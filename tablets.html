@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tablets — Rare Cocoa™</title>
+  <meta name="description" content="Handcrafted dark chocolate tablets in 8 exquisite varieties. Choose your sweetener and cocoa percentage for a truly personalized luxury experience.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo.jpg" alt="Rare Cocoa Logo" class="nav-logo-img">
+        <span>RARE COCOA</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tablets.html" style="color:var(--accent);">Tablets</a>
+        <a href="snacks.html">Snacks</a>
+        <a href="spreads.html">Spreads</a>
+        <a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a>
+        <a href="make-your-own.html">Make Your Own</a>
+      </div>
+      <button class="nav-menu-btn" id="menuBtn" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="tablets.html">Tablets</a>
+    <a href="snacks.html">Snacks</a>
+    <a href="spreads.html">Spreads</a>
+    <a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a>
+    <a href="make-your-own.html">Make Your Own</a>
+  </div>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label center">The Collection</span>
+      <h1 class="section-title center">Tablets</h1>
+      <p class="page-hero-desc">Artisan dark chocolate tablets crafted with single-origin cocoa. Choose your sweetener and cocoa intensity for a personalized indulgence.</p>
+      <div class="page-hero-tags">
+        <span class="page-hero-tag">Single-Origin</span>
+        <span class="page-hero-tag">Vegan</span>
+        <span class="page-hero-tag">Handmade</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      Collections
+      <span>/</span>
+      Tablets
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <section class="products-section">
+    <div class="container">
+      <div class="products-grid">
+
+        <!-- Almond -->
+        <div class="product-grid-card reveal" data-product='{"name":"Almond","subtitle":"Rich almond dark chocolate tablet","icon":"🌰","options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]}]}'>
+          <div class="product-grid-img">
+            <div class="img-gradient" style="background:linear-gradient(135deg,#8B6914 0%,#C9A456 50%,#6E5310 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:3rem;">🌰</span>
+            </div>
+          </div>
+          <div class="product-grid-body">
+            <h3 class="product-grid-name">Almond</h3>
+            <p class="product-grid-desc">Crunchy almonds in rich dark chocolate</p>
+            <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Pistachio -->
+        <div class="product-grid-card reveal" data-product='{"name":"Pistachio","subtitle":"Vibrant pistachio dark chocolate tablet","icon":"💚","options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]}]}'>
+          <div class="product-grid-img">
+            <div class="img-gradient" style="background:linear-gradient(135deg,#4A7A4A 0%,#6B9B5E 50%,#3D6B3D 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:3rem;">💚</span>
+            </div>
+          </div>
+          <div class="product-grid-body">
+            <h3 class="product-grid-name">Pistachio</h3>
+            <p class="product-grid-desc">Premium pistachios with aromatic cocoa</p>
+            <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Hazelnut -->
+        <div class="product-grid-card reveal" data-product='{"name":"Hazelnut","subtitle":"Classic hazelnut dark chocolate tablet","icon":"🌰","options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]}]}'>
+          <div class="product-grid-img">
+            <div class="img-gradient" style="background:linear-gradient(135deg,#6B4A30 0%,#8B6A4A 50%,#5C3D2E 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:3rem;">🌰</span>
+            </div>
+          </div>
+          <div class="product-grid-body">
+            <h3 class="product-grid-name">Hazelnut</h3>
+            <p class="product-grid-desc">Roasted hazelnuts in velvety chocolate</p>
+            <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Cranberry -->
+        <div class="product-grid-card reveal" data-product='{"name":"Cranberry","subtitle":"Tangy cranberry dark chocolate tablet","icon":"🔴","options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]}]}'>
+          <div class="product-grid-img">
+            <div class="img-gradient" style="background:linear-gradient(135deg,#8B2252 0%,#C94060 50%,#6B1A3D 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:3rem;">🔴</span>
+            </div>
+          </div>
+          <div class="product-grid-body">
+            <h3 class="product-grid-name">Cranberry</h3>
+            <p class="product-grid-desc">Tart cranberries with deep cocoa notes</p>
+            <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Orange Peel -->
+        <div class="product-grid-card reveal" data-product='{"name":"Orange Peel","subtitle":"Zesty orange peel dark chocolate tablet","icon":"🍊","options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]}]}'>
+          <div class="product-grid-img">
+            <div class="img-gradient" style="background:linear-gradient(135deg,#CC6600 0%,#E88A30 50%,#AA5500 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:3rem;">🍊</span>
+            </div>
+          </div>
+          <div class="product-grid-body">
+            <h3 class="product-grid-name">Orange Peel</h3>
+            <p class="product-grid-desc">Candied orange zest meets fine chocolate</p>
+            <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Himalayan Salt -->
+        <div class="product-grid-card reveal" data-product='{"name":"Himalayan Salt","subtitle":"Mineral-rich salt dark chocolate tablet","icon":"🧂","options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]}]}'>
+          <div class="product-grid-img">
+            <div class="img-gradient" style="background:linear-gradient(135deg,#D4A5A5 0%,#E8C4B8 50%,#C49090 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:3rem;">🧂</span>
+            </div>
+          </div>
+          <div class="product-grid-body">
+            <h3 class="product-grid-name">Himalayan Salt</h3>
+            <p class="product-grid-desc">Pink salt crystals on dark chocolate</p>
+            <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Coffee -->
+        <div class="product-grid-card reveal" data-product='{"name":"Coffee","subtitle":"Espresso-infused dark chocolate tablet","icon":"☕","options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]}]}'>
+          <div class="product-grid-img">
+            <div class="img-gradient" style="background:linear-gradient(135deg,#3D2B1F 0%,#5C4033 50%,#2A1A10 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:3rem;">☕</span>
+            </div>
+          </div>
+          <div class="product-grid-body">
+            <h3 class="product-grid-name">Coffee</h3>
+            <p class="product-grid-desc">Bold espresso blended with cocoa</p>
+            <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Chilli -->
+        <div class="product-grid-card reveal" data-product='{"name":"Chilli","subtitle":"Fiery chilli dark chocolate tablet","icon":"🌶️","options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]}]}'>
+          <div class="product-grid-img">
+            <div class="img-gradient" style="background:linear-gradient(135deg,#B22222 0%,#DC3545 50%,#8B0000 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:3rem;">🌶️</span>
+            </div>
+          </div>
+          <div class="product-grid-body">
+            <h3 class="product-grid-name">Chilli</h3>
+            <p class="product-grid-desc">Warm spice meets smooth chocolate</p>
+            <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Modal -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" id="productModal">
+      <button class="modal-close" aria-label="Close">&times;</button>
+      <div class="modal-header">
+        <div class="modal-product-icon">🍫</div>
+        <h2 class="modal-product-name">Product</h2>
+        <p class="modal-product-subtitle">Description</p>
+      </div>
+      <div class="modal-body">
+        <!-- Options injected by JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="modal-add-btn">Add to Selection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h2 class="footer-logo">RARE COCOA</h2>
+          <p class="footer-tagline">Real Chocolate. Real Trust.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Collections</h4>
+            <a href="tablets.html">Tablets</a>
+            <a href="snacks.html">Snacks</a>
+            <a href="spreads.html">Spreads</a>
+            <a href="hot-chocolate-ice-cream.html">Hot Chocolate & Ice Cream</a>
+            <a href="make-your-own.html">Make Your Own</a>
+            <a href="chocolate-slab.html">Chocolate Slab</a>
+          </div>
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="index.html">Home</a>
+            <a href="manufacturing.html">Manufacturing</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Rare Cocoa&trade;. All rights reserved.</p>
+        <p>Pure Ingredients. Single Origin. Real Chocolate.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="cart.js"></script>
+  <script src="pages.js"></script>
+</body>
+</html>

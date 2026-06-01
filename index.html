@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rare Cocoa™ — Real Chocolate. Real Trust.</title>
+  <meta name="description" content="Rare Cocoa — Handcrafted luxury dark chocolate from single-origin cocoa and pure ingredients. Farm-to-bar. No shortcuts. No false promises. Founded by Praveen.">
+  <meta name="keywords" content="luxury dark chocolate, single origin cocoa, handcrafted chocolate, farm to bar, pure ingredients, Rare Cocoa">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css?v=2">
+</head>
+
+<body>
+
+  <!-- ─── Navigation ─────────────────────────────────────── -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" id="navLogo">
+        <img src="logo.jpg" alt="Rare Cocoa Logo" class="nav-logo-img">
+        <span>RARE COCOA</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#story">Our Story</a>
+        <a href="#products">Products</a>
+        <a href="#collections">Collections</a>
+        <a href="#compare">Why Us</a>
+        <a href="manufacturing.html">Manufacturing</a>
+      </div>
+      <button class="nav-menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ─── Mobile Menu ────────────────────────────────────── -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#story">Our Story</a>
+    <a href="#products">Products</a>
+    <a href="#collections">Collections</a>
+    <a href="#compare">Why Us</a>
+    <a href="manufacturing.html">Manufacturing</a>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 1 — HERO (Autoplay Video)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <!-- Video background -->
+    <div class="hero-video-container">
+      <video class="hero-video" autoplay muted loop playsinline aria-label="Hero Video">
+        <source src="assets/Hero%20Video.mp4" type="video/mp4">
+      </video>
+      <div class="hero-overlay"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">EST. MMXXIV</div>
+      <h1 class="hero-title">RARE COCOA</h1>
+      <div class="hero-divider">
+        <span class="hero-divider-line"></span>
+        <span class="hero-divider-diamond">◆</span>
+        <span class="hero-divider-line"></span>
+      </div>
+      <p class="hero-tagline">Real Chocolate. Real Trust.</p>
+      <p class="hero-sub">Single Origin · Pure Ingredients · Luxury Dark Chocolate</p>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 2 — BRAND STORY / MANUFACTURING TEASER
+       ═══════════════════════════════════════════════════════ -->
+  <section class="story" id="story">
+    <div class="container">
+      <div class="story-grid">
+
+        <div class="story-content reveal">
+          <span class="section-label">Our Philosophy</span>
+          <h2 class="section-title">From Bean to Bar,<br>With Honesty</h2>
+          <p class="story-text">
+            In a world filled with mass-produced sweetness, Rare Cocoa was created to bring 
+            back the soul of real chocolate. Crafted from carefully selected single-origin 
+            cocoa and pure ingredients, our chocolate is made with the same care, patience, 
+            and honesty as a meal prepared at home — fresh, thoughtful, and meant to be 
+            truly experienced.
+          </p>
+          <p class="story-text">
+            We believe luxury is not created through excess, but through purity. No 
+            unnecessary preservatives. No artificial shortcuts. No compromise on 
+            authenticity. Every bar is handcrafted in small batches to preserve the natural 
+            depth, aroma, and character of fine cocoa.
+          </p>
+          <a href="manufacturing.html" class="btn-primary" id="discoverBtn">Discover Our Process</a>
+        </div>
+
+        <div class="story-image reveal reveal-right">
+          <div class="image-placeholder" data-label="Farm-to-bar journey image">
+            <span class="placeholder-icon">🫘</span>
+            <span class="placeholder-text">Your Image Here</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Founder Quote -->
+      <div class="founder-quote reveal">
+        <blockquote>
+          "People deserve chocolate they can truly trust."
+        </blockquote>
+        <cite>— Praveen, Founder</cite>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 3 — PRODUCT CAROUSEL
+       ═══════════════════════════════════════════════════════ -->
+  <section class="products" id="products">
+    <div class="container">
+      <span class="section-label center">The Collection</span>
+      <h2 class="section-title center">Handcrafted Indulgence</h2>
+
+      <div class="carousel" id="carousel">
+        <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Previous slide">&#8249;</button>
+
+        <div class="carousel-track-container" id="carouselContainer">
+          <div class="carousel-track" id="carouselTrack">
+
+            <!-- Slide 1 -->
+            <div class="carousel-slide">
+              <div class="product-card">
+                <div class="image-placeholder product-img" data-label="Product 1">
+                  <span class="placeholder-icon">🍫</span>
+                  <span class="placeholder-text">Your Image Here</span>
+                </div>
+                <div class="product-info">
+                  <h3>Single Origin Dark 72%</h3>
+                  <p>Pure cocoa, intense depth</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-slide">
+              <div class="product-card">
+                <div class="image-placeholder product-img" data-label="Product 2">
+                  <span class="placeholder-icon">🍫</span>
+                  <span class="placeholder-text">Your Image Here</span>
+                </div>
+                <div class="product-info">
+                  <h3>Dark Truffle Collection</h3>
+                  <p>Handrolled, small-batch luxury</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-slide">
+              <div class="product-card">
+                <div class="image-placeholder product-img" data-label="Product 3">
+                  <span class="placeholder-icon">🍫</span>
+                  <span class="placeholder-text">Your Image Here</span>
+                </div>
+                <div class="product-info">
+                  <h3>Raw Cocoa Nibs</h3>
+                  <p>Unprocessed, authentic flavor</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="carousel-slide">
+              <div class="product-card">
+                <div class="image-placeholder product-img" data-label="Product 4">
+                  <span class="placeholder-icon">🍫</span>
+                  <span class="placeholder-text">Your Image Here</span>
+                </div>
+                <div class="product-info">
+                  <h3>Gift Box — The Curated Edit</h3>
+                  <p>For moments worth savoring</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Next slide">&#8250;</button>
+      </div>
+
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       BRAND PROMISE STRIP
+       ═══════════════════════════════════════════════════════ -->
+  <div class="brand-strip">
+    <div class="container">
+      <p class="brand-strip-text">Single-Origin · Vegan · Handmade</p>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 4 — COLLECTION CATEGORIES (BENTO GRID)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="categories" id="collections">
+    <div class="container">
+      <span class="section-label center">Explore Our</span>
+      <h2 class="section-title center">Collections</h2>
+
+      <div class="category-grid stagger-children">
+
+        <!-- Tablets — Large card -->
+        <a href="tablets.html" class="category-card large reveal" id="catTablets">
+          <div class="category-img">
+            <div class="image-placeholder" style="aspect-ratio:auto;border:none;width:100%;height:100%;background:linear-gradient(135deg, #3D2B1F 0%, #5C3D2E 50%, #8B6914 100%);">
+              <span class="placeholder-icon" style="font-size:3rem;opacity:0.3;">🍫</span>
+            </div>
+          </div>
+          <div class="category-overlay">
+            <h3>Tablets</h3>
+            <span class="category-cta">Explore Collection →</span>
+          </div>
+        </a>
+
+        <!-- Snacks -->
+        <a href="snacks.html" class="category-card reveal" id="catSnacks">
+          <div class="category-img">
+            <div class="image-placeholder" style="aspect-ratio:auto;border:none;width:100%;height:100%;background:linear-gradient(135deg, #4A3228 0%, #6B4532 50%, #8B5E3C 100%);">
+              <span class="placeholder-icon" style="font-size:3rem;opacity:0.3;">🥜</span>
+            </div>
+          </div>
+          <div class="category-overlay">
+            <h3>Snacks</h3>
+            <span class="category-cta">Explore Collection →</span>
+          </div>
+        </a>
+
+        <!-- Spreads -->
+        <a href="spreads.html" class="category-card reveal" id="catSpreads">
+          <div class="category-img">
+            <div class="image-placeholder" style="aspect-ratio:auto;border:none;width:100%;height:100%;background:linear-gradient(135deg, #5C4033 0%, #7B5B44 50%, #A0826D 100%);">
+              <span class="placeholder-icon" style="font-size:3rem;opacity:0.3;">🫕</span>
+            </div>
+          </div>
+          <div class="category-overlay">
+            <h3>Spreads</h3>
+            <span class="category-cta">Explore Collection →</span>
+          </div>
+        </a>
+
+        <!-- Hot Chocolate & Ice Cream — Large card -->
+        <a href="hot-chocolate-ice-cream.html" class="category-card large reveal" id="catHotChoc">
+          <div class="category-img">
+            <div class="image-placeholder" style="aspect-ratio:auto;border:none;width:100%;height:100%;background:linear-gradient(135deg, #2C1810 0%, #4A2820 50%, #6B3A2A 100%);">
+              <span class="placeholder-icon" style="font-size:3rem;opacity:0.3;">☕</span>
+            </div>
+          </div>
+          <div class="category-overlay">
+            <h3>Hot Chocolate & Ice Cream</h3>
+            <span class="category-cta">Explore Collection →</span>
+          </div>
+        </a>
+
+        <!-- Make Your Own -->
+        <a href="make-your-own.html" class="category-card reveal" id="catMakeOwn">
+          <div class="category-img">
+            <div class="image-placeholder" style="aspect-ratio:auto;border:none;width:100%;height:100%;background:linear-gradient(135deg, #1A0E08 0%, #3D2B1F 50%, #5C4033 100%);">
+              <span class="placeholder-icon" style="font-size:3rem;opacity:0.3;">✨</span>
+            </div>
+          </div>
+          <div class="category-overlay">
+            <h3>Make Your Own</h3>
+            <span class="category-cta">Explore Collection →</span>
+          </div>
+        </a>
+
+        <!-- Chocolate Slab -->
+        <a href="chocolate-slab.html" class="category-card reveal" id="catSlab">
+          <div class="category-img">
+            <div class="image-placeholder" style="aspect-ratio:auto;border:none;width:100%;height:100%;background:linear-gradient(135deg, #2A1A10 0%, #4A3020 50%, #6B4A30 100%);">
+              <span class="placeholder-icon" style="font-size:3rem;opacity:0.3;">🧱</span>
+            </div>
+          </div>
+          <div class="category-overlay">
+            <h3>Chocolate Slab</h3>
+            <span class="category-cta">Explore Collection →</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 5 — RARE COCOA vs. INDUSTRY COMPARISON
+       ═══════════════════════════════════════════════════════ -->
+  <section class="compare" id="compare">
+    <div class="container">
+      <span class="section-label center">The Difference</span>
+      <h2 class="section-title center">Rare Cocoa vs. Industry Chocolate</h2>
+      <p class="compare-subtitle">Not all chocolate is created equal. Here is what sets us apart.</p>
+
+      <div class="compare-grid">
+
+        <!-- Rare Cocoa column -->
+        <div class="compare-column compare-us reveal">
+          <div class="compare-header">
+            <h3>Rare Cocoa</h3>
+            <span class="compare-badge">The Real Way</span>
+          </div>
+          <div class="compare-items">
+            <div class="compare-item">
+              <span class="compare-icon">✦</span>
+              <div>
+                <strong>Single-Origin Cocoa</strong>
+                <p>Carefully selected from trusted sources</p>
+              </div>
+            </div>
+            <div class="compare-item">
+              <span class="compare-icon">✦</span>
+              <div>
+                <strong>Pure Ingredients</strong>
+                <p>Only what's needed, nothing more</p>
+              </div>
+            </div>
+            <div class="compare-item">
+              <span class="compare-icon">✦</span>
+              <div>
+                <strong>No Unnecessary Preservatives</strong>
+                <p>Fresh, honest, chemical-free</p>
+              </div>
+            </div>
+            <div class="compare-item">
+              <span class="compare-icon">✦</span>
+              <div>
+                <strong>Small-Batch Handcrafted</strong>
+                <p>Every bar made with intention</p>
+              </div>
+            </div>
+            <div class="compare-item">
+              <span class="compare-icon">✦</span>
+              <div>
+                <strong>Farm-to-Bar Journey</strong>
+                <p>Full transparency, bean to bar</p>
+              </div>
+            </div>
+            <div class="compare-item">
+              <span class="compare-icon">✦</span>
+              <div>
+                <strong>Ethical Sourcing</strong>
+                <p>Respecting people and nature</p>
+              </div>
+            </div>
+            <div class="compare-item">
+              <span class="compare-icon">✦</span>
+              <div>
+                <strong>Real Chocolate, The Real Way</strong>
+                <p>Made with patience and dedication</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VS divider -->
+        <div class="compare-divider">
+          <span>VS</span>
+        </div>
+
+        <!-- Industry column -->
+        <div class="compare-column compare-them reveal reveal-right">
+          <div class="compare-header compare-header-them">
+            <h3>Industry Standard</h3>
+            <span class="compare-badge compare-badge-them">The Shortcut</span>
+          </div>
+          <div class="compare-items">
+            <div class="compare-item compare-item-them">
+              <span class="compare-icon-x">✕</span>
+              <div>
+                <strong>Blended / Unknown Origins</strong>
+                <p>Mixed sources, no traceability</p>
+              </div>
+            </div>
+            <div class="compare-item compare-item-them">
+              <span class="compare-icon-x">✕</span>
+              <div>
+                <strong>Artificial Additives</strong>
+                <p>Fillers, flavoring, and emulsifiers</p>
+              </div>
+            </div>
+            <div class="compare-item compare-item-them">
+              <span class="compare-icon-x">✕</span>
+              <div>
+                <strong>Chemical Preservation</strong>
+                <p>Extended shelf life over quality</p>
+              </div>
+            </div>
+            <div class="compare-item compare-item-them">
+              <span class="compare-icon-x">✕</span>
+              <div>
+                <strong>Mass Factory Production</strong>
+                <p>Volume over craft</p>
+              </div>
+            </div>
+            <div class="compare-item compare-item-them">
+              <span class="compare-icon-x">✕</span>
+              <div>
+                <strong>Anonymous Supply Chains</strong>
+                <p>No visibility into sourcing</p>
+              </div>
+            </div>
+            <div class="compare-item compare-item-them">
+              <span class="compare-icon-x">✕</span>
+              <div>
+                <strong>Unverified Sourcing</strong>
+                <p>No accountability in the chain</p>
+              </div>
+            </div>
+            <div class="compare-item compare-item-them">
+              <span class="compare-icon-x">✕</span>
+              <div>
+                <strong>Shortcuts &amp; False Promises</strong>
+                <p>Marketing over substance</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── Footer ─────────────────────────────────────────── -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h2 class="footer-logo">RARE COCOA</h2>
+          <p class="footer-tagline">Real Chocolate. Real Trust.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Collections</h4>
+            <a href="tablets.html">Tablets</a>
+            <a href="snacks.html">Snacks</a>
+            <a href="spreads.html">Spreads</a>
+            <a href="hot-chocolate-ice-cream.html">Hot Chocolate & Ice Cream</a>
+            <a href="make-your-own.html">Make Your Own</a>
+            <a href="chocolate-slab.html">Chocolate Slab</a>
+          </div>
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="#story">Our Story</a>
+            <a href="manufacturing.html">Manufacturing</a>
+            <a href="#compare">Why Us</a>
+          </div>
+          <div class="footer-col">
+            <h4>Connect</h4>
+            <a href="#">Instagram</a>
+            <a href="#">Contact</a>
+            <a href="#">Press</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Rare Cocoa&trade;. All rights reserved.</p>
+        <p>Pure Ingredients. Single Origin. Real Chocolate.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="cart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
