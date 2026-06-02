@@ -1253,10 +1253,10 @@ button {
   }
 
   .hero-video {
-    position: static;
-    width: 100%;
-    height: auto;
-    object-fit: unset;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
   }
 
   .hero-title {
