@@ -14,10 +14,12 @@ const MIME_TYPES = {
   '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
+  '.mp4': 'video/mp4',
 };
 
 const server = http.createServer((req, res) => {
-  let filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
+  const urlPath = decodeURIComponent(req.url.split('?')[0]);
+  let filePath = path.join(__dirname, urlPath === '/' ? 'index.html' : urlPath);
   
   // Prevent directory traversal
   if (!filePath.startsWith(__dirname)) {

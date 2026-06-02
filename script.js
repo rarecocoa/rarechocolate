@@ -5,10 +5,29 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // ── Lazy-load Hero Video ─────────────────────────────────
+  const heroVideo = document.getElementById('heroVideo');
+  if (heroVideo && window.innerWidth > 768) {
+    const loadVideo = () => {
+      const source = heroVideo.querySelector('source[data-src]');
+      if (source) {
+        source.src = source.getAttribute('data-src');
+        source.removeAttribute('data-src');
+        heroVideo.load();
+        heroVideo.play().catch(() => {});
+      }
+    };
+    // Load after page is interactive
+    if (document.readyState === 'complete') {
+      loadVideo();
+    } else {
+      window.addEventListener('load', loadVideo);
+    }
+  }
+
   // ── Navigation Scroll Behavior ───────────────────────────
   const nav = document.getElementById('nav');
   const heroSection = document.getElementById('hero');
-
   const handleNavScroll = () => {
     const scrolled = window.scrollY > 60;
     nav.classList.toggle('scrolled', scrolled);
@@ -234,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const heroScroll = document.querySelector('.hero-scroll');
 
   const handleHeroParallax = () => {
-    if (!heroContent) return;
+    if (!heroContent || window.innerWidth <= 768) return;
     const scrollY = window.scrollY;
     const heroHeight = heroSection ? heroSection.offsetHeight : 800;
 
