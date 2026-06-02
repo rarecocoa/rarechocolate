@@ -5,9 +5,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Remove skeleton loading state ────────────────────────
-  document.body.classList.remove('page-loading');
-
   // ── Navigation (shared) ───────────────────────────────────
   const nav = document.getElementById('nav');
 
