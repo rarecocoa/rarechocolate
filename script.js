@@ -13,11 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (source) {
         source.src = source.getAttribute('data-src');
         source.removeAttribute('data-src');
+        const showVideo = () => heroVideo.classList.add('is-playing');
+        heroVideo.addEventListener('canplay',     showVideo, { once: true });
+        heroVideo.addEventListener('loadeddata',  showVideo, { once: true });
+        heroVideo.addEventListener('playing',     showVideo, { once: true });
         heroVideo.load();
-        heroVideo.addEventListener('canplay', () => {
-          heroVideo.classList.add('is-playing');
-        }, { once: true });
         heroVideo.play().catch(() => {});
+        // Fallback: show video after 3s even if events don't fire
+        setTimeout(showVideo, 3000);
       }
     };
     if (document.readyState === 'complete') {
