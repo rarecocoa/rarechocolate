@@ -5,29 +5,16 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Lazy-load Hero Video ─────────────────────────────────
+  // ── Hero Video ───────────────────────────────────────────
   const heroVideo = document.getElementById('heroVideo');
   if (heroVideo) {
-    const loadVideo = () => {
-      const source = heroVideo.querySelector('source[data-src]');
-      if (source) {
-        source.src = source.getAttribute('data-src');
-        source.removeAttribute('data-src');
-        const showVideo = () => heroVideo.classList.add('is-playing');
-        heroVideo.addEventListener('canplay',     showVideo, { once: true });
-        heroVideo.addEventListener('loadeddata',  showVideo, { once: true });
-        heroVideo.addEventListener('playing',     showVideo, { once: true });
-        heroVideo.load();
-        heroVideo.play().catch(() => {});
-        // Fallback: show video after 3s even if events don't fire
-        setTimeout(showVideo, 3000);
-      }
-    };
-    if (document.readyState === 'complete') {
-      loadVideo();
-    } else {
-      window.addEventListener('load', loadVideo);
-    }
+    const showVideo = () => heroVideo.classList.add('is-playing');
+    heroVideo.addEventListener('canplay',    showVideo, { once: true });
+    heroVideo.addEventListener('loadeddata', showVideo, { once: true });
+    heroVideo.addEventListener('playing',    showVideo, { once: true });
+    // Fallback: show after 3s even if events don't fire
+    setTimeout(showVideo, 3000);
+    heroVideo.play().catch(() => {});
   }
 
   // ── Navigation Scroll Behavior ───────────────────────────
