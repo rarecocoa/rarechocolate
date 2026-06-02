@@ -5,9 +5,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Lazy-load Hero Video (desktop only — landscape video doesn't suit portrait mobile) ──
+  // ── Lazy-load Hero Video ─────────────────────────────────
   const heroVideo = document.getElementById('heroVideo');
-  if (heroVideo && window.innerWidth > 768) {
+  if (heroVideo) {
     const loadVideo = () => {
       const source = heroVideo.querySelector('source[data-src]');
       if (source) {
