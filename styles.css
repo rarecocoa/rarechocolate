@@ -1235,28 +1235,26 @@ button {
   }
 
   .hero {
-    min-height: 100svh;
+    min-height: 0;
+    height: 56.25vw;
+    margin-top: 60px;
   }
 
   .hero::before {
     animation: none;
   }
 
-  /* Container fills hero; video plays at natural 16:9, centred below the nav bar */
   .hero-video-container {
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 60px;
+    display: block;
   }
 
   .hero-video {
-    position: static !important;
     width: 100% !important;
-    height: auto !important;
-    object-fit: contain !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
   }
 
   .hero-title {
