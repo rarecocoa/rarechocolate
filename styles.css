@@ -1235,9 +1235,9 @@ button {
   }
 
   .hero {
-    min-height: 0;
-    height: 56.25vw;
-    margin-top: 60px;
+    min-height: 0 !important;
+    height: 56.25vw !important;
+    margin-top: 64px;
   }
 
   .hero::before {
