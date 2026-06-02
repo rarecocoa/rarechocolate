@@ -728,3 +728,25 @@
     font-size: 0.72rem;
   }
 }
+
+/* ── Skeleton Shimmer (Collection Pages) ────────────────── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+body.page-loading .product-grid-img,
+body.page-loading .product-grid-img > div,
+body.page-loading .mfg-hero,
+body.page-loading .page-hero {
+  background: linear-gradient(
+    90deg,
+    #F0E9DD 25%,
+    #EDE5D8 50%,
+    #F0E9DD 75%
+  ) !important;
+  background-size: 600px 100% !important;
+  animation: skeleton-shimmer 1.4s infinite linear !important;
+}
+body.page-loading .product-grid-img span {
+  opacity: 0;
+}

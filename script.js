@@ -5,17 +5,28 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Hero Video ───────────────────────────────────────────
+  // ── Page Preloader & Hero Video ──────────────────────────
+  const preloader = document.getElementById('page-preloader');
   const heroVideo = document.getElementById('heroVideo');
+
+  const hidePreloader = () => {
+    if (preloader) preloader.classList.add('hidden');
+    document.body.classList.remove('page-loading');
+  };
+
   if (heroVideo) {
-    const showVideo = () => heroVideo.classList.add('is-playing');
+    const showVideo = () => {
+      heroVideo.classList.add('is-playing');
+      hidePreloader();
+    };
     heroVideo.addEventListener('canplay',    showVideo, { once: true });
     heroVideo.addEventListener('loadeddata', showVideo, { once: true });
     heroVideo.addEventListener('playing',    showVideo, { once: true });
-    // Fallback: show after 3s even if events don't fire
-    setTimeout(showVideo, 3000);
     heroVideo.play().catch(() => {});
   }
+
+  // Fallback: dismiss after 3s regardless
+  setTimeout(hidePreloader, 3000);
 
   // ── Navigation Scroll Behavior ───────────────────────────
   const nav = document.getElementById('nav');
