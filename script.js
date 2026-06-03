@@ -5,14 +5,20 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Hero Video ───────────────────────────────────────────
+  // ── Hero Video (lazy-load after page ready) ──────────────
   const heroVideo = document.getElementById('heroVideo');
   if (heroVideo) {
+    const source = heroVideo.querySelector('source[data-src]');
+    if (source) {
+      source.src = source.getAttribute('data-src');
+      source.removeAttribute('data-src');
+    }
     const showVideo = () => heroVideo.classList.add('is-playing');
     heroVideo.addEventListener('canplay',    showVideo, { once: true });
     heroVideo.addEventListener('loadeddata', showVideo, { once: true });
     heroVideo.addEventListener('playing',    showVideo, { once: true });
     setTimeout(showVideo, 3000);
+    heroVideo.load();
     heroVideo.play().catch(() => {});
   }
 
