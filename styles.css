@@ -984,8 +984,9 @@ button {
 }
 
 .compare-image-wrapper {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 0 10px;
 }
 
 .compare-image {
