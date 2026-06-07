@@ -764,6 +764,12 @@ body.page-loading .product-grid-img span {
     grid-template-columns: 1fr;
     gap: 32px;
   }
+  .builder-preview-panel {
+    order: -1; /* Move preview panel to top on mobile */
+    position: relative;
+    top: 0;
+    margin-bottom: 16px;
+  }
 }
 
 .builder-preview-panel {
@@ -839,34 +845,34 @@ body.page-loading .product-grid-img span {
   position: absolute;
   left: -50%;
   width: 200%;
-  height: 100px;
+  height: 120px; /* Tall enough to overlap the top surface */
   background: var(--cocoa-color, #4A2E1B);
-  border-radius: 44%;
+  border-radius: 40%;
   transform-origin: center;
   animation: wave-spin 7s linear infinite;
   will-change: transform;
 }
 
 .wave1 {
-  bottom: 80px;
+  top: -60px; /* Position at the surface of rising liquid */
   opacity: 1;
   animation-duration: 6s;
 }
 
 .wave2 {
-  bottom: 84px;
+  top: -55px;
   opacity: 0.7;
   animation-duration: 9s;
   animation-delay: -2s;
-  background: var(--cocoa-color-light, #5A3E2B);
+  background: var(--cocoa-color-light, #5D3C2A);
 }
 
 .wave3 {
-  bottom: 86px;
+  top: -50px;
   opacity: 0.4;
   animation-duration: 12s;
   animation-delay: -5s;
-  background: var(--cocoa-color-dark, #3A2010);
+  background: var(--cocoa-color-dark, #3B2315);
 }
 
 @keyframes wave-spin {
