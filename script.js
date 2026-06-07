@@ -6,27 +6,57 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ── Hero Video (lazy-load after page ready) ──────────────
-  const heroVideo = document.getElementById('heroVideo');
-  if (heroVideo) {
-    const source = heroVideo.querySelector('source[data-src]');
+  const isMobile = () => window.innerWidth <= 768;
+
+  const initHeroVideo = (videoEl) => {
+    if (!videoEl) return;
+    const source = videoEl.querySelector('source[data-src]');
     if (source) {
       source.src = source.getAttribute('data-src');
       source.removeAttribute('data-src');
+      videoEl.load();
     }
-    const showVideo = () => heroVideo.classList.add('is-playing');
-    heroVideo.addEventListener('canplay',    showVideo, { once: true });
-    heroVideo.addEventListener('loadeddata', showVideo, { once: true });
-    heroVideo.addEventListener('playing',    showVideo, { once: true });
+    const showVideo = () => videoEl.classList.add('is-playing');
+    videoEl.addEventListener('canplay',    showVideo, { once: true });
+    videoEl.addEventListener('loadeddata', showVideo, { once: true });
+    videoEl.addEventListener('playing',    showVideo, { once: true });
     setTimeout(showVideo, 3000);
-    heroVideo.load();
-    heroVideo.play().catch(() => {});
-  }
+    videoEl.play().catch(() => {});
+  };
+
+  const heroVideo       = document.getElementById('heroVideo');
+  const heroVideoMobile = document.getElementById('heroVideoMobile');
+
+  const checkAndInitVideo = () => {
+    if (isMobile()) {
+      if (heroVideoMobile && !heroVideoMobile.src && heroVideoMobile.querySelector('source[data-src]')) {
+        initHeroVideo(heroVideoMobile);
+      } else if (heroVideoMobile && heroVideoMobile.paused) {
+        heroVideoMobile.play().catch(() => {});
+      }
+      if (heroVideo && !heroVideo.paused) {
+        heroVideo.pause();
+      }
+    } else {
+      if (heroVideo && !heroVideo.src && heroVideo.querySelector('source[data-src]')) {
+        initHeroVideo(heroVideo);
+      } else if (heroVideo && heroVideo.paused) {
+        heroVideo.play().catch(() => {});
+      }
+      if (heroVideoMobile && !heroVideoMobile.paused) {
+        heroVideoMobile.pause();
+      }
+    }
+  };
+
+  checkAndInitVideo();
+  window.addEventListener('resize', checkAndInitVideo, { passive: true });
 
   // ── Navigation Scroll Behavior ───────────────────────────
   const nav = document.getElementById('nav');
   const heroSection = document.getElementById('hero');
   const handleNavScroll = () => {
-    const scrolled = window.scrollY > 60;
+    const scrolled = window.scrollY > 10;
     nav.classList.toggle('scrolled', scrolled);
   };
 

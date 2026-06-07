@@ -14,7 +14,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"></noscript>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
   <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="/" class="nav-logo" id="navLogo">
-        <img src="logo.jpg" alt="Rare Cocoa Logo" class="nav-logo-img">
+        <img src="logo.png" alt="Rare Cocoa Logo" class="nav-logo-img">
         <span>RARE COCOA</span>
       </a>
       <div class="nav-links" id="navLinks">
@@ -55,8 +55,13 @@
   <section class="hero" id="hero">
     <!-- Video background -->
     <div class="hero-video-container">
-      <video class="hero-video" muted loop playsinline preload="none" aria-label="Hero Video" id="heroVideo">
+      <!-- Desktop landscape video -->
+      <video class="hero-video hero-video-desktop" muted loop playsinline preload="none" aria-label="Hero Video" id="heroVideo">
         <source data-src="assets/new_hero.mp4" type="video/mp4">
+      </video>
+      <!-- Mobile portrait video (4:5) -->
+      <video class="hero-video hero-video-mobile" muted loop playsinline preload="auto" aria-label="Hero Video Mobile" id="heroVideoMobile">
+        <source data-src="assets/mobilehero.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
     </div>
