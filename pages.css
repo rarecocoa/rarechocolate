@@ -751,4 +751,211 @@ body.page-loading .product-grid-img span {
   opacity: 0;
 }
 
+/* ── Builder Layout & Visualizer Styles ── */
+.builder-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .builder-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.builder-preview-panel {
+  position: sticky;
+  top: 100px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+}
+
+.preview-sticky {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.preview-title {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* 3D Viscous Chocolate Bar */
+.chocolate-bar-visualizer {
+  width: 170px;
+  height: 290px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chocolate-bar {
+  width: 156px;
+  height: 270px;
+  background: var(--bg-secondary);
+  border: 7px solid #2A170F; /* Rich chocolate boundary */
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 15px 35px rgba(26, 14, 8, 0.15),
+    inset 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.chocolate-liquid-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #E8DEC9; /* Empty bar inner cream backing */
+}
+
+/* Viscous Wave Animation */
+.liquid-waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+  background: var(--cocoa-color, #4A2E1B);
+  filter: url('#goo'); /* Viscous gooey blending filter */
+}
+
+.wave {
+  position: absolute;
+  left: -50%;
+  width: 200%;
+  height: 100px;
+  background: var(--cocoa-color, #4A2E1B);
+  border-radius: 44%;
+  transform-origin: center;
+  animation: wave-spin 7s linear infinite;
+  will-change: transform;
+}
+
+.wave1 {
+  bottom: 80px;
+  opacity: 1;
+  animation-duration: 6s;
+}
+
+.wave2 {
+  bottom: 84px;
+  opacity: 0.7;
+  animation-duration: 9s;
+  animation-delay: -2s;
+  background: var(--cocoa-color-light, #5A3E2B);
+}
+
+.wave3 {
+  bottom: 86px;
+  opacity: 0.4;
+  animation-duration: 12s;
+  animation-delay: -5s;
+  background: var(--cocoa-color-dark, #3A2010);
+}
+
+@keyframes wave-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Beveled Grid Segments */
+.chocolate-grid-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 5px;
+  padding: 5px;
+  pointer-events: none;
+}
+
+.chocolate-segment {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.18);
+  border-right: 2px solid rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+  box-shadow: 
+    inset 1px 1px 3px rgba(255, 255, 255, 0.12),
+    inset -1px -1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Preview Summary Details */
+.preview-summary {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+}
+
+.summary-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.summary-value {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.summary-addons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-addons-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.summary-addon-pill {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--border-light);
+}
+
 

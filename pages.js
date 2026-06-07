@@ -231,21 +231,118 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Single-select builder options logic
+  // Preview / Visualizer update function
+  const updateBuilderPreview = () => {
+    const liquidWaves = document.getElementById('liquidWaves');
+    const summaryBase = document.getElementById('summaryBase');
+    const summaryPercentage = document.getElementById('summaryPercentage');
+    const summarySweetener = document.getElementById('summarySweetener');
+    const summarySize = document.getElementById('summarySize');
+    const summaryAddons = document.getElementById('summaryAddons');
+
+    if (!liquidWaves) return;
+
+    // 1. Base Cocoa
+    const selectedBase = document.querySelector('.builder-options[data-type="base"] .builder-option.selected');
+    if (selectedBase && summaryBase) {
+      summaryBase.textContent = selectedBase.textContent.trim();
+    }
+
+    // 2. Cocoa Percentage & Colors
+    const selectedPctOption = document.querySelector('.builder-options[data-type="percentage"] .builder-option.selected');
+    if (selectedPctOption) {
+      const pct = parseInt(selectedPctOption.getAttribute('data-val')) || 70;
+      if (summaryPercentage) {
+        summaryPercentage.textContent = pct + '%';
+      }
+
+      // Height offset: 100 - pct (translateY offset)
+      const translateOffset = 100 - pct;
+      liquidWaves.style.transform = `translateY(${translateOffset}%)`;
+
+      // Viscous Color Mapping matching cocoa concentration
+      let mainColor = '#4E3121';
+      let lightColor = '#5D3C2A';
+      let darkColor = '#3B2315';
+
+      if (pct === 50) {
+        mainColor = '#6A432D';
+        lightColor = '#7B523A';
+        darkColor = '#523422';
+      } else if (pct === 70) {
+        mainColor = '#4E3121';
+        lightColor = '#5D3C2A';
+        darkColor = '#3B2315';
+      } else if (pct === 80) {
+        mainColor = '#3A2012';
+        lightColor = '#4B2C1A';
+        darkColor = '#271206';
+      } else if (pct === 90) {
+        mainColor = '#251206';
+        lightColor = '#331B0D';
+        darkColor = '#140500';
+      } else if (pct === 100) {
+        mainColor = '#120400';
+        lightColor = '#210C04';
+        darkColor = '#050100';
+      }
+
+      liquidWaves.style.setProperty('--cocoa-color', mainColor);
+      liquidWaves.style.setProperty('--cocoa-color-light', lightColor);
+      liquidWaves.style.setProperty('--cocoa-color-dark', darkColor);
+    }
+
+    // 3. Sweetener
+    const selectedSweetener = document.querySelector('.builder-options[data-type="sweetener"] .builder-option.selected');
+    if (selectedSweetener && summarySweetener) {
+      summarySweetener.textContent = selectedSweetener.textContent.trim();
+    }
+
+    // 4. Slab Size
+    const selectedSize = document.querySelector('.builder-options[data-type="size"] .builder-option.selected');
+    if (selectedSize && summarySize) {
+      summarySize.textContent = selectedSize.textContent.trim();
+    }
+
+    // 5. Add-ons
+    const selectedAddons = Array.from(document.querySelectorAll('.builder-options[data-type="addons"] .builder-option.selected'))
+      .map(btn => btn.textContent.trim());
+
+    if (summaryAddons) {
+      if (selectedAddons.length > 0) {
+        summaryAddons.innerHTML = '';
+        selectedAddons.forEach(addon => {
+          const pill = document.createElement('span');
+          pill.className = 'summary-addon-pill';
+          pill.textContent = addon;
+          summaryAddons.appendChild(pill);
+        });
+      } else {
+        summaryAddons.textContent = 'None';
+      }
+    }
+  };
+
+  // Initial preview render
+  updateBuilderPreview();
+
+  // Single-select options event listeners
   document.querySelectorAll('.builder-options[data-select="single"]').forEach(group => {
     group.querySelectorAll('.builder-option').forEach(opt => {
       opt.addEventListener('click', () => {
         group.querySelectorAll('.builder-option').forEach(o => o.classList.remove('selected'));
         opt.classList.add('selected');
+        updateBuilderPreview();
       });
     });
   });
 
-  // Multi-select builder options (add-ons) logic
+  // Multi-select options event listeners
   document.querySelectorAll('.builder-options[data-select="multi"]').forEach(group => {
     group.querySelectorAll('.builder-option').forEach(opt => {
       opt.addEventListener('click', () => {
         opt.classList.toggle('selected');
+        updateBuilderPreview();
       });
     });
   });

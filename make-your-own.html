@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"></noscript>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="pages.css">
+  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="pages.css?v=2">
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -49,85 +49,161 @@
   </section>
 
   <div class="container"><div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Collections<span>/</span>Make Your Own</div></div>
+  <!-- SVG Filter for gooey liquid chocolate -->
+  <svg class="goo-filter" style="display:none;">
+    <defs>
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+      </filter>
+    </defs>
+  </svg>
 
   <section class="builder-section">
     <div class="container">
-      <div class="builder-container">
+      <div class="builder-layout">
+        
+        <!-- Left: Form Steps -->
+        <div class="builder-container">
+          <!-- Step 1: Choose Base -->
+          <div class="builder-step">
+            <div class="builder-step-header">
+              <span class="builder-step-num">1</span>
+              <h3 class="builder-step-title">Choose Your Base</h3>
+            </div>
+            <div class="builder-options" data-select="single" data-type="base">
+              <button class="builder-option">Cocoa Beans</button>
+              <button class="builder-option">Cocoa Nibs</button>
+              <button class="builder-option">Cocoa Butter</button>
+            </div>
+          </div>
 
-        <!-- Step 1: Choose Base -->
-        <div class="builder-step">
-          <div class="builder-step-header">
-            <span class="builder-step-num">1</span>
-            <h3 class="builder-step-title">Choose Your Base</h3>
+          <!-- Step 2: Chocolate Percentage -->
+          <div class="builder-step">
+            <div class="builder-step-header">
+              <span class="builder-step-num">2</span>
+              <h3 class="builder-step-title">Chocolate Percentage</h3>
+            </div>
+            <div class="builder-options" data-select="single" data-type="percentage">
+              <button class="builder-option" data-val="50">50%</button>
+              <button class="builder-option" data-val="70">70%</button>
+              <button class="builder-option" data-val="80">80%</button>
+              <button class="builder-option" data-val="90">90%</button>
+              <button class="builder-option" data-val="100">100%</button>
+            </div>
           </div>
-          <div class="builder-options" data-select="single">
-            <button class="builder-option">Cocoa Beans</button>
-            <button class="builder-option">Cocoa Nibs</button>
-            <button class="builder-option">Cocoa Butter</button>
+
+          <!-- Step 3: Sweetener -->
+          <div class="builder-step">
+            <div class="builder-step-header">
+              <span class="builder-step-num">3</span>
+              <h3 class="builder-step-title">Choose Your Sweetener</h3>
+            </div>
+            <div class="builder-options" data-select="single" data-type="sweetener">
+              <button class="builder-option">Muscovado Sugar</button>
+              <button class="builder-option">Coconut Sugar</button>
+              <button class="builder-option">Monk Fruit</button>
+            </div>
           </div>
+
+          <!-- Step 4: Slab Size -->
+          <div class="builder-step">
+            <div class="builder-step-header">
+              <span class="builder-step-num">4</span>
+              <h3 class="builder-step-title">Slab Size</h3>
+            </div>
+            <div class="builder-options" data-select="single" data-type="size">
+              <button class="builder-option">250g</button>
+              <button class="builder-option">500g</button>
+              <button class="builder-option">1kg</button>
+            </div>
+          </div>
+
+          <!-- Step 5: Add-ons -->
+          <div class="builder-step">
+            <div class="builder-step-header">
+              <span class="builder-step-num">5</span>
+              <h3 class="builder-step-title">Add-ons</h3>
+            </div>
+            <div class="builder-options" data-select="multi" data-type="addons">
+              <button class="builder-option">Almonds</button>
+              <button class="builder-option">Pistachio</button>
+              <button class="builder-option">Hazelnut</button>
+              <button class="builder-option">Cranberry</button>
+              <button class="builder-option">Orange Peel</button>
+              <button class="builder-option">Coffee</button>
+              <button class="builder-option">Sea Salt</button>
+              <button class="builder-option">Chilli</button>
+            </div>
+            <p class="multi-hint">Select as many as you like</p>
+          </div>
+
+          <button class="builder-submit">Craft My Chocolate</button>
         </div>
 
-        <!-- Step 2: Chocolate Percentage -->
-        <div class="builder-step">
-          <div class="builder-step-header">
-            <span class="builder-step-num">2</span>
-            <h3 class="builder-step-title">Chocolate Percentage</h3>
-          </div>
-          <div class="builder-options" data-select="single">
-            <button class="builder-option">50%</button>
-            <button class="builder-option">70%</button>
-            <button class="builder-option">80%</button>
-            <button class="builder-option">90%</button>
-            <button class="builder-option">100%</button>
+        <!-- Right: Visual Preview Panel -->
+        <div class="builder-preview-panel">
+          <div class="preview-sticky">
+            <h3 class="preview-title">Your Custom Bar</h3>
+            
+            <!-- Chocolate Bar visualizer -->
+            <div class="chocolate-bar-visualizer">
+              <div class="chocolate-bar">
+                <div class="chocolate-liquid-container">
+                  <div class="liquid-waves" id="liquidWaves" style="transform: translateY(30%);">
+                    <div class="wave wave1"></div>
+                    <div class="wave wave2"></div>
+                    <div class="wave wave3"></div>
+                  </div>
+                </div>
+                <!-- Beveled segments -->
+                <div class="chocolate-grid-overlay">
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Configuration Summary -->
+            <div class="preview-summary">
+              <div class="summary-row">
+                <span class="summary-label">Base</span>
+                <span class="summary-value" id="summaryBase">Cocoa Beans</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Cocoa %</span>
+                <span class="summary-value" id="summaryPercentage">70%</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Sweetener</span>
+                <span class="summary-value" id="summarySweetener">Muscovado Sugar</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Size</span>
+                <span class="summary-value" id="summarySize">250g</span>
+              </div>
+              <div class="summary-addons">
+                <span class="summary-label">Add-ons</span>
+                <div class="summary-addons-list" id="summaryAddons">None</div>
+              </div>
+            </div>
+
           </div>
         </div>
-
-        <!-- Step 3: Sweetener -->
-        <div class="builder-step">
-          <div class="builder-step-header">
-            <span class="builder-step-num">3</span>
-            <h3 class="builder-step-title">Choose Your Sweetener</h3>
-          </div>
-          <div class="builder-options" data-select="single">
-            <button class="builder-option">Muscovado Sugar</button>
-            <button class="builder-option">Coconut Sugar</button>
-            <button class="builder-option">Monk Fruit</button>
-          </div>
-        </div>
-
-        <!-- Step 4: Slab Size -->
-        <div class="builder-step">
-          <div class="builder-step-header">
-            <span class="builder-step-num">4</span>
-            <h3 class="builder-step-title">Slab Size</h3>
-          </div>
-          <div class="builder-options" data-select="single">
-            <button class="builder-option">250g</button>
-            <button class="builder-option">500g</button>
-            <button class="builder-option">1kg</button>
-          </div>
-        </div>
-
-        <!-- Step 5: Add-ons -->
-        <div class="builder-step">
-          <div class="builder-step-header">
-            <span class="builder-step-num">5</span>
-            <h3 class="builder-step-title">Add-ons</h3>
-          </div>
-          <div class="builder-options" data-select="multi">
-            <button class="builder-option">Almonds</button>
-            <button class="builder-option">Pistachio</button>
-            <button class="builder-option">Hazelnut</button>
-            <button class="builder-option">Cranberry</button>
-            <button class="builder-option">Orange Peel</button>
-            <button class="builder-option">Coffee</button>
-            <button class="builder-option">Sea Salt</button>
-            <button class="builder-option">Chilli</button>
-          </div>
-          <p class="multi-hint">Select as many as you like</p>
-        </div>
-
-        <button class="builder-submit">Craft My Chocolate</button>
 
       </div>
     </div>
@@ -146,6 +222,6 @@
     </div>
   </footer>
   <script src="cart.js"></script>
-  <script src="pages.js"></script>
+  <script src="pages.js?v=2"></script>
 </body>
 </html>
