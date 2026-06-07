@@ -42,9 +42,9 @@
   --shadow-lift:     0 20px 60px rgba(26, 14, 8, 0.1);
 
   /* Typography */
-  --font-display:  'Bodoni Moda', 'Didot', 'Georgia', serif;
-  --font-heading:  'Cormorant Garamond', 'Garamond', serif;
-  --font-body:     'Jost', 'Helvetica Neue', 'Arial', sans-serif;
+  --font-display:  'Outfit', 'Helvetica Neue', sans-serif;
+  --font-heading:  'Outfit', 'Helvetica Neue', sans-serif;
+  --font-body:     'DM Sans', 'Helvetica Neue', 'Arial', sans-serif;
 
   /* Spacing */
   --section-py:    clamp(80px, 10vw, 150px);
@@ -59,10 +59,10 @@
   --duration-fast: 0.3s;
 
   /* Border Radius */
-  --radius-sm:  4px;
-  --radius-md:  8px;
-  --radius-lg:  16px;
-  --radius-xl:  24px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
 }
 
 /* Ã¢â€â‚¬Ã¢â€â‚¬ Reset & Base Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
