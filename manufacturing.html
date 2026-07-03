@@ -13,17 +13,88 @@
   <link rel="stylesheet" href="pages.css">
 </head>
 <body>
+  <!-- Premium Loader -->
+  <div id="premium-loader" class="premium-loader">
+    <div class="loader-content">
+      <img src="logo.avif" alt="Rare Cocoa" class="loader-logo-img">
+      <div class="loader-logo">Rare Cocoa</div>
+      <div class="loader-tagline">The Soul of Chocolate</div>
+      <div class="loader-progress-bar">
+        <div class="loader-progress-line" id="loader-progress-line"></div>
+      </div>
+      <div class="loader-status" id="loader-status">0%</div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var loader = document.getElementById('premium-loader');
+      var line = document.getElementById('loader-progress-line');
+      var status = document.getElementById('loader-status');
+      var progress = 0;
+      var interval = setInterval(function() {
+        progress += Math.random() * 18 + 5;
+        if (progress > 100) progress = 100;
+        if (line) line.style.width = progress + '%';
+        if (status) status.textContent = Math.round(progress) + '%';
+        
+        var logoImg = document.querySelector('.loader-logo-img');
+        var logoText = document.querySelector('.loader-logo');
+        if (logoImg) {
+          var glowVal = 8 + (progress / 100) * 16;
+          var opacityVal = 0.2 + (progress / 100) * 0.6;
+          logoImg.style.boxShadow = '0 0 ' + glowVal + 'px rgba(212, 175, 55, ' + opacityVal + ')';
+        }
+        if (logoText) {
+          var scaleVal = 1 + (progress / 100) * 0.05;
+          logoText.style.transform = 'scale(' + scaleVal + ')';
+        }
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(function() {
+            if (loader) {
+              loader.classList.add('fade-out');
+              setTimeout(function() { loader.remove(); }, 600);
+            }
+          }, 200);
+        }
+      }, 180);
+      setTimeout(function() {
+        clearInterval(interval);
+        if (line) line.style.width = '100%';
+        if (status) status.textContent = '100%';
+        
+        var logoImg = document.querySelector('.loader-logo-img');
+        var logoText = document.querySelector('.loader-logo');
+        if (logoImg) {
+          logoImg.style.boxShadow = '0 0 24px rgba(212, 175, 55, 0.8)';
+        }
+        if (logoText) {
+          logoText.style.transform = 'scale(1.05)';
+        }
+
+        setTimeout(function() {
+          if (loader && !loader.classList.contains('fade-out')) {
+            loader.classList.add('fade-out');
+            setTimeout(function() { loader.remove(); }, 600);
+          }
+        }, 200);
+      }, 2000);
+    })();
+  </script>
+
   <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">
-        <img src="logo.png" alt="Rare Cocoa Logo" class="nav-logo-img">
+        <img src="logo.avif" alt="Rare Cocoa Logo" class="nav-logo-img">
         <span>RARE COCOA</span>
       </a>
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="tablets.html">Tablets</a>
         <a href="snacks.html">Snacks</a>
-        <a href="spreads.html">Spreads</a>
+        <a href="spreads.html">Spreads &amp; Butter</a>
+        <a href="chocolate-slab.html">Slab</a>
         <a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a>
         <a href="make-your-own.html">Make Your Own</a>
         <a href="manufacturing.html" style="color:var(--accent);">Manufacturing</a>
@@ -32,8 +103,14 @@
     </div>
   </nav>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html">Home</a><a href="tablets.html">Tablets</a><a href="snacks.html">Snacks</a>
-    <a href="spreads.html">Spreads</a><a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a><a href="make-your-own.html">Make Your Own</a><a href="manufacturing.html">Manufacturing</a>
+    <a href="index.html">Home</a>
+    <a href="tablets.html">Tablets</a>
+    <a href="snacks.html">Snacks</a>
+    <a href="spreads.html">Spreads &amp; Butter</a>
+    <a href="chocolate-slab.html">Chocolate Slab</a>
+    <a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a>
+    <a href="make-your-own.html">Make Your Own</a>
+    <a href="manufacturing.html">Manufacturing</a>
   </div>
 
   <!-- Hero -->
@@ -54,59 +131,80 @@
       <div class="timeline">
 
         <div class="timeline-step reveal">
-          <div class="timeline-marker">1</div>
+          <div class="timeline-marker-container">
+            <div class="timeline-marker">1</div>
+          </div>
           <div class="timeline-content">
             <h3>Sourcing</h3>
             <p>We begin with single-origin cocoa beans, carefully selected from trusted farms that practice ethical and sustainable agriculture. Every batch is traceable back to its source — because transparency is not optional, it's foundational.</p>
           </div>
+          <div class="timeline-step-space"></div>
         </div>
 
         <div class="timeline-step reveal">
-          <div class="timeline-marker">2</div>
+          <div class="timeline-marker-container">
+            <div class="timeline-marker">2</div>
+          </div>
           <div class="timeline-content">
             <h3>Sorting & Cleaning</h3>
             <p>Each bean is hand-sorted and cleaned to remove any impurities. We take time at this stage — quality can never be rushed. Only the finest beans make it through to the next step.</p>
           </div>
+          <div class="timeline-step-space"></div>
         </div>
 
         <div class="timeline-step reveal">
-          <div class="timeline-marker">3</div>
+          <div class="timeline-marker-container">
+            <div class="timeline-marker">3</div>
+          </div>
           <div class="timeline-content">
             <h3>Roasting</h3>
             <p>Our beans are roasted in small batches at carefully controlled temperatures. This is where the magic begins — the natural flavours of the cocoa develop their depth, complexity, and aroma.</p>
           </div>
+          <div class="timeline-step-space"></div>
         </div>
 
         <div class="timeline-step reveal">
-          <div class="timeline-marker">4</div>
+          <div class="timeline-marker-container">
+            <div class="timeline-marker">4</div>
+          </div>
           <div class="timeline-content">
             <h3>Cracking & Winnowing</h3>
             <p>The roasted beans are cracked open to reveal the cocoa nibs inside. The shells are separated through winnowing, leaving behind pure cocoa nibs — the heart of real chocolate.</p>
           </div>
+          <div class="timeline-step-space"></div>
         </div>
 
         <div class="timeline-step reveal">
-          <div class="timeline-marker">5</div>
+          <div class="timeline-marker-container">
+            <div class="timeline-marker">5</div>
+          </div>
           <div class="timeline-content">
             <h3>Grinding & Conching</h3>
             <p>The nibs are ground into a smooth, liquid chocolate mass. Through extended conching — a slow mixing process — the chocolate develops its signature silky texture and refined flavour profile.</p>
           </div>
+          <div class="timeline-step-space"></div>
         </div>
 
         <div class="timeline-step reveal">
-          <div class="timeline-marker">6</div>
+          <div class="timeline-marker-container">
+            <div class="timeline-marker">6</div>
+          </div>
           <div class="timeline-content">
             <h3>Tempering</h3>
             <p>Precise temperature control during tempering gives our chocolate its satisfying snap, glossy finish, and smooth melt. This is the hallmark of properly made chocolate — and we never skip it.</p>
           </div>
+          <div class="timeline-step-space"></div>
         </div>
 
         <div class="timeline-step reveal">
-          <div class="timeline-marker">7</div>
+          <div class="timeline-marker-container">
+            <div class="timeline-marker">7</div>
+          </div>
           <div class="timeline-content">
             <h3>Moulding & Packaging</h3>
             <p>Finally, the tempered chocolate is poured into moulds, cooled, and hand-wrapped with care. Every bar is inspected before it reaches you — because you deserve nothing less than perfection.</p>
           </div>
+          <div class="timeline-step-space"></div>
         </div>
 
       </div>
@@ -122,39 +220,63 @@
       <div class="quality-grid stagger-children">
 
         <div class="quality-card reveal">
-          <div class="quality-icon">✦</div>
-          <h3>Single-Origin Only</h3>
-          <p>Every batch uses cocoa from a single, traceable source. No blends, no anonymity.</p>
+          <div class="quality-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.4z"/></svg>
+          </div>
+          <div class="quality-card-text">
+            <h3>Single-Origin Only</h3>
+            <p>Every batch uses cocoa from a single, traceable source. No blends, no anonymity.</p>
+          </div>
         </div>
 
         <div class="quality-card reveal">
-          <div class="quality-icon">✦</div>
-          <h3>Pure Ingredients</h3>
-          <p>No artificial flavours, fillers, or unnecessary preservatives. Just what chocolate needs.</p>
+          <div class="quality-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 6 20c3.83.1 10-2 12-11 .83-3.75-.42-5.75-.42-5.75S15.58 4.75 17 8zM6 20c.03-3.83 2.2-10 11.2-12 .67 3.75-.68 5.75-.68 5.75S10.25 15.42 6 20z"/></svg>
+          </div>
+          <div class="quality-card-text">
+            <h3>Pure Ingredients</h3>
+            <p>Zero preservatives, fillers, emulsifiers, or palm oil. Not fancy, just 100% pure chocolate.</p>
+          </div>
         </div>
 
         <div class="quality-card reveal">
-          <div class="quality-icon">✦</div>
-          <h3>Small-Batch Craft</h3>
-          <p>Every bar is made in small batches by hand. Mass production is never part of our process.</p>
+          <div class="quality-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.58 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+          </div>
+          <div class="quality-card-text">
+            <h3>Made to Order</h3>
+            <p>We craft only after receiving your order and dispatch weekly. Our chocolate is never pre-made.</p>
+          </div>
         </div>
 
         <div class="quality-card reveal">
-          <div class="quality-icon">✦</div>
-          <h3>Ethical Sourcing</h3>
-          <p>We work with farms that respect their people and the environment. Fair trade, always.</p>
+          <div class="quality-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+          </div>
+          <div class="quality-card-text">
+            <h3>Ethical Sourcing</h3>
+            <p>We work with farms that respect their people and the environment. Fair trade, always.</p>
+          </div>
         </div>
 
         <div class="quality-card reveal">
-          <div class="quality-icon">✦</div>
-          <h3>Vegan Friendly</h3>
-          <p>Our entire range is 100% plant-based. Luxury chocolate doesn't need dairy.</p>
+          <div class="quality-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.93c-3.95-.49-7-3.85-7-7.93h2c0 2.76 2.24 5 5 5v2.93zm-1-6.93c0-2.76 2.24-5 5-5v2c-1.66 0-3 1.34-3 3h-2z"/></svg>
+          </div>
+          <div class="quality-card-text">
+            <h3>Vegan Friendly</h3>
+            <p>Our entire range is 100% plant-based. Luxury chocolate doesn't need dairy.</p>
+          </div>
         </div>
 
         <div class="quality-card reveal">
-          <div class="quality-icon">✦</div>
-          <h3>Full Transparency</h3>
-          <p>From farm to your hands — we share every step of the journey openly.</p>
+          <div class="quality-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </div>
+          <div class="quality-card-text">
+            <h3>Full Transparency</h3>
+            <p>From farm to your hands — we share every step of the journey openly.</p>
+          </div>
         </div>
 
       </div>
@@ -162,24 +284,63 @@
   </section>
 
   <!-- CTA -->
-  <section style="padding:clamp(60px,8vw,100px) 0;background:var(--bg-primary);text-align:center;">
-    <div class="container">
-      <h2 class="section-title center">Taste the Difference</h2>
-      <p style="font-family:var(--font-heading);font-size:1.1rem;font-style:italic;color:var(--text-tertiary);margin-bottom:32px;">Now that you know how we make it, experience it for yourself.</p>
-      <a href="index.html#collections" class="btn-primary">Explore Our Collections</a>
+  <section style="padding:clamp(80px,10vw,120px) 0;background:var(--bg-dark);color:#fff;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 120%, rgba(201, 164, 86, 0.15) 0%, transparent 60%);pointer-events:none;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <h2 class="section-title center" style="color:#fff;margin-bottom:16px;">Taste the Difference</h2>
+      <p style="font-family:var(--font-heading);font-size:1.15rem;font-style:italic;color:var(--text-light);margin-bottom:40px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6;">Now that you know how we make it, experience it for yourself.</p>
+      <a href="index.html#collections" class="btn-primary" style="background:var(--accent);border-color:var(--accent);color:#fff;padding:18px 48px;">Explore Our Collections</a>
     </div>
   </section>
 
-  <footer class="footer">
+  <footer class="footer" id="footer">
     <div class="container">
       <div class="footer-top">
-        <div class="footer-brand"><h2 class="footer-logo">RARE COCOA</h2><p class="footer-tagline">Real Chocolate. Real Trust.</p></div>
+        <div class="footer-brand">
+          <h2 class="footer-logo">RARE COCOA</h2>
+          <p class="footer-tagline">Real Chocolate. Real Trust.</p>
+          <div class="footer-map-box" style="width:260px;height:130px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);margin-top:15px;">
+            <iframe src="https://maps.google.com/maps?q=Rare%20Cocoa%20Gudivada&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+        <div class="footer-meta-wrapper">
+          <div class="footer-meta-row">
+            <div class="footer-social-icons">
+              <a href="https://www.instagram.com/rarecocoa/?hl=en" target="_blank" rel="noopener" aria-label="Instagram" style="color:#E1306C;display:inline-flex;transition:transform 0.3s,filter 0.3s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+              <a href="https://www.facebook.com/p/Rare-Cocoa-61575199524262/" target="_blank" rel="noopener" aria-label="Facebook" style="color:#1877F2;display:inline-flex;transition:transform 0.3s,filter 0.3s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+              <a href="https://wa.me/917674931380" target="_blank" rel="noopener" aria-label="WhatsApp" style="color:#25D366;display:inline-flex;transition:transform 0.3s,filter 0.3s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg></a>
+            </div>
+            <div class="footer-developer-block">
+              <span class="footer-dev-label">Developed by</span>
+              <a href="https://digitalsutraai.vercel.app" target="_blank" rel="noopener" class="footer-dev-logo-link">
+                <img src="assets/full_logo_digitalsutraai.png" alt="Digital Sutra AI" class="footer-dev-logo">
+              </a>
+              <a href="https://digitalsutraai.vercel.app" target="_blank" rel="noopener" class="footer-dev-contact">Contact</a>
+            </div>
+          </div>
+        </div>
         <div class="footer-links">
-          <div class="footer-col"><h4>Collections</h4><a href="tablets.html">Tablets</a><a href="snacks.html">Snacks</a><a href="spreads.html">Spreads</a><a href="hot-chocolate-ice-cream.html">Hot Chocolate & Ice Cream</a><a href="make-your-own.html">Make Your Own</a><a href="chocolate-slab.html">Chocolate Slab</a></div>
-          <div class="footer-col"><h4>Explore</h4><a href="index.html">Home</a><a href="manufacturing.html">Manufacturing</a></div>
+          <div class="footer-col">
+            <h4>Collections</h4>
+            <a href="tablets.html">Tablets</a>
+            <a href="snacks.html">Snacks</a>
+            <a href="spreads.html">Spreads &amp; Butter</a>
+            <a href="hot-chocolate-ice-cream.html">Hot Chocolate &amp; Ice Cream</a>
+            <a href="make-your-own.html">Make Your Own</a>
+            <a href="chocolate-slab.html">Chocolate Slab</a>
+          </div>
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="#story">Our Story</a>
+            <a href="manufacturing.html">Manufacturing</a>
+            <a href="#compare">Why Us</a>
+          </div>
         </div>
       </div>
-      <div class="footer-bottom"><p>&copy; 2026 Rare Cocoa&trade;. All rights reserved.</p><p>Pure Ingredients. Single Origin. Real Chocolate.</p></div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Rare Cocoa&trade;. All rights reserved.</p>
+        <p>Pure Ingredients. Single Origin. Real Chocolate.</p>
+      </div>
     </div>
   </footer>
   <script src="cart.js"></script>

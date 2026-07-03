@@ -10,7 +10,7 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"></noscript>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="pages.css">
+  <link rel="stylesheet" href="pages.css?v=5">
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -54,48 +54,28 @@
     <div class="container">
       <div class="products-grid">
 
-        <div class="product-grid-card reveal" data-product='{"name":"50% Dark Slab","subtitle":"Smooth & approachable dark chocolate","icon":"🍫","options":[{"label":"Chocolate Percentage","values":["50%"]}]}'>
-          <div class="product-grid-img"><div class="img-gradient" style="background:linear-gradient(135deg,#A0826D,#C9A456,#8B7040);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span style="font-size:3.5rem;">🍫</span></div></div>
-          <div class="product-grid-body">
-            <h3 class="product-grid-name">50% Dark Slab</h3>
-            <p class="product-grid-desc">Smooth & approachable, perfect for everyday</p>
-            <span class="product-grid-cta">View Details <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        <div class="product-grid-card reveal" data-product='{"name":"Craft Chocolate Slab","subtitle":"Premium customizable dark chocolate slab","icon":["assets/chocolateslab.png","assets/chocolateslab2.png"],"price":750,"options":[{"label":"Choose Weight","values":["250g (&#8377;750)","500g (&#8377;1500)","750g (&#8377;2250)","1kg (&#8377;3000)"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","80%","90%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+          <div class="product-grid-img">
+            <div class="card-carousel">
+              <div class="card-carousel-track">
+                <div class="card-carousel-slide"><img src="assets/chocolateslab.png" alt="Craft Chocolate Slab" loading="lazy"></div>
+                <div class="card-carousel-slide"><img src="assets/chocolateslab2.png" alt="Craft Chocolate Slab" loading="lazy"></div>
+              </div>
+              <button class="card-carousel-btn prev" aria-label="Previous">&#8249;</button>
+              <button class="card-carousel-btn next" aria-label="Next">&#8250;</button>
+              <div class="card-carousel-dots">
+                <span class="card-carousel-dot"></span>
+                <span class="card-carousel-dot"></span>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div class="product-grid-card reveal" data-product='{"name":"70% Dark Slab","subtitle":"Rich & balanced dark chocolate","icon":"🍫","options":[{"label":"Chocolate Percentage","values":["70%"]}]}'>
-          <div class="product-grid-img"><div class="img-gradient" style="background:linear-gradient(135deg,#6B4A30,#8B6A4A,#5C3D2E);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span style="font-size:3.5rem;">🍫</span></div></div>
           <div class="product-grid-body">
-            <h3 class="product-grid-name">70% Dark Slab</h3>
-            <p class="product-grid-desc">Rich & balanced with deep cocoa character</p>
-            <span class="product-grid-cta">View Details <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-          </div>
-        </div>
-
-        <div class="product-grid-card reveal" data-product='{"name":"80% Dark Slab","subtitle":"Intense dark chocolate experience","icon":"🍫","options":[{"label":"Chocolate Percentage","values":["80%"]}]}'>
-          <div class="product-grid-img"><div class="img-gradient" style="background:linear-gradient(135deg,#4A2820,#6B3A2A,#3D2018);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span style="font-size:3.5rem;">🍫</span></div></div>
-          <div class="product-grid-body">
-            <h3 class="product-grid-name">80% Dark Slab</h3>
-            <p class="product-grid-desc">Intense with bold, lingering cocoa notes</p>
-            <span class="product-grid-cta">View Details <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-          </div>
-        </div>
-
-        <div class="product-grid-card reveal" data-product='{"name":"90% Dark Slab","subtitle":"Ultra-dark pure chocolate","icon":"🍫","options":[{"label":"Chocolate Percentage","values":["90%"]}]}'>
-          <div class="product-grid-img"><div class="img-gradient" style="background:linear-gradient(135deg,#2A1A10,#4A3020,#1A0E08);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span style="font-size:3.5rem;">🍫</span></div></div>
-          <div class="product-grid-body">
-            <h3 class="product-grid-name">90% Dark Slab</h3>
-            <p class="product-grid-desc">Ultra-dark, pure cocoa intensity</p>
-            <span class="product-grid-cta">View Details <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-          </div>
-        </div>
-
-        <div class="product-grid-card reveal" data-product='{"name":"100% Pure Slab","subtitle":"Absolute pure cocoa — zero sugar","icon":"🍫","options":[{"label":"Chocolate Percentage","values":["100%"]}]}'>
-          <div class="product-grid-img"><div class="img-gradient" style="background:linear-gradient(135deg,#1A0E08,#2A1A10,#0D0906);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span style="font-size:3.5rem;">🍫</span></div></div>
-          <div class="product-grid-body">
-            <h3 class="product-grid-name">100% Pure Slab</h3>
-            <p class="product-grid-desc">Absolute pure cocoa, zero sugar, raw power</p>
-            <span class="product-grid-cta">View Details <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            <h3 class="product-grid-name">Craft Chocolate Slab</h3>
+            <p class="product-grid-desc">Pure, customizable single-origin dark chocolate slab. Choose weight, percentage &amp; sweetener (min 250g).</p>
+            <div class="product-grid-price-row">
+              <span class="product-grid-price">&#8377;750 – &#8377;3000</span>
+              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </div>
           </div>
         </div>
 
@@ -108,7 +88,7 @@
       <button class="modal-close" aria-label="Close">&times;</button>
       <div class="modal-header"><div class="modal-product-icon">🍫</div><h2 class="modal-product-name">Product</h2><p class="modal-product-subtitle">Description</p></div>
       <div class="modal-body"></div>
-      <div class="modal-footer"><button class="modal-add-btn">Add to Selection</button></div>
+      <div class="modal-footer"><span class="modal-price-display"></span><button class="modal-add-btn">Add to Selection</button></div>
     </div>
   </div>
 
@@ -125,6 +105,6 @@
     </div>
   </footer>
   <script src="cart.js"></script>
-  <script src="pages.js"></script>
+  <script src="pages.js?v=5"></script>
 </body>
 </html>

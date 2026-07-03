@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     videoEl.addEventListener('canplay',    showVideo, { once: true });
     videoEl.addEventListener('loadeddata', showVideo, { once: true });
     videoEl.addEventListener('playing',    showVideo, { once: true });
-    setTimeout(showVideo, 3000);
+    setTimeout(showVideo, 800);
     videoEl.play().catch(() => {});
   };
 
@@ -110,6 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
     (entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
+          if (entry.target.dataset.delay) {
+            entry.target.style.transitionDelay = entry.target.dataset.delay + 'ms';
+          }
           entry.target.classList.add('is-visible');
           revealObserver.unobserve(entry.target);
         }
@@ -123,155 +126,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealElements.forEach(el => revealObserver.observe(el));
 
-  // ── Product Carousel ─────────────────────────────────────
-  const track = document.getElementById('carouselTrack');
-  const container = document.getElementById('carouselContainer');
-  const prevBtn = document.getElementById('carouselPrev');
-  const nextBtn = document.getElementById('carouselNext');
-  const dotsContainer = document.getElementById('carouselDots');
-  const slides = track ? track.querySelectorAll('.carousel-slide') : [];
+  // ── Home Image Carousel ──────────────────────────────────
+  const homeSlides = document.querySelectorAll('.home-carousel-slide');
+  const homeDots = document.querySelectorAll('.home-carousel-dot');
+  let homeCurrentIndex = 0;
+  let homeAutoplayInterval = null;
 
-  let currentIndex = 0;
-  let slidesPerView = 3;
-  let totalPages = 1;
-
-  const updateSlidesPerView = () => {
-    const w = window.innerWidth;
-    if (w <= 480)       slidesPerView = 1;
-    else if (w <= 768)  slidesPerView = 1;
-    else if (w <= 1024) slidesPerView = 2;
-    else                slidesPerView = 3;
-
-    totalPages = Math.max(1, slides.length - slidesPerView + 1);
-    if (currentIndex >= totalPages) currentIndex = totalPages - 1;
+  const showHomeSlide = (index) => {
+    if (homeSlides.length === 0) return;
+    homeSlides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+    homeDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+    homeCurrentIndex = index;
   };
 
-  const moveCarousel = () => {
-    if (!track || slides.length === 0) return;
-    const slideWidth = 100 / slidesPerView;
-    const offset = -(currentIndex * slideWidth);
-    track.style.transform = `translateX(${offset}%)`;
-    updateDots();
-    updateButtons();
+  const nextHomeSlide = () => {
+    let nextIndex = homeCurrentIndex + 1;
+    if (nextIndex >= homeSlides.length) nextIndex = 0;
+    showHomeSlide(nextIndex);
   };
 
-  const updateButtons = () => {
-    if (prevBtn) prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
-    if (nextBtn) nextBtn.style.opacity = currentIndex >= totalPages - 1 ? '0.3' : '1';
+  const prevHomeSlide = () => {
+    let prevIndex = homeCurrentIndex - 1;
+    if (prevIndex < 0) prevIndex = homeSlides.length - 1;
+    showHomeSlide(prevIndex);
   };
 
-  // Dots
-  const createDots = () => {
-    if (!dotsContainer) return;
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i < totalPages; i++) {
-      const dot = document.createElement('button');
-      dot.className = `carousel-dot${i === currentIndex ? ' active' : ''}`;
-      dot.setAttribute('aria-label', `Go to slide group ${i + 1}`);
-      dot.addEventListener('click', () => {
-        currentIndex = i;
-        moveCarousel();
-      });
-      dotsContainer.appendChild(dot);
+  const startHomeAutoplay = () => {
+    if (homeSlides.length <= 1) return;
+    stopHomeAutoplay();
+    homeAutoplayInterval = setInterval(nextHomeSlide, 4000);
+  };
+
+  const stopHomeAutoplay = () => {
+    if (homeAutoplayInterval) {
+      clearInterval(homeAutoplayInterval);
+      homeAutoplayInterval = null;
     }
   };
 
-  const updateDots = () => {
-    if (!dotsContainer) return;
-    dotsContainer.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-      dot.classList.toggle('active', i === currentIndex);
-    });
-  };
+  if (homeSlides.length > 0) {
+    showHomeSlide(0);
+    startHomeAutoplay();
 
-  // Controls
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      if (currentIndex > 0) {
-        currentIndex--;
-        moveCarousel();
-      }
-    });
-  }
-
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      if (currentIndex < totalPages - 1) {
-        currentIndex++;
-        moveCarousel();
-      }
-    });
-  }
-
-  // Touch / swipe support for carousel
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  if (container) {
-    container.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    container.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      const diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0 && currentIndex < totalPages - 1) {
-          currentIndex++;
-          moveCarousel();
-        } else if (diff < 0 && currentIndex > 0) {
-          currentIndex--;
-          moveCarousel();
-        }
-      }
-    }, { passive: true });
-  }
-
-  // Initialize carousel
-  const initCarousel = () => {
-    updateSlidesPerView();
-    slides.forEach(slide => {
-      slide.style.minWidth = `${100 / slidesPerView}%`;
-    });
-    createDots();
-    moveCarousel();
-  };
-
-  if (slides.length > 0) {
-    initCarousel();
-    window.addEventListener('resize', () => {
-      updateSlidesPerView();
-      slides.forEach(slide => {
-        slide.style.minWidth = `${100 / slidesPerView}%`;
+    // Click dots to navigate
+    homeDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        stopHomeAutoplay();
+        showHomeSlide(index);
+        startHomeAutoplay();
       });
-      createDots();
-      moveCarousel();
     });
-  }
 
-  // ── Auto-advance carousel (pause on hover) ──────────────
-  let autoplayInterval = null;
-
-  const startAutoplay = () => {
-    autoplayInterval = setInterval(() => {
-      if (currentIndex < totalPages - 1) {
-        currentIndex++;
-      } else {
-        currentIndex = 0;
-      }
-      moveCarousel();
-    }, 5000);
-  };
-
-  const stopAutoplay = () => {
-    clearInterval(autoplayInterval);
-  };
-
-  if (slides.length > 0) {
-    startAutoplay();
-    const carouselEl = document.getElementById('carousel');
-    if (carouselEl) {
-      carouselEl.addEventListener('mouseenter', stopAutoplay);
-      carouselEl.addEventListener('mouseleave', startAutoplay);
+    // Pause on hover
+    const carouselContainer = document.querySelector('.home-carousel-container');
+    if (carouselContainer) {
+      carouselContainer.addEventListener('mouseenter', stopHomeAutoplay);
+      carouselContainer.addEventListener('mouseleave', startHomeAutoplay);
     }
   }
 
@@ -343,6 +257,31 @@ document.addEventListener('DOMContentLoaded', () => {
         moveCarousel();
       }
     }
+  });
+
+  // ── FAQ Accordion Interactivity ──────────────────────────
+  const faqTriggers = document.querySelectorAll('.faq-trigger');
+  
+  faqTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const parent = trigger.parentElement;
+      const isOpen = parent.classList.contains('active');
+      
+      // Close all other FAQs
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+        item.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+        const content = item.querySelector('.faq-content');
+        if (content) content.style.maxHeight = null;
+      });
+      
+      if (!isOpen) {
+        parent.classList.add('active');
+        trigger.setAttribute('aria-expanded', 'true');
+        const content = parent.querySelector('.faq-content');
+        if (content) content.style.maxHeight = content.scrollHeight + 'px';
+      }
+    });
   });
 
 });

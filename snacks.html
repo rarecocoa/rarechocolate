@@ -10,22 +10,92 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"></noscript>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="pages.css">
+  <link rel="stylesheet" href="pages.css?v=5">
 </head>
 <body>
-
+  <!-- Premium Loader -->
+  <div id="premium-loader" class="premium-loader">
+    <div class="loader-content">
+      <img src="logo.avif" alt="Rare Cocoa" class="loader-logo-img">
+      <div class="loader-logo">Rare Cocoa</div>
+      <div class="loader-tagline">The Soul of Chocolate</div>
+      <div class="loader-progress-bar">
+        <div class="loader-progress-line" id="loader-progress-line"></div>
+      </div>
+      <div class="loader-status" id="loader-status">0%</div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var loader = document.getElementById('premium-loader');
+      var line = document.getElementById('loader-progress-line');
+      var status = document.getElementById('loader-status');
+      var progress = 0;
+      var interval = setInterval(function() {
+        progress += Math.random() * 18 + 5;
+        if (progress > 100) progress = 100;
+        if (line) line.style.width = progress + '%';
+        if (status) status.textContent = Math.round(progress) + '%';
+        
+        var logoImg = document.querySelector('.loader-logo-img');
+        var logoText = document.querySelector('.loader-logo');
+        if (logoImg) {
+          var glowVal = 8 + (progress / 100) * 16;
+          var opacityVal = 0.2 + (progress / 100) * 0.6;
+          logoImg.style.boxShadow = '0 0 ' + glowVal + 'px rgba(212, 175, 55, ' + opacityVal + ')';
+        }
+        if (logoText) {
+          var scaleVal = 1 + (progress / 100) * 0.05;
+          logoText.style.transform = 'scale(' + scaleVal + ')';
+        }
+ 
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(function() {
+            if (loader) {
+              loader.classList.add('fade-out');
+              setTimeout(function() { loader.remove(); }, 600);
+            }
+          }, 200);
+        }
+      }, 180);
+      setTimeout(function() {
+        clearInterval(interval);
+        if (line) line.style.width = '100%';
+        if (status) status.textContent = '100%';
+        
+        var logoImg = document.querySelector('.loader-logo-img');
+        var logoText = document.querySelector('.loader-logo');
+        if (logoImg) {
+          logoImg.style.boxShadow = '0 0 24px rgba(212, 175, 55, 0.8)';
+        }
+        if (logoText) {
+          logoText.style.transform = 'scale(1.05)';
+        }
+ 
+        setTimeout(function() {
+          if (loader && !loader.classList.contains('fade-out')) {
+            loader.classList.add('fade-out');
+            setTimeout(function() { loader.remove(); }, 600);
+          }
+        }, 200);
+      }, 2000);
+    })();
+  </script>
+ 
   <!-- Navigation -->
   <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">
-        <img src="logo.png" alt="Rare Cocoa Logo" class="nav-logo-img">
+        <img src="logo.avif" alt="Rare Cocoa Logo" class="nav-logo-img">
         <span>RARE COCOA</span>
       </a>
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="tablets.html">Tablets</a>
         <a href="snacks.html" style="color:var(--accent);">Snacks</a>
-        <a href="spreads.html">Spreads</a>
+        <a href="spreads.html">Spreads &amp; Butter</a>
+        <a href="chocolate-slab.html">Slab</a>
         <a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a>
         <a href="make-your-own.html">Make Your Own</a>
       </div>
@@ -36,11 +106,12 @@
     <a href="index.html">Home</a>
     <a href="tablets.html">Tablets</a>
     <a href="snacks.html">Snacks</a>
-    <a href="spreads.html">Spreads</a>
+    <a href="spreads.html">Spreads &amp; Butter</a>
+    <a href="chocolate-slab.html">Chocolate Slab</a>
     <a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a>
     <a href="make-your-own.html">Make Your Own</a>
   </div>
-
+ 
   <!-- Page Hero -->
   <section class="page-hero">
     <div class="container">
@@ -54,195 +125,457 @@
       </div>
     </div>
   </section>
-
+ 
   <!-- Breadcrumb -->
   <div class="container">
     <div class="breadcrumb">
       <a href="index.html">Home</a><span>/</span>Collections<span>/</span>Snacks
     </div>
   </div>
-
+ 
   <!-- Sub-Category Tabs -->
   <section class="products-section">
     <div class="container">
       <div class="sub-tabs">
         <button class="sub-tab active" data-tab="clusters">Clusters</button>
         <button class="sub-tab" data-tab="drags">Drags</button>
+        <button class="sub-tab" data-tab="popsicles">Popsicles & Tea</button>
+        <button class="sub-tab" data-tab="cavities-laddoo">Cavities & Laddoos</button>
       </div>
-
+ 
       <!-- CLUSTERS Tab -->
       <div class="tab-content" data-tab-content="clusters">
         <div class="products-grid">
-
-          <div class="product-grid-card reveal" data-product='{"name":"Almond Cluster","subtitle":"Crunchy almond chocolate clusters","icon":"🌰","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Almond Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"Almond Cluster","subtitle":"Crunchy almond chocolate clusters","icon":["assets/almond_cluster.avif?v=2","assets/almond_cluster2.avif?v=2"],"options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#8B6914 0%,#C9A456 50%,#6E5310 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🌰</span>
+              <div class="card-carousel">
+                <div class="card-carousel-track">
+                  <div class="card-carousel-slide"><img src="assets/almond_cluster.avif?v=2" alt="Almond Cluster" loading="lazy"></div>
+                  <div class="card-carousel-slide"><img src="assets/almond_cluster2.avif?v=2" alt="Almond Cluster 2" loading="lazy"></div>
+                </div>
+                <button class="card-carousel-btn prev" aria-label="Previous">&#8249;</button>
+                <button class="card-carousel-btn next" aria-label="Next">&#8250;</button>
+                <div class="card-carousel-dots">
+                  <span class="card-carousel-dot"></span>
+                  <span class="card-carousel-dot"></span>
+                </div>
               </div>
             </div>
             <div class="product-grid-body">
-              <h3 class="product-grid-name">Almond</h3>
-              <p class="product-grid-desc">Crunchy almond clusters in dark chocolate</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              <h3 class="product-grid-name">Almond Cluster</h3>
+              <p class="product-grid-desc">Crunchy roasted almonds wrapped in luxury dark chocolate</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
             </div>
           </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Cashew Cluster","subtitle":"Buttery cashew chocolate clusters","icon":"🥜","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Orange Almond Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"Orange Almond Cluster","subtitle":"Zesty orange and crunchy almonds","icon":["assets/orange_almond_cluster.avif?v=2","assets/orangealmond_cluster.avif?v=2"],"options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#D4AA70 0%,#E8C890 50%,#B8924A 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🥜</span>
+              <div class="card-carousel">
+                <div class="card-carousel-track">
+                  <div class="card-carousel-slide"><img src="assets/orange_almond_cluster.avif?v=2" alt="Orange Almond Cluster" loading="lazy"></div>
+                  <div class="card-carousel-slide"><img src="assets/orangealmond_cluster.avif?v=2" alt="Orange Almond Cluster 2" loading="lazy"></div>
+                </div>
+                <button class="card-carousel-btn prev" aria-label="Previous">&#8249;</button>
+                <button class="card-carousel-btn next" aria-label="Next">&#8250;</button>
+                <div class="card-carousel-dots">
+                  <span class="card-carousel-dot"></span>
+                  <span class="card-carousel-dot"></span>
+                </div>
               </div>
             </div>
             <div class="product-grid-body">
-              <h3 class="product-grid-name">Cashew</h3>
-              <p class="product-grid-desc">Buttery cashews coated in rich cocoa</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              <h3 class="product-grid-name">Orange Almond Cluster</h3>
+              <p class="product-grid-desc">Zesty candied orange peel paired with toasted almond slices</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
             </div>
           </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Pistachio Cluster","subtitle":"Vibrant pistachio chocolate clusters","icon":"💚","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Orange Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"Orange Cluster","subtitle":"Zesty orange peel chocolate clusters","icon":"assets/orange_cluster.avif?v=2","options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#4A7A4A 0%,#6B9B5E 50%,#3D6B3D 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">💚</span>
+              <img src="assets/orange_cluster.avif?v=2" alt="Orange Cluster" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Orange Cluster</h3>
+              <p class="product-grid-desc">Sweet and zesty candied orange peel coated in dark chocolate</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Cashew Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"Cashew Cluster","subtitle":"Buttery cashew nut clusters","icon":["assets/cashew_cluster.avif?v=2","assets/cashew_cluster2.avif?v=2"],"options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+            <div class="product-grid-img">
+              <div class="card-carousel">
+                <div class="card-carousel-track">
+                  <div class="card-carousel-slide"><img src="assets/cashew_cluster.avif?v=2" alt="Cashew Cluster" loading="lazy"></div>
+                  <div class="card-carousel-slide"><img src="assets/cashew_cluster2.avif?v=2" alt="Cashew Cluster 2" loading="lazy"></div>
+                </div>
+                <button class="card-carousel-btn prev" aria-label="Previous">&#8249;</button>
+                <button class="card-carousel-btn next" aria-label="Next">&#8250;</button>
+                <div class="card-carousel-dots">
+                  <span class="card-carousel-dot"></span>
+                  <span class="card-carousel-dot"></span>
+                </div>
               </div>
             </div>
             <div class="product-grid-body">
-              <h3 class="product-grid-name">Pistachio</h3>
-              <p class="product-grid-desc">Premium pistachios in artisan chocolate</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              <h3 class="product-grid-name">Cashew Cluster</h3>
+              <p class="product-grid-desc">Creamy, rich, and buttery roasted cashew nut clusters</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
             </div>
           </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Hazelnut Cluster","subtitle":"Toasted hazelnut chocolate clusters","icon":"🌰","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Cashew & Almond Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"Cashew & Almond Cluster","subtitle":"Cashew and almond blend clusters","icon":"assets/cashewalmond_cluster.avif?v=2","options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#6B4A30 0%,#8B6A4A 50%,#5C3D2E 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🌰</span>
+              <img src="assets/cashewalmond_cluster.avif?v=2" alt="Cashew & Almond Cluster" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Cashew & Almond Cluster</h3>
+              <p class="product-grid-desc">A premium double-nut blend of roasted cashews and almonds</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Cranberry Blueberry Almond Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"Cranberry Blueberry Almond Cluster","subtitle":"Double berry and almond clusters","icon":["assets/cranberry_blueberryalmond_cluster.avif?v=2","assets/cranberry_blueberryalmond_cluster2.avif?v=2"],"options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+            <div class="product-grid-img">
+              <div class="card-carousel">
+                <div class="card-carousel-track">
+                  <div class="card-carousel-slide"><img src="assets/cranberry_blueberryalmond_cluster.avif?v=2" alt="Cranberry Blueberry Almond Cluster" loading="lazy"></div>
+                  <div class="card-carousel-slide"><img src="assets/cranberry_blueberryalmond_cluster2.avif?v=2" alt="Cranberry Blueberry Almond Cluster 2" loading="lazy"></div>
+                </div>
+                <button class="card-carousel-btn prev" aria-label="Previous">&#8249;</button>
+                <button class="card-carousel-btn next" aria-label="Next">&#8250;</button>
+                <div class="card-carousel-dots">
+                  <span class="card-carousel-dot"></span>
+                  <span class="card-carousel-dot"></span>
+                </div>
               </div>
             </div>
             <div class="product-grid-body">
-              <h3 class="product-grid-name">Hazelnut</h3>
-              <p class="product-grid-desc">Roasted hazelnuts wrapped in cocoa</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </div>
-          </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Raisins Cluster","subtitle":"Sweet raisins in dark chocolate","icon":"🍇","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
-            <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#5B2C6F 0%,#7D3C98 50%,#4A235A 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🍇</span>
+              <h3 class="product-grid-name">Cranberry Blueberry Almond</h3>
+              <p class="product-grid-desc">Tart cranberries, sweet wild blueberries, and crunchy almonds</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
             </div>
-            <div class="product-grid-body">
-              <h3 class="product-grid-name">Raisins</h3>
-              <p class="product-grid-desc">Plump raisins in smooth dark chocolate</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </div>
           </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Cranberry Cluster","subtitle":"Tangy cranberry chocolate clusters","icon":"🔴","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Coconut Almond Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"Coconut Almond Cluster","subtitle":"Toasted coconut and almond clusters","icon":"assets/coconut_almond_cluster.avif?v=2","options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#8B2252 0%,#C94060 50%,#6B1A3D 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🔴</span>
+              <img src="assets/coconut_almond_cluster.avif?v=2" alt="Coconut Almond Cluster" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Coconut Almond Cluster</h3>
+              <p class="product-grid-desc">Crisp toasted organic coconut flakes combined with crunchy almonds</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
             </div>
+          </div>
+ 
+          <!-- Rice Crisper with Almond Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"Rice Crisper with Almond Cluster","subtitle":"Rice crisper and almond clusters","icon":"assets/ricecrisperandalmond_cluster.avif?v=2","options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/ricecrisperandalmond_cluster.avif?v=2" alt="Rice Crisper with Almond Cluster" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
             <div class="product-grid-body">
-              <h3 class="product-grid-name">Cranberry</h3>
-              <p class="product-grid-desc">Tart cranberry meets rich chocolate</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              <h3 class="product-grid-name">Rice Crisper with Almond</h3>
+              <p class="product-grid-desc">Toasted puffed rice crisps combined with sliced roasted almonds</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
             </div>
           </div>
-
+ 
+          <!-- All Seeds and Nuts Cluster -->
+          <div class="product-grid-card reveal" data-product='{"name":"All Seeds and Nuts Cluster","subtitle":"Mixed seeds and nuts clusters","icon":"assets/allseedsandnuts_cluster.avif?v=2","options":[{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/allseedsandnuts_cluster.avif?v=2" alt="All Seeds and Nuts Cluster" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">All Seeds and Nuts Cluster</h3>
+              <p class="product-grid-desc">Toasted pumpkin seeds, organic sunflower seeds, and almond chips</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Custom Cluster Blend -->
+          <div class="product-grid-card reveal" data-product='{"name":"Custom Cluster Blend (As Per Your Tastebuds)","subtitle":"Made-to-order custom chocolate cluster","icon":"assets/customblend_cluster.avif?v=2","options":[{"label":"Enter Preferred Ingredients","type":"text","placeholder":"e.g., Cashews, Cranberries, Coconut flakes..."},{"label":"Weight","values":["50g (₹150)","100g (₹300)","250g (₹750)"]},{"label":"Choose Cocoa Percentage","values":["50%","70%","100%"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/customblend_cluster.avif?v=2" alt="Custom Cluster Blend" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Custom Cluster Blend</h3>
+              <p class="product-grid-desc">Create your own customized blend with your preferred raw ingredients</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹150</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
         </div>
       </div>
-
+ 
       <!-- DRAGS Tab -->
       <div class="tab-content" data-tab-content="drags" style="display:none;">
         <div class="products-grid">
-
-          <div class="product-grid-card reveal" data-product='{"name":"Almond Drag","subtitle":"Almond center coated in dark chocolate","icon":"🌰","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Roasted Almond Drags -->
+          <div class="product-grid-card reveal" data-product='{"name":"Roasted Almond Drags","subtitle":"Crunchy roasted almonds coated in chocolate (200g)","icon":"assets/almond_drags.avif?v=2","price":600,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#5C4033 0%,#8B6914 50%,#3D2B1F 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🌰</span>
-              </div>
+              <img src="assets/almond_drags.avif?v=2" alt="Roasted Almond Drags" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
             </div>
             <div class="product-grid-body">
-              <h3 class="product-grid-name">Almond</h3>
-              <p class="product-grid-desc">Whole almond dragged in dark chocolate</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </div>
-          </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Cashew Drag","subtitle":"Cashew center coated in dark chocolate","icon":"🥜","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
-            <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#B8924A 0%,#D4AA70 50%,#8B7040 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🥜</span>
+              <h3 class="product-grid-name">Roasted Almond Drags</h3>
+              <p class="product-grid-desc">Crunchy whole roasted almonds coated in premium craft chocolate (200g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹600</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
             </div>
-            <div class="product-grid-body">
-              <h3 class="product-grid-name">Cashew</h3>
-              <p class="product-grid-desc">Whole cashew dragged in smooth cocoa</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </div>
           </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Pistachio Drag","subtitle":"Pistachio center coated in dark chocolate","icon":"💚","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Roasted Cashew Drags -->
+          <div class="product-grid-card reveal" data-product='{"name":"Roasted Cashew Drags","subtitle":"Buttery roasted cashews coated in chocolate (200g)","icon":"assets/cashew_drags.avif?v=2","price":600,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#3D6B3D 0%,#5A8A5A 50%,#2E5A2E 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">💚</span>
+              <img src="assets/cashew_drags.avif?v=2" alt="Roasted Cashew Drags" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Roasted Cashew Drags</h3>
+              <p class="product-grid-desc">Creamy roasted cashews coated in smooth dark chocolate (200g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹600</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
             </div>
-            <div class="product-grid-body">
-              <h3 class="product-grid-name">Pistachio</h3>
-              <p class="product-grid-desc">Whole pistachio dragged in dark cocoa</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </div>
           </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Hazelnut Drag","subtitle":"Hazelnut center coated in dark chocolate","icon":"🌰","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Orange Drags -->
+          <div class="product-grid-card reveal" data-product='{"name":"Orange Drags","subtitle":"Zesty orange peel coated in chocolate (200g)","icon":"assets/orange_drags.avif?v=2","price":600,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#5C3D2E 0%,#7B5B44 50%,#4A2E20 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🌰</span>
+              <img src="assets/orange_drags.avif?v=2" alt="Orange Drags" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Orange Drags</h3>
+              <p class="product-grid-desc">Zesty candied orange peel coated in rich luxury dark chocolate (200g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹600</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
             </div>
-            <div class="product-grid-body">
-              <h3 class="product-grid-name">Hazelnut</h3>
-              <p class="product-grid-desc">Toasted hazelnut dragged in cocoa</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </div>
           </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Raisins Drag","subtitle":"Raisin center coated in dark chocolate","icon":"🍇","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Roasted Peanuts Drags -->
+          <div class="product-grid-card reveal" data-product='{"name":"Roasted Peanuts Drags","subtitle":"Crunchy roasted peanuts coated in chocolate (200g)","icon":"assets/roastedpeanut_drags.avif?v=2","price":600,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#4A235A 0%,#6B3C7A 50%,#3D1D4A 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🍇</span>
+              <img src="assets/roastedpeanut_drags.avif?v=2" alt="Roasted Peanuts Drags" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Roasted Peanuts Drags</h3>
+              <p class="product-grid-desc">Classic roasted peanuts dragged in premium smooth cocoa (200g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹600</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
             </div>
-            <div class="product-grid-body">
-              <h3 class="product-grid-name">Raisins</h3>
-              <p class="product-grid-desc">Sweet raisin dragged in smooth cocoa</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </div>
           </div>
-
-          <div class="product-grid-card reveal" data-product='{"name":"Cranberry Drag","subtitle":"Cranberry center coated in dark chocolate","icon":"🔴","options":[{"label":"Chocolate Percentage","values":["50%","70%","80%","90%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+ 
+          <!-- Walnut Drags -->
+          <div class="product-grid-card reveal" data-product='{"name":"Walnut Drags","subtitle":"Rich walnut halves coated in chocolate (200g)","icon":"assets/walnut_drags.avif?v=2","price":800,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
             <div class="product-grid-img">
-              <div class="img-gradient" style="background:linear-gradient(135deg,#6B1A3D 0%,#A03050 50%,#5A1530 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:3rem;">🔴</span>
+              <img src="assets/walnut_drags.avif?v=2" alt="Walnut Drags" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Walnut Drags</h3>
+              <p class="product-grid-desc">Premium toasted walnut halves coated in dark chocolate (200g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹800</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
             </div>
+          </div>
+ 
+          <!-- Coffee Bean Drags -->
+          <div class="product-grid-card reveal" data-product='{"name":"Coffee Bean Drags","subtitle":"Roasted espresso beans coated in chocolate (200g)","icon":"assets/coffee_drags.avif?v=2","price":800,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/coffee_drags.avif?v=2" alt="Coffee Bean Drags" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
             <div class="product-grid-body">
-              <h3 class="product-grid-name">Cranberry</h3>
-              <p class="product-grid-desc">Tart cranberry dragged in dark cocoa</p>
-              <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              <h3 class="product-grid-name">Coffee Bean Drags</h3>
+              <p class="product-grid-desc">Bold roasted espresso beans coated in smooth premium cocoa (200g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹800</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
             </div>
           </div>
-
+ 
+          <!-- Cocoa Nibs Drags -->
+          <div class="product-grid-card reveal" data-product='{"name":"Cocoa Nibs Drags","subtitle":"Crunchy raw cocoa nibs coated in chocolate (200g)","icon":"assets/cocoanibs_drags.avif?v=2","price":900,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/cocoanibs_drags.avif?v=2" alt="Cocoa Nibs Drags" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Cocoa Nibs Drags</h3>
+              <p class="product-grid-desc">Raw crunchy cocoa nibs coated in single-origin luxury dark chocolate (200g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">From ₹900</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Custom Drags Blend -->
+          <div class="product-grid-card reveal" data-product='{"name":"Custom Drags Blend (As Per Your Tastebuds)","subtitle":"Made-to-order custom drags (200g)","icon":"assets/custom_dragsblend.avif?v=2","price":600,"options":[{"label":"Choose Cocoa Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar","Coconut Sugar","Monk Fruit"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/custom_dragsblend.avif?v=2" alt="Custom Drags Blend" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Custom Drags Blend</h3>
+              <p class="product-grid-desc">Create your own signature custom drags (200g). Select your preferred sweetener and options.</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">₹600 onwards</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
         </div>
       </div>
-
+ 
+      <!-- POPSICLES & TEA Tab -->
+      <div class="tab-content" data-tab-content="popsicles" style="display:none;">
+        <div class="products-grid">
+ 
+          <!-- Popsicle Card -->
+          <div class="product-grid-card reveal" data-product='{"name":"Premium Popsicle","subtitle":"Rich chocolate popsicle (60g)","icon":["assets/popsicle1.avif?v=2","assets/popsicle2.avif?v=2"],"price":200,"options":[{"label":"Choose Your Sweetener","values":["Muscovado Sugar (₹200)","Coconut Sugar (₹250)","Monk Fruit Sweetener (₹300)"]}]}'>
+            <div class="product-grid-img">
+              <div class="card-carousel">
+                <div class="card-carousel-track">
+                  <div class="card-carousel-slide"><img src="assets/popsicle1.avif?v=2" alt="Premium Popsicle 1" loading="lazy"></div>
+                  <div class="card-carousel-slide"><img src="assets/popsicle2.avif?v=2" alt="Premium Popsicle 2" loading="lazy"></div>
+                </div>
+                <button class="card-carousel-btn prev" aria-label="Previous">&#8249;</button>
+                <button class="card-carousel-btn next" aria-label="Next">&#8250;</button>
+                <div class="card-carousel-dots">
+                  <span class="card-carousel-dot"></span>
+                  <span class="card-carousel-dot"></span>
+                </div>
+              </div>
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Premium Popsicle</h3>
+              <p class="product-grid-desc">Creamy, rich premium chocolate popsicle made with single-origin cocoa (60g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">₹200 onwards</span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Cocoa Tea Card -->
+          <div class="product-grid-card reveal" data-product='{"name":"Cocoa Tea","subtitle":"Premium organic cocoa tea (100g)","icon":"🍵","price":200}'>
+            <div class="product-grid-img">
+              <div class="img-gradient" style="background:linear-gradient(135deg,#5C4033 0%,#8B5A2B 50%,#2B1A0A 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:3rem;">🍵</span>
+              </div>
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Cocoa Tea</h3>
+              <p class="product-grid-desc">Premium organic cocoa shell tea, rich in antioxidants and cocoa aroma (100g)</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">₹200</span>
+                <span class="product-grid-cta">Add to Bag <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+        </div>
+      </div>
+ 
+      <!-- CAVITIES & LADDOOS Tab -->
+      <div class="tab-content" data-tab-content="cavities-laddoo" style="display:none;">
+        <div class="products-grid">
+ 
+          <!-- Cavities -->
+          <div class="product-grid-card reveal" data-product='{"name":"Cavities","subtitle":"Handcrafted chocolate cavities","icon":"assets/cavities.avif?v=2","price":25,"minQty":25,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar (₹25/pc)","Coconut Sugar (₹35/pc)","Monk Fruit (₹45/pc)"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/cavities.avif?v=2" alt="Cavities" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Cavities</h3>
+              <p class="product-grid-desc">Deluxe filled chocolate cavities. Customize cocoa percentage and sweetener.</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">₹25 <span style="font-size:0.7rem;font-weight:400;color:var(--text-muted);">/ pc (Min. 25 pcs)</span></span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Coconut Laddoo -->
+          <div class="product-grid-card reveal" data-product='{"name":"Coconut Laddoo (6pcs Box)","subtitle":"Traditional coconut chocolate laddoos (6pcs Box - Muscovado Sugar Only)","icon":"assets/coconut_laddoo.avif?v=2","price":400,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar (Only Option)"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/coconut_laddoo.avif?v=2" alt="Coconut Laddoo" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Coconut Laddoo</h3>
+              <p class="product-grid-desc">Premium box of 6 handcrafted coconut chocolate laddoos. Made with Muscovado Sugar only. Select cocoa percentage.</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">₹400 <span style="font-size:0.7rem;font-weight:400;color:var(--text-muted);">/ box (6 pcs)</span></span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Banana Laddoo -->
+          <div class="product-grid-card reveal" data-product='{"name":"Banana Laddoo (6pcs Box)","subtitle":"Artisanal banana chocolate laddoos (6pcs Box - Muscovado Sugar Only)","icon":"assets/coconut_laddoo.avif?v=2","price":400,"options":[{"label":"Chocolate Percentage","values":["50%","70%","100%"]},{"label":"Choose Your Sweetener","values":["Muscovado Sugar (Only Option)"]}]}'>
+            <div class="product-grid-img">
+              <img src="assets/coconut_laddoo.avif?v=2" alt="Banana Laddoo" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <div class="product-grid-body">
+              <h3 class="product-grid-name">Banana Laddoo</h3>
+              <p class="product-grid-desc">Premium box of 6 handcrafted banana chocolate laddoos. Made with Muscovado Sugar only. Select cocoa percentage.</p>
+              <div class="product-grid-price-row">
+                <span class="product-grid-price">₹400 <span style="font-size:0.7rem;font-weight:400;color:var(--text-muted);">/ box (6 pcs)</span></span>
+                <span class="product-grid-cta">Choose Options <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+ 
+        </div>
+      </div>
+ 
     </div>
   </section>
-
+ 
   <!-- Product Modal -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal" id="productModal">
@@ -258,40 +591,61 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- Footer -->
-  <footer class="footer">
+  <footer class="footer" id="footer">
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
           <h2 class="footer-logo">RARE COCOA</h2>
           <p class="footer-tagline">Real Chocolate. Real Trust.</p>
-        </div>
-        <div class="footer-links">
-          <div class="footer-col">
-            <h4>Collections</h4>
-            <a href="tablets.html">Tablets</a>
-            <a href="snacks.html">Snacks</a>
-            <a href="spreads.html">Spreads</a>
-            <a href="hot-chocolate-ice-cream.html">Hot Chocolate & Ice Cream</a>
-            <a href="make-your-own.html">Make Your Own</a>
-            <a href="chocolate-slab.html">Chocolate Slab</a>
+          <div class="footer-map-box" style="width:260px;height:130px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);margin-top:15px;">
+            <iframe src="https://maps.google.com/maps?q=Rare%20Cocoa%20Gudivada&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
-          <div class="footer-col">
-            <h4>Explore</h4>
-            <a href="index.html">Home</a>
-            <a href="manufacturing.html">Manufacturing</a>
+        </div>
+        <div class="footer-meta-wrapper">
+          <div class="footer-meta-row">
+            <div class="footer-social-icons">
+              <a href="https://www.instagram.com/rarecocoa/?hl=en" target="_blank" rel="noopener" aria-label="Instagram" style="color:#E1306C;display:inline-flex;transition:transform 0.3s,filter 0.3s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+              <a href="https://www.facebook.com/p/Rare-Cocoa-61575199524262/" target="_blank" rel="noopener" aria-label="Facebook" style="color:#1877F2;display:inline-flex;transition:transform 0.3s,filter 0.3s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+              <a href="https://wa.me/917674931380" target="_blank" rel="noopener" aria-label="WhatsApp" style="color:#25D366;display:inline-flex;transition:transform 0.3s,filter 0.3s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg></a>
+            </div>
+            <div class="footer-developer-block">
+              <span class="footer-dev-label">Developed by</span>
+              <a href="https://digitalsutraai.vercel.app" target="_blank" rel="noopener" class="footer-dev-logo-link">
+                <img src="assets/full_logo_digitalsutraai.png" alt="Digital Sutra AI" class="footer-dev-logo">
+              </a>
+              <a href="https://digitalsutraai.vercel.app" target="_blank" rel="noopener" class="footer-dev-contact">Contact</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 Rare Cocoa&trade;. All rights reserved.</p>
-        <p>Pure Ingredients. Single Origin. Real Chocolate.</p>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Collections</h4>
+          <a href="tablets.html">Tablets</a>
+          <a href="snacks.html">Snacks</a>
+          <a href="spreads.html">Spreads &amp; Butter</a>
+          <a href="hot-chocolate-ice-cream.html">Hot Chocolate &amp; Ice Cream</a>
+          <a href="make-your-own.html">Make Your Own</a>
+          <a href="chocolate-slab.html">Chocolate Slab</a>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <a href="#story">Our Story</a>
+          <a href="manufacturing.html">Manufacturing</a>
+          <a href="#compare">Why Us</a>
+        </div>
       </div>
     </div>
-  </footer>
-
-  <script src="cart.js"></script>
-  <script src="pages.js"></script>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Rare Cocoa&trade;. All rights reserved.</p>
+      <p>Pure Ingredients. Single Origin. Real Chocolate.</p>
+    </div>
+  </div>
+</footer>
+ 
+<script src="cart.js"></script>
+<script src="pages.js?v=5"></script>
 </body>
 </html>
