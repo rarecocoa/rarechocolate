@@ -153,16 +153,21 @@
       groups[sc].push(p);
     });
 
+    var savedTabKey = 'activeTab_' + window.location.pathname;
+    var savedTab = sessionStorage.getItem(savedTabKey);
+
     var tabsHTML = '';
     subcats.forEach(function(sc, idx){
       var slug = slugify(sc);
-      tabsHTML += '<button class="sub-tab' + (idx === 0 ? ' active' : '') + '" data-tab="' + slug + '">' + esc(sc) + '</button>';
+      var isActive = savedTab ? (slug === savedTab) : (idx === 0);
+      tabsHTML += '<button class="sub-tab' + (isActive ? ' active' : '') + '" data-tab="' + slug + '">' + esc(sc) + '</button>';
     });
 
     var contentHTML = '';
     subcats.forEach(function(sc, idx){
       var slug = slugify(sc);
-      var display = idx === 0 ? '' : ' style="display:none;"';
+      var isActive = savedTab ? (slug === savedTab) : (idx === 0);
+      var display = isActive ? '' : ' style="display:none;"';
       contentHTML += '<div class="tab-content" data-tab-content="' + slug + '"' + display + '>';
       contentHTML += '<div class="products-grid">';
       groups[sc].forEach(function(p){ contentHTML += buildCardHTML(p); });
@@ -177,11 +182,13 @@
   }
 
   function reinitSubTabs(container) {
+    var savedTabKey = 'activeTab_' + window.location.pathname;
     var tabs = container.querySelectorAll('.sub-tab');
     var contents = container.querySelectorAll('.tab-content');
     tabs.forEach(function(tab){
       tab.addEventListener('click', function(){
         var target = tab.getAttribute('data-tab');
+        sessionStorage.setItem(savedTabKey, target);
         tabs.forEach(function(t){ t.classList.remove('active'); });
         tab.classList.add('active');
         contents.forEach(function(c){
@@ -214,16 +221,17 @@
 
   function reinitReveal(container) {
     if (!('IntersectionObserver' in window)) {
-      container.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('visible'); });
+      container.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-visible'); });
       return;
     }
     var obs = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
-        if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+        if (entry.isIntersecting) { entry.target.classList.add('is-visible'); obs.unobserve(entry.target); }
       });
     }, { threshold: 0.08 });
     container.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
   }
+
 
   function showLoading(container) {
     container.innerHTML =
