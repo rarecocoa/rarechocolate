@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (customCocoaInput && customCocoaInput.value !== '') {
           sel = customCocoaInput.value + '%';
         } else {
-          const selectedPills = [...g.querySelectorAll('.modal-option-pill.selected')].map(p => p.textContent);
+          const selectedPills = [...g.querySelectorAll('.modal-option-pill.selected')].map(p => p.getAttribute('data-original') || p.textContent);
           const inputSel = g.querySelector('.modal-option-input')?.value;
           if (selectedPills.length > 0) {
             sel = selectedPills.join(', ');
@@ -277,42 +277,54 @@ document.addEventListener('DOMContentLoaded', () => {
       if (sweetenerGroup) {
         const pills = sweetenerGroup.querySelectorAll('.modal-option-pill');
         pills.forEach(pill => {
-          // Get clean sweetener name (remove any previous price tag like "(₹300)")
-          let sweetName = pill.textContent.split(' (₹')[0].trim();
+          const originalVal = pill.getAttribute('data-original') || pill.textContent;
+          // Get clean sweetener name (remove any previous price tag like "(₹300)" or rates)
+          let sweetName = originalVal.split(' (₹')[0].trim();
+          sweetName = sweetName.split(' (+₹')[0].trim();
           sweetName = sweetName.replace(/\s*\(\+₹\d+\/g\)/, '');
           
           let optPrice = null;
 
+          let customRate = null;
+          const rateMatch = originalVal.match(/₹([\d.]+)\/g/);
+          if (rateMatch) {
+            customRate = parseFloat(rateMatch[1]);
+          }
+
           if (nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) {
             let rate = 3;
-            let checkHazelnut = nameLower.includes('hazelnut');
-            let checkMedjool = nameLower.includes('medjool');
-            let checkMacadamiaOrBrazil = nameLower.includes('macadamia') || nameLower.includes('brazil');
-            if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
-              const addonGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
-                const lbl = g.querySelector('.modal-option-label')?.textContent || '';
-                return lbl.includes('Add-on');
-              });
-              const selectedAddons = [...addonGroup?.querySelectorAll('.modal-option-pill.selected') || []].map(p => p.textContent.toLowerCase());
-              if (selectedAddons.some(a => a.includes('hazelnut'))) {
-                checkHazelnut = true;
-              } else if (selectedAddons.some(a => a.includes('medjool'))) {
-                checkMedjool = true;
-              }
-            }
-
-            if (checkMacadamiaOrBrazil) {
-              rate = 6;
-            } else if (checkHazelnut && (nameLower.includes('spread') || nameLower.includes('cluster'))) {
-              rate = 7;
-              if (sweetName.includes('Coconut Sugar')) rate = 8;
-              else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 9;
-            } else if (checkMedjool) {
-              rate = 5;
-              if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 6;
+            if (customRate !== null) {
+              rate = customRate;
             } else {
-              if (sweetName.includes('Coconut Sugar')) rate = 4;
-              else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 5;
+              let checkHazelnut = nameLower.includes('hazelnut');
+              let checkMedjool = nameLower.includes('medjool');
+              let checkMacadamiaOrBrazil = nameLower.includes('macadamia') || nameLower.includes('brazil');
+              if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
+                const addonGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+                  const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+                  return lbl.includes('Add-on');
+                });
+                const selectedAddons = [...addonGroup?.querySelectorAll('.modal-option-pill.selected') || []].map(p => p.textContent.toLowerCase());
+                if (selectedAddons.some(a => a.includes('hazelnut'))) {
+                  checkHazelnut = true;
+                } else if (selectedAddons.some(a => a.includes('medjool'))) {
+                  checkMedjool = true;
+                }
+              }
+
+              if (checkMacadamiaOrBrazil) {
+                rate = 6;
+              } else if (checkHazelnut && (nameLower.includes('spread') || nameLower.includes('cluster'))) {
+                rate = 7;
+                if (sweetName.includes('Coconut Sugar')) rate = 8;
+                else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 9;
+              } else if (checkMedjool) {
+                rate = 5;
+                if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 6;
+              } else {
+                if (sweetName.includes('Coconut Sugar')) rate = 4;
+                else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 5;
+              }
             }
 
             // Find selected weight
@@ -330,28 +342,34 @@ document.addEventListener('DOMContentLoaded', () => {
             if (grams > 0) optPrice = grams * rate;
           } else if (nameLower.includes('drags')) {
             let baseRate = 3;
-            let checkWalnutOrCoffee = nameLower.includes('walnut') || nameLower.includes('coffee');
-            let checkNibs = nameLower.includes('nibs');
-            if (nameLower.includes('custom drags blend')) {
-              const addonGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
-                const lbl = g.querySelector('.modal-option-label')?.textContent || '';
-                return lbl.includes('Add-on');
-              });
-              const selectedAddons = [...addonGroup?.querySelectorAll('.modal-option-pill.selected') || []].map(p => p.textContent.toLowerCase());
-              if (selectedAddons.some(a => a.includes('nibs'))) {
-                checkNibs = true;
+            if (customRate !== null) {
+              baseRate = customRate;
+            } else {
+              let checkWalnutOrCoffee = nameLower.includes('walnut') || nameLower.includes('coffee');
+              let checkNibs = nameLower.includes('nibs');
+              if (nameLower.includes('custom drags blend')) {
+                const addonGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+                  const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+                  return lbl.includes('Add-on');
+                });
+                const selectedAddons = [...addonGroup?.querySelectorAll('.modal-option-pill.selected') || []].map(p => p.textContent.toLowerCase());
+                if (selectedAddons.some(a => a.includes('nibs'))) {
+                  checkNibs = true;
+                }
+                if (selectedAddons.some(a => a.includes('walnut') || a.includes('coffee'))) {
+                  checkWalnutOrCoffee = true;
+                }
               }
-              if (selectedAddons.some(a => a.includes('walnut') || a.includes('coffee'))) {
-                checkWalnutOrCoffee = true;
-              }
+
+              if (checkNibs) baseRate = 4.5;
+              else if (checkWalnutOrCoffee) baseRate = 4;
             }
 
-            if (checkNibs) baseRate = 4.5;
-            else if (checkWalnutOrCoffee) baseRate = 4;
-
             let rate = baseRate;
-            if (sweetName.includes('Coconut Sugar')) rate = baseRate + 1;
-            else if (sweetName.includes('Monk Fruit')) rate = baseRate + 2;
+            if (customRate === null) {
+              if (sweetName.includes('Coconut Sugar')) rate = baseRate + 1;
+              else if (sweetName.includes('Monk Fruit')) rate = baseRate + 2;
+            }
 
             // Find selected weight
             const qtyGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
@@ -525,6 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const pill = document.createElement('button');
             pill.className = 'modal-option-pill';
             pill.textContent = val;
+            pill.setAttribute('data-original', val);
             if (idx === 0 && !isAddon) pill.classList.add('selected');
             pill.addEventListener('click', () => {
               if (isAddon) {
@@ -711,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (customCocoaInput && customCocoaInput.value !== '') {
             selectedOptions[optLabel] = customCocoaInput.value + '%';
           } else {
-            const selectedPills = [...group.querySelectorAll('.modal-option-pill.selected')].map(p => p.textContent);
+            const selectedPills = [...group.querySelectorAll('.modal-option-pill.selected')].map(p => p.getAttribute('data-original') || p.textContent);
             const inputVal = group.querySelector('.modal-option-input')?.value;
             if (selectedPills.length > 0) {
               selectedOptions[optLabel] = selectedPills.join(', ');
@@ -738,6 +757,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if any selected option has a price format like (₹180) or similar
         let priceFromOptions = null;
         Object.values(selectedOptions).forEach(val => {
+          // Exclude rates like (₹3/g) from setting a flat price
+          if (val.indexOf('/g') !== -1 || val.indexOf('/pc') !== -1) return;
           const match = val.match(/\(₹\s*(\d+)(?:\/[a-zA-Z]+)?\)/);
           if (match) {
             priceFromOptions = parseFloat(match[1]);
@@ -750,40 +771,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Special dynamic pricing for Clusters, Slabs, and Spreads
         const nameLower = product.name?.toLowerCase() || '';
-        if (nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('cookie')) {
-          const sweetener = selectedOptions['Choose Your Sweetener'] || selectedOptions['Choose Sweetener'] || '';
-          let rate = 3; // default Muscovado
-          let checkHazelnut = nameLower.includes('hazelnut');
-          let checkMedjool = nameLower.includes('medjool');
-          let checkMacadamiaOrBrazil = nameLower.includes('macadamia') || nameLower.includes('brazil');
-          if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
-            const addon = selectedOptions['Choose Add-on'] || '';
-            if (addon.toLowerCase().includes('hazelnut')) {
-              checkHazelnut = true;
-            } else if (addon.toLowerCase().includes('medjool')) {
-              checkMedjool = true;
-            }
-          }
+        const sweetener = selectedOptions['Choose Your Sweetener'] || selectedOptions['Choose Sweetener'] || '';
+        let customRate = null;
+        const rateMatch = sweetener.match(/₹([\d.]+)\/g/);
+        if (rateMatch) {
+          customRate = parseFloat(rateMatch[1]);
+        }
 
-          if (checkMacadamiaOrBrazil) {
-            rate = 6;
-          } else if (checkHazelnut && (nameLower.includes('spread') || nameLower.includes('cluster'))) {
-            rate = 7;
-            if (sweetener.includes('Coconut Sugar')) {
-              rate = 8;
-            } else if (sweetener.includes('Monk Fruit')) {
-              rate = 9;
-            }
-          } else if (checkMedjool) {
-            rate = 5;
-            if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) {
-              rate = 6;
-            }
+        if (nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) {
+          let rate = 3; // default Muscovado
+          if (customRate !== null) {
+            rate = customRate;
           } else {
-            if (sweetener.includes('Coconut Sugar')) {
-              rate = 4;
-            } else if (sweetener.includes('Monk Fruit')) {
+            let checkHazelnut = nameLower.includes('hazelnut');
+            let checkMedjool = nameLower.includes('medjool');
+            let checkMacadamiaOrBrazil = nameLower.includes('macadamia') || nameLower.includes('brazil');
+            if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
+              const addon = selectedOptions['Choose Add-on'] || '';
+              if (addon.toLowerCase().includes('hazelnut')) {
+                checkHazelnut = true;
+              } else if (addon.toLowerCase().includes('medjool')) {
+                checkMedjool = true;
+              }
+            }
+
+            if (checkMacadamiaOrBrazil) {
+              rate = 6;
+            } else if (checkHazelnut && (nameLower.includes('spread') || nameLower.includes('cluster'))) {
+              rate = 7;
+              if (sweetener.includes('Coconut Sugar')) {
+                rate = 8;
+              } else if (sweetener.includes('Monk Fruit')) {
+                rate = 9;
+              }
+            } else if (checkMedjool) {
               rate = 5;
+              if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) {
+                rate = 6;
+              }
+            } else {
+              if (sweetener.includes('Coconut Sugar')) {
+                rate = 4;
+              } else if (sweetener.includes('Monk Fruit')) {
+                rate = 5;
+              }
             }
           }
 
@@ -806,31 +837,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Special dynamic pricing for Drags
         if (nameLower.includes('drags')) {
-          const sweetener = selectedOptions['Choose Your Sweetener'] || '';
           let baseRate = 3; // default Muscovado
-          let checkWalnutOrCoffee = nameLower.includes('walnut') || nameLower.includes('coffee');
-          let checkNibs = nameLower.includes('nibs');
-          if (nameLower.includes('custom drags blend')) {
-            const addon = selectedOptions['Choose Add-on'] || '';
-            const addonLower = addon.toLowerCase();
-            if (addonLower.includes('walnut') || addonLower.includes('coffee')) {
-              checkWalnutOrCoffee = true;
-            } else if (addonLower.includes('nibs')) {
-              checkNibs = true;
+          if (customRate !== null) {
+            baseRate = customRate;
+          } else {
+            let checkWalnutOrCoffee = nameLower.includes('walnut') || nameLower.includes('coffee');
+            let checkNibs = nameLower.includes('nibs');
+            if (nameLower.includes('custom drags blend')) {
+              const addon = selectedOptions['Choose Add-on'] || '';
+              const addonLower = addon.toLowerCase();
+              if (addonLower.includes('walnut') || addonLower.includes('coffee')) {
+                checkWalnutOrCoffee = true;
+              } else if (addonLower.includes('nibs')) {
+                checkNibs = true;
+              }
+            }
+
+            if (checkNibs) {
+              baseRate = 4.5;
+            } else if (checkWalnutOrCoffee) {
+              baseRate = 4;
             }
           }
 
-          if (checkNibs) {
-            baseRate = 4.5;
-          } else if (checkWalnutOrCoffee) {
-            baseRate = 4;
-          }
-
           let rate = baseRate; // default Muscovado
-          if (sweetener.includes('Coconut Sugar')) {
-            rate = baseRate + 1;
-          } else if (sweetener.includes('Monk Fruit')) {
-            rate = baseRate + 2;
+          if (customRate === null) {
+            if (sweetener.includes('Coconut Sugar')) {
+              rate = baseRate + 1;
+            } else if (sweetener.includes('Monk Fruit')) {
+              rate = baseRate + 2;
+            }
           }
 
           const qtyOpt = selectedOptions['Weight'] || selectedOptions['Choose Weight'] || selectedOptions['Quantity'] || '';
