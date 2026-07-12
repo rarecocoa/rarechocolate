@@ -106,6 +106,20 @@
       options: []
     };
 
+    if (row.price && row.price.trim()) {
+      var p = parseFloat(row.price.trim());
+      if (!isNaN(p)) obj.price = p;
+    }
+
+    if (row.options_json && row.options_json.trim()) {
+      try {
+        obj.options = JSON.parse(row.options_json.trim());
+        return JSON.stringify(obj).replace(/'/g, '&#39;');
+      } catch (e) {
+        console.error('Failed to parse options_json for', row.name, e);
+      }
+    }
+
     for (var i = 1; i <= 4; i++) {
       var lbl = row['option' + i + '_label'] || '';
       var vals = row['option' + i + '_values'] || '';
@@ -124,8 +138,32 @@
     var name = esc(row.name || 'Product');
     var desc = esc(row.description || '');
     var price = esc(row.price_label || '');
-    var hasOptions = ['option1_label','option2_label','option3_label','option4_label']
-      .some(function(k){ return row[k] && row[k].trim(); });
+
+    var isLaunching = price.toLowerCase().indexOf('launching') === 0;
+
+    if (isLaunching) {
+      return '<div class="product-grid-card reveal" style="cursor: default;">' +
+        '<div class="product-grid-img">' + buildImageHTML(row) + '</div>' +
+        '<div class="product-grid-body">' +
+          '<h3 class="product-grid-name">' + name + '</h3>' +
+          '<p class="product-grid-desc">' + desc + '</p>' +
+          '<div class="product-grid-price-row">' +
+            '<span class="product-grid-price" style="color:var(--accent);">' + price + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    var hasOptions = false;
+    if (row.options_json && row.options_json.trim()) {
+      try {
+        var opts = JSON.parse(row.options_json.trim());
+        hasOptions = opts && opts.length > 0;
+      } catch(e) {}
+    } else {
+      hasOptions = ['option1_label','option2_label','option3_label','option4_label']
+        .some(function(k){ return row[k] && row[k].trim(); });
+    }
     var ctaLabel = hasOptions ? 'Choose Options' : 'Add to Bag';
 
     return '<div class="product-grid-card reveal" data-product=\'' + buildDataProduct(row) + '\'>' +
@@ -140,6 +178,7 @@
       '</div>' +
     '</div>';
   }
+
 
   function slugify(str) {
     return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
