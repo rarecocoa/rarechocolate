@@ -918,44 +918,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ═══════════════════════════════════════════════════════════
-  // SUB-CATEGORY TABS (for Snacks page)
+  // SUB-CATEGORY TABS (Moved to products-db.js)
   // ═══════════════════════════════════════════════════════════
-
-  const subTabs = document.querySelectorAll('.sub-tab');
-  const tabContents = document.querySelectorAll('.tab-content');
-
-  const savedTabKey = 'activeTab_' + window.location.pathname;
-  const savedTab = sessionStorage.getItem(savedTabKey);
-  if (savedTab) {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
-
-    subTabs.forEach(tab => {
-      if (tab.getAttribute('data-tab') === savedTab) {
-        subTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-      }
-    });
-
-    tabContents.forEach(content => {
-      if (content.getAttribute('data-tab-content') === savedTab) {
-        content.style.display = '';
-      } else {
-        content.style.display = 'none';
-      }
-    });
-    sessionStorage.removeItem(savedTabKey);
-  }
-
-  subTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.getAttribute('data-tab');
-      sessionStorage.setItem(savedTabKey, target);
-      window.location.reload();
-    });
-  });
 
 
   // ═══════════════════════════════════════════════════════════

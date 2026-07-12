@@ -194,6 +194,13 @@
 
     var savedTabKey = 'activeTab_' + window.location.pathname;
     var savedTab = sessionStorage.getItem(savedTabKey);
+    if (savedTab) {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+      sessionStorage.removeItem(savedTabKey);
+    }
 
     var tabsHTML = '';
     subcats.forEach(function(sc, idx){
@@ -223,19 +230,15 @@
   function reinitSubTabs(container) {
     var savedTabKey = 'activeTab_' + window.location.pathname;
     var tabs = container.querySelectorAll('.sub-tab');
-    var contents = container.querySelectorAll('.tab-content');
     tabs.forEach(function(tab){
       tab.addEventListener('click', function(){
         var target = tab.getAttribute('data-tab');
         sessionStorage.setItem(savedTabKey, target);
-        tabs.forEach(function(t){ t.classList.remove('active'); });
-        tab.classList.add('active');
-        contents.forEach(function(c){
-          c.style.display = c.getAttribute('data-tab-content') === target ? '' : 'none';
-        });
+        window.location.reload();
       });
     });
   }
+
 
   function reinitCarousels(container) {
     container.querySelectorAll('.card-carousel').forEach(function(carousel){
