@@ -10,7 +10,7 @@
 
   function csvUrl(sheetId, tabName) {
     return 'https://docs.google.com/spreadsheets/d/' + sheetId +
-      '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(tabName);
+      '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(tabName) + '&t=' + Date.now();
   }
 
   function parseCSV(text) {
@@ -49,7 +49,7 @@
     });
   }
 
-  function cacheKey(sheetId, tabName) { return 'rc_products_' + sheetId + '_' + tabName; }
+  function cacheKey(sheetId, tabName) { return 'rc_products_v3_' + sheetId + '_' + tabName; }
 
   function saveCache(key, data) {
     try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
@@ -74,6 +74,10 @@
     var img2 = row.image2 || '';
     var altText = esc(row.name || 'Product');
 
+    var version = '?v=23';
+    if (img1 && img1.indexOf('?') === -1) img1 += version;
+    if (img2 && img2.indexOf('?') === -1) img2 += version;
+
     if (!img1 && !img2) {
       var emoji = esc(row.emoji || '🍫');
       return '<div class="img-gradient" style="background:linear-gradient(135deg,#3e2723 0%,#5d4037 50%,#1b0000 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span style="font-size:3rem;">' + emoji + '</span></div>';
@@ -96,8 +100,14 @@
 
   function buildDataProduct(row) {
     var icons = [];
-    if (row.image && row.image.trim()) icons.push(row.image.trim());
-    if (row.image2 && row.image2.trim()) icons.push(row.image2.trim());
+    var img1 = row.image || '';
+    var img2 = row.image2 || '';
+    var version = '?v=23';
+    if (img1 && img1.indexOf('?') === -1) img1 += version;
+    if (img2 && img2.indexOf('?') === -1) img2 += version;
+
+    if (img1 && img1.trim()) icons.push(img1.trim());
+    if (img2 && img2.trim()) icons.push(img2.trim());
 
     var obj = {
       name: row.name || '',
@@ -124,9 +134,41 @@
       var lbl = row['option' + i + '_label'] || '';
       var vals = row['option' + i + '_values'] || '';
       if (lbl && vals) {
+        var parsedVals = vals.split(',').map(function(v){ return v.trim(); }).filter(Boolean);
+        var lblLower = lbl.toLowerCase();
+        var rName = (row.name || '').toLowerCase();
+
+        // Fix accidental sweetener copies in Google Sheet columns
+        if (vals.indexOf('Sugar') !== -1 || vals.indexOf('Muscovado') !== -1) {
+          if (lblLower.indexOf('add-on') !== -1) {
+            if (rName.indexOf('cluster') !== -1) {
+              parsedVals = ['Almond', 'Apricot', 'Blueberry', 'Cashew', 'Cranberry', 'Coffee', 'Hazelnut', 'Mango', 'Medjool Dates', 'Orange', 'Raisins', 'Rice Crisper', 'Roasted Peanuts', 'Seeds & Nuts'];
+            } else if (rName.indexOf('drags') !== -1) {
+              parsedVals = ['Almond', 'Cashew', 'Orange Peel', 'Roasted Peanuts', 'Walnut', 'Coffee Beans', 'Cocoa Nibs'];
+            }
+          } else if (lblLower.indexOf('quantity') !== -1 || lblLower.indexOf('weight') !== -1) {
+            if (rName.indexOf('drags') !== -1) {
+              parsedVals = ['100g', '200g', '250g'];
+            } else if (rName.indexOf('cookie') !== -1) {
+              parsedVals = ['100g (₹300)', '250g (₹750)', '300g (₹900)'];
+            } else {
+              continue;
+            }
+          }
+        }
+
+        // Fix weight/quantity options for Macadamia and Brazil Nut Spreads (should have 100g, 250g, 300g options)
+        if (lblLower.indexOf('quantity') !== -1 || lblLower.indexOf('weight') !== -1) {
+          if (rName.indexOf('macadamia') !== -1 && rName.indexOf('spread') !== -1) {
+            parsedVals = ['100g (₹600)', '250g (₹1500)', '300g (₹1800)'];
+          } else if (rName.indexOf('brazil') !== -1 && rName.indexOf('spread') !== -1) {
+            parsedVals = ['100g (₹600)', '250g (₹1500)', '300g (₹1800)'];
+          }
+        }
+
         obj.options.push({
           label: lbl,
-          values: vals.split(',').map(function(v){ return v.trim(); }).filter(Boolean)
+          values: parsedVals
         });
       }
     }
@@ -297,10 +339,14 @@
   }
 
   window.RCProductsDB = {
-    load: function(sheetId, tabName, containerId, tabsBannerHTML) {
+    load: function(sheetId, tabName, containerId, pageCategory, tabsBannerHTML) {
+      if (typeof pageCategory === 'string' && pageCategory.indexOf('<') !== -1) {
+        tabsBannerHTML = pageCategory;
+        pageCategory = undefined;
+      }
       var container = document.getElementById(containerId);
       if (!container) return;
-      var key = cacheKey(sheetId, tabName);
+      var key = cacheKey(sheetId, tabName + (pageCategory ? '_' + pageCategory : ''));
       showLoading(container);
       fetch(csvUrl(sheetId, tabName), { cache: 'no-store' })
         .then(function(res){
@@ -311,7 +357,13 @@
           var rows = parseCSV(text);
           var all = rowsToObjects(rows);
           var products = all.filter(function(p){
-            return (p.active || '').toUpperCase() === 'TRUE' && p.name;
+            var isActive = (p.active || '').toUpperCase() === 'TRUE' && p.name;
+            if (!isActive) return false;
+            if (pageCategory && p.category) {
+              var cats = p.category.split(',').map(function(c){ return c.trim().toLowerCase(); });
+              return cats.indexOf(pageCategory.toLowerCase()) !== -1;
+            }
+            return true;
           });
           if (!products.length) throw new Error('No active products found.');
           saveCache(key, products);

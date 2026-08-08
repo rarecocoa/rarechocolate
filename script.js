@@ -55,6 +55,54 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Navigation Scroll Behavior ───────────────────────────
   const nav = document.getElementById('nav');
   const heroSection = document.getElementById('hero');
+
+  const volumeBtn = document.getElementById('heroVolumeBtn');
+  const volumeIcon = document.getElementById('heroVolumeIcon');
+
+  const mutePath = "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM12 4L9.91 6.09 12 8.18V4zm-7.97-.28a.996.996 0 10-1.41 1.41L5.27 7.8H3v8.4h4.2l5.8 5.8v-8.58l5.22 5.22c-.67.45-1.4.8-2.22.98v2.01c1.36-.26 2.6-.86 3.63-1.69l2.42 2.42a.996.996 0 101.41-1.41L4.03 3.72zm5.97 7.08L12 12.8v3.02L8.2 12H7.27L10 9.27z";
+  const unmutePath = "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z";
+
+  const updateVolumeIcon = (isMuted) => {
+    if (!volumeIcon) return;
+    const pathEl = volumeIcon.querySelector('path');
+    if (pathEl) {
+      pathEl.setAttribute('d', isMuted ? mutePath : unmutePath);
+    }
+    if (volumeBtn) {
+      volumeBtn.setAttribute('aria-label', isMuted ? 'Unmute video' : 'Mute video');
+    }
+  };
+
+  const handleVolumeToggle = () => {
+    const activeVideo = isMobile() ? heroVideoMobile : heroVideo;
+    if (activeVideo) {
+      const targetMuted = !activeVideo.muted;
+      if (heroVideo) heroVideo.muted = targetMuted;
+      if (heroVideoMobile) heroVideoMobile.muted = targetMuted;
+    }
+  };
+
+  if (heroSection) {
+    heroSection.addEventListener('click', (e) => {
+      if (e.target.closest('a') || e.target.closest('button')) return;
+      handleVolumeToggle();
+    });
+  }
+
+  if (volumeBtn) {
+    volumeBtn.addEventListener('click', handleVolumeToggle);
+  }
+
+  if (heroVideo) {
+    heroVideo.addEventListener('volumechange', () => {
+      updateVolumeIcon(heroVideo.muted);
+    });
+  }
+  if (heroVideoMobile) {
+    heroVideoMobile.addEventListener('volumechange', () => {
+      updateVolumeIcon(heroVideoMobile.muted);
+    });
+  }
   const handleNavScroll = () => {
     const scrolled = window.scrollY > 10;
     nav.classList.toggle('scrolled', scrolled);

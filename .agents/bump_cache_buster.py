@@ -7,7 +7,8 @@ html_files = [
     "spreads.html",
     "chocolate-slab.html",
     "hot-chocolate-ice-cream.html",
-    "make-your-own.html"
+    "make-your-own.html",
+    "manufacturing.html"
 ]
 
 base_dir = r"c:\Users\91767\Downloads\rarechocolate"

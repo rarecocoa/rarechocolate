@@ -7,7 +7,8 @@ html_files = [
     "spreads.html",
     "chocolate-slab.html",
     "hot-chocolate-ice-cream.html",
-    "make-your-own.html"
+    "make-your-own.html",
+    "manufacturing.html"
 ]
 
 base_dir = r"c:\Users\91767\Downloads\rarechocolate"
@@ -26,9 +27,9 @@ for filename in html_files:
         new_content = content
         
         # Matches pages.css with or without query param
-        new_content = re.sub(r'href=["\']pages\.css(?:\?v=\d+)?["\']', 'href="pages.css?v=4"', new_content)
+        new_content = re.sub(r'href=["\']pages\.css(?:\?v=\d+)?["\']', 'href="pages.css?v=22"', new_content)
         # Matches pages.js with or without query param
-        new_content = re.sub(r'src=["\']pages\.js(?:\?v=\d+)?["\']', 'src="pages.js?v=4"', new_content)
+        new_content = re.sub(r'src=["\']pages\.js(?:\?v=\d+)?["\']', 'src="pages.js?v=22"', new_content)
         
         if new_content != content:
             with open(filepath, 'w', encoding='utf-8') as f:

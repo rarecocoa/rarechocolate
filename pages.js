@@ -502,14 +502,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (product.options && product.options.length > 0) {
       const isTabletPage = window.location.pathname.toLowerCase().includes('tablets');
-      const hasCocoa = isTabletPage && product.options.some(o =>
-        o.label && o.label.toLowerCase().includes('cocoa') && o.label.toLowerCase().includes('percent')
-      );
+      const isSpreadsPage = window.location.pathname.toLowerCase().includes('spreads');
+      const isCocoaOpt = (o) => o && o.label && o.label.toLowerCase().includes('cocoa') && o.label.toLowerCase().includes('percent');
+      
+      const needsCocoa = (isTabletPage || (isSpreadsPage && product.options.some(o => o.label && o.label.toLowerCase().includes('sweetener')))) && !product.options.some(isCocoaOpt);
+      
+      if (needsCocoa) {
+        product.options.unshift({
+          label: 'Choose Cocoa Percentage',
+          values: ['50% Dark', '70% Dark', '100% Dark']
+        });
+      }
+      const hasCocoa = product.options.some(isCocoaOpt);
       const sortedOpts = hasCocoa
-        ? [...product.options].sort((a, b) => {
-            const aIsPct = a.label.toLowerCase().includes('cocoa') && a.label.toLowerCase().includes('percent');
-            return aIsPct ? -1 : 1;
-          })
+        ? [...product.options].sort((a, b) => (isCocoaOpt(a) ? -1 : 1))
         : product.options;
 
       // Colors for cocoa % levels
@@ -517,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let chocoWavesEl = null;
 
       sortedOpts.forEach(optGroup => {
-        const isCocoa = optGroup.label.toLowerCase().includes('cocoa') && optGroup.label.toLowerCase().includes('percent');
+        const isCocoa = isCocoaOpt(optGroup);
         const isSweetener = optGroup.label.toLowerCase().includes('sweetener');
 
         const group = document.createElement('div');
@@ -588,8 +594,12 @@ document.addEventListener('DOMContentLoaded', () => {
             optionsContainer.appendChild(pill);
           });
 
-          // Add custom input for Cocoa Percentage
-          if (isCocoa) {
+          // Add custom input for Cocoa Percentage (only for custom products)
+          const isCustomProduct = product.name && (
+            product.name.toLowerCase().includes('custom') ||
+            product.name.toLowerCase().includes('plain')
+          );
+          if (isCocoa && isCustomProduct) {
             const customInput = document.createElement('input');
             customInput.type = 'number';
             customInput.min = 50;

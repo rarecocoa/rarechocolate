@@ -4,13 +4,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Make Your Own Chocolate — Rare Cocoa™</title>
-  <meta name="description" content="Craft your own luxury chocolate experience. Choose base, cocoa percentage, sweetener, size, and add-ons.">
+  <meta name="description" content="Craft your own luxury chocolate experience. Choose cocoa beans, nibs, butter, and slab.">
+  <meta name="keywords" content="custom chocolate order, bulk chocolate, raw cocoa ingredients, single origin nibs, cocoa butter, Rare Cocoa">
+  <link rel="canonical" href="https://rarecocoa.com/make-your-own.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"></noscript>
   <link rel="stylesheet" href="styles.css?v=8">
-  <link rel="stylesheet" href="pages.css?v=5">
+  <link rel="stylesheet" href="pages.css?v=24">
+  <style>
+    .myo-section{padding:48px 0 80px}
+    .myo-layout{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start}
+    .myo-product-card{background:var(--bg-card);border:1.5px solid var(--border-light);border-radius:20px;padding:28px;margin-bottom:20px;transition:border-color .3s,box-shadow .3s}
+    .myo-product-card.active{border-color:var(--accent);box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+    .myo-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .myo-card-title-wrap{display:flex;align-items:center;gap:12px}
+    .myo-card-title{font-size:1.05rem;font-weight:600;color:var(--text-primary)}
+    .myo-card-subtitle{font-size:.78rem;color:var(--text-tertiary);margin-top:2px}
+    .myo-add-btn{padding:8px 20px;border-radius:100px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:var(--font-body);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .25s;letter-spacing:.05em}
+    .myo-add-btn.added{background:var(--accent);color:#1a1008}
+    .myo-add-btn:hover{opacity:.85}
+    .myo-live-price{font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:16px}
+    .myo-label{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:10px}
+    .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .pill{padding:7px 18px;border-radius:100px;border:1.5px solid var(--border-light);background:transparent;font-family:var(--font-body);font-size:.8rem;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+    .pill.sel{border-color:var(--accent);background:rgba(212,175,55,.1);color:var(--accent)}
+    .pill:hover{border-color:var(--accent)}
+    .myo-custom-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+    .myo-custom-input{width:110px;padding:8px 14px;border-radius:10px;border:1.5px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);font-size:.85rem;outline:none;transition:border-color .2s}
+    .myo-custom-input:focus{border-color:var(--accent)}
+    .myo-custom-label{font-size:.8rem;color:var(--text-tertiary)}
+    .myo-min-note{font-size:.74rem;color:var(--text-tertiary);font-style:italic;margin-bottom:8px}
+    .myo-toppings-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .topping{padding:6px 14px;border-radius:100px;border:1.5px solid var(--border-light);background:transparent;font-family:var(--font-body);font-size:.78rem;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+    .topping.sel{border-color:var(--accent);background:rgba(212,175,55,.12);color:var(--accent)}
+    .myo-sticky-panel{position:sticky;top:90px;z-index:0}
+    #slabVisualizer{padding-bottom:48px}
+    .chocolate-bar-visualizer{width:170px;height:290px;display:flex;justify-content:center;align-items:center;margin:0 auto 20px}
+    .chocolate-bar{width:156px;height:270px;background:var(--bg-secondary);border:7px solid #2A170F;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 15px 35px rgba(26,14,8,.15),inset 0 4px 12px rgba(0,0,0,.12)}
+    .chocolate-liquid-container{position:absolute;inset:0;overflow:hidden;border-radius:10px;background:#E8DEC9}
+    .liquid-waves{position:absolute;bottom:0;left:0;width:100%;height:100%;transition:transform 1.5s cubic-bezier(.25,1,.5,1);background:var(--cocoa-color,#4A2E1B);filter:url('#goo')}
+    .wave{position:absolute;left:-50%;width:200%;height:100px;background:var(--cocoa-color,#4A2E1B);border-radius:44%;transform-origin:center;animation:wave-spin 7s linear infinite;will-change:transform}
+    .wave1{bottom:80px;opacity:1;animation-duration:6s}
+    .wave2{bottom:84px;opacity:.7;animation-duration:9s;animation-delay:-2s;background:var(--cocoa-color-light,#5A3E2B)}
+    .wave3{bottom:86px;opacity:.4;animation-duration:12s;animation-delay:-5s;background:var(--cocoa-color-dark,#3A2010)}
+    @keyframes wave-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    .chocolate-grid-overlay{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(5,1fr);gap:5px;padding:5px;pointer-events:none}
+    .chocolate-segment{border:1px solid rgba(255,255,255,.06);border-bottom:2px solid rgba(0,0,0,.18);border-right:2px solid rgba(0,0,0,.18);border-radius:4px;box-shadow:inset 1px 1px 3px rgba(255,255,255,.12),inset -1px -1px 3px rgba(0,0,0,.3)}
+    .myo-bag-panel{background:var(--bg-card);border:1.5px solid var(--border-light);border-radius:20px;padding:22px;margin-top:8px}
+    .myo-bag-title{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+    #mcItems{min-height:40px}
+    .mc-item{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-light)}
+    .mc-item:last-child{border-bottom:none}
+    .mc-item-name{font-size:.85rem;font-weight:600;color:var(--text-primary);display:block}
+    .mc-item-desc{font-size:.74rem;color:var(--text-tertiary);display:block;margin-top:2px}
+    .mc-item-price{font-size:.9rem;font-weight:700;color:var(--accent);white-space:nowrap}
+    .mc-empty{font-size:.82rem;color:var(--text-tertiary);text-align:center;padding:16px 0}
+    .mc-subtotal-row{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:2px solid var(--border-light)}
+    .mc-subtotal-label{font-size:.85rem;font-weight:600;color:var(--text-secondary)}
+    #mcSubtotal{font-size:1.1rem;font-weight:700;color:var(--accent)}
+    .myo-add-to-cart-btn{width:100%;margin-top:16px;padding:14px 24px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),#b8860b);color:#1a1008;font-family:var(--font-body);font-size:.88rem;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:opacity .2s,transform .2s}
+    .myo-add-to-cart-btn:hover:not(:disabled){opacity:.9;transform:translateY(-1px)}
+    .myo-add-to-cart-btn:disabled{opacity:.4;cursor:not-allowed}
+    .myo-card-divider{border:none;border-top:1px solid var(--border-light);margin:18px 0}
+    @media(max-width:900px){.myo-layout{grid-template-columns:1fr}.myo-sticky-panel{position:relative;top:0}}
+    @media(max-width:500px){.myo-product-card{padding:20px 16px}.chocolate-bar-visualizer{height:140px}}
+  </style>
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -24,7 +84,7 @@
         <a href="tablets.html">Tablets</a>
         <a href="snacks.html">Snacks</a>
         <a href="spreads.html">Spreads</a>
-        <a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a>
+        <a href="hot-chocolate-ice-cream.html">Hot Choc &amp; Ice Cream</a>
         <a href="make-your-own.html" style="color:var(--accent);">Make Your Own</a>
       </div>
       <button class="nav-menu-btn" id="menuBtn" aria-label="Toggle menu"><span></span><span></span><span></span></button>
@@ -32,7 +92,7 @@
   </nav>
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html">Home</a><a href="tablets.html">Tablets</a><a href="snacks.html">Snacks</a>
-    <a href="spreads.html">Spreads</a><a href="hot-chocolate-ice-cream.html">Hot Choc & Ice Cream</a><a href="make-your-own.html">Make Your Own</a>
+    <a href="spreads.html">Spreads</a><a href="hot-chocolate-ice-cream.html">Hot Choc &amp; Ice Cream</a><a href="make-your-own.html">Make Your Own</a>
   </div>
 
   <section class="page-hero">
@@ -48,8 +108,15 @@
     </div>
   </section>
 
+  <div class="brand-strip">
+    <div class="marquee-track">
+      <span class="marquee-content">Zero Preservatives &nbsp;&nbsp;&middot;&nbsp;&nbsp; Crafted After Ordering &nbsp;&nbsp;&middot;&nbsp;&nbsp; Affordable Luxury &nbsp;&nbsp;&middot;&nbsp;&nbsp; Single-Origin Cocoa &nbsp;&nbsp;&middot;&nbsp;&nbsp; Not Fancy, Just Pure &nbsp;&nbsp;&middot;&nbsp;&nbsp; Fresh Batches Only &nbsp;&nbsp;&middot;&nbsp;&nbsp; Luxury Without The Markup &nbsp;&nbsp;&middot;&nbsp;&nbsp;</span>
+      <span class="marquee-content" aria-hidden="true">Zero Preservatives &nbsp;&nbsp;&middot;&nbsp;&nbsp; Crafted After Ordering &nbsp;&nbsp;&middot;&nbsp;&nbsp; Affordable Luxury &nbsp;&nbsp;&middot;&nbsp;&nbsp; Single-Origin Cocoa &nbsp;&nbsp;&middot;&nbsp;&nbsp; Not Fancy, Just Pure &nbsp;&nbsp;&middot;&nbsp;&nbsp; Fresh Batches Only &nbsp;&nbsp;&middot;&nbsp;&nbsp; Luxury Without The Markup &nbsp;&nbsp;&middot;&nbsp;&nbsp;</span>
+    </div>
+  </div>
+
   <div class="container"><div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Collections<span>/</span>Make Your Own</div></div>
-  <!-- SVG Filter for gooey liquid chocolate -->
+
   <svg class="goo-filter" style="display:none;">
     <defs>
       <filter id="goo">
@@ -60,149 +127,201 @@
     </defs>
   </svg>
 
-  <section class="builder-section">
+  <section class="myo-section">
     <div class="container">
-      <div class="builder-layout">
-        
-        <!-- Left: Form Steps -->
-        <div class="builder-container">
-          <!-- Step 1: Choose Base -->
-          <div class="builder-step">
-            <div class="builder-step-header">
-              <span class="builder-step-num">1</span>
-              <h3 class="builder-step-title">Choose Your Base</h3>
+      <div class="myo-layout">
+
+        <!-- LEFT: Product Cards -->
+        <div class="myo-cards-col">
+
+          <!-- Cocoa Beans -->
+          <div class="myo-product-card" id="beansCard">
+            <div class="myo-card-header">
+              <div class="myo-card-title-wrap">
+                <div>
+                  <div class="myo-card-title">Raw Cocoa Beans</div>
+                  <div class="myo-card-subtitle">&#8377;1/g &middot; Single-origin Keralan beans</div>
+                </div>
+              </div>
+              <button class="myo-add-btn" id="beansAddBtn">Add</button>
             </div>
-            <div class="builder-options" data-select="single" data-type="base">
-              <button class="builder-option">Cocoa Beans</button>
-              <button class="builder-option">Cocoa Nibs</button>
-              <button class="builder-option">Cocoa Butter</button>
+            <div class="myo-live-price" id="beansPrice">&#8377;500</div>
+            <div class="myo-label">Quantity (KG)</div>
+            <div class="pill-row" id="beansWeightGroup">
+              <button class="pill sel" data-val="500">0.5 kg</button>
+              <button class="pill" data-val="1000">1 kg</button>
+              <button class="pill" data-val="2000">2 kg</button>
+            </div>
+            <div class="myo-min-note">Minimum: 0.5 kg (500g)</div>
+            <div class="myo-custom-row">
+              <input class="myo-custom-input" id="beansCustomWeight" type="number" min="500" step="100" placeholder="Custom g">
+              <span class="myo-custom-label">g (min 500g)</span>
             </div>
           </div>
 
-          <!-- Step 2: Chocolate Percentage -->
-          <div class="builder-step">
-            <div class="builder-step-header">
-              <span class="builder-step-num">2</span>
-              <h3 class="builder-step-title">Chocolate Percentage</h3>
+          <!-- Cocoa Nibs -->
+          <div class="myo-product-card" id="nibsCard">
+            <div class="myo-card-header">
+              <div class="myo-card-title-wrap">
+                <div>
+                  <div class="myo-card-title">Roasted Cocoa Nibs</div>
+                  <div class="myo-card-subtitle">&#8377;2/g &middot; 250g = &#8377;500</div>
+                </div>
+              </div>
+              <button class="myo-add-btn" id="nibsAddBtn">Add</button>
             </div>
-            <div class="builder-options" data-select="single" data-type="percentage">
-              <button class="builder-option" data-val="50">50%</button>
-              <button class="builder-option" data-val="70">70%</button>
-              <button class="builder-option" data-val="80">80%</button>
-              <button class="builder-option" data-val="90">90%</button>
-              <button class="builder-option" data-val="100">100%</button>
+            <div class="myo-live-price" id="nibsPrice">&#8377;500</div>
+            <div class="myo-label">Quantity</div>
+            <div class="pill-row" id="nibsWeightGroup">
+              <button class="pill sel" data-val="250">250g &mdash; &#8377;500</button>
+              <button class="pill" data-val="500">500g &mdash; &#8377;1,000</button>
             </div>
-          </div>
-
-          <!-- Step 3: Sweetener -->
-          <div class="builder-step">
-            <div class="builder-step-header">
-              <span class="builder-step-num">3</span>
-              <h3 class="builder-step-title">Choose Your Sweetener</h3>
-            </div>
-            <div class="builder-options" data-select="single" data-type="sweetener">
-              <button class="builder-option">Muscovado Sugar</button>
-              <button class="builder-option">Coconut Sugar</button>
-              <button class="builder-option">Monk Fruit</button>
+            <div class="myo-min-note">Minimum: 250g</div>
+            <div class="myo-custom-row">
+              <input class="myo-custom-input" id="nibsCustomWeight" type="number" min="250" step="50" placeholder="Custom g">
+              <span class="myo-custom-label">g (min 250g)</span>
             </div>
           </div>
 
-          <!-- Step 4: Slab Size -->
-          <div class="builder-step">
-            <div class="builder-step-header">
-              <span class="builder-step-num">4</span>
-              <h3 class="builder-step-title">Slab Size</h3>
+          <!-- Cocoa Butter -->
+          <div class="myo-product-card" id="butterCard">
+            <div class="myo-card-header">
+              <div class="myo-card-title-wrap">
+                <div>
+                  <div class="myo-card-title">Pure Cocoa Butter</div>
+                  <div class="myo-card-subtitle">&#8377;5/g &middot; Cold-pressed</div>
+                </div>
+              </div>
+              <button class="myo-add-btn" id="butterAddBtn">Add</button>
             </div>
-            <div class="builder-options" data-select="single" data-type="size">
-              <button class="builder-option">250g</button>
-              <button class="builder-option">500g</button>
-              <button class="builder-option">1kg</button>
+            <div class="myo-live-price" id="butterPrice">&#8377;100</div>
+            <div class="myo-label">Quantity</div>
+            <div class="pill-row" id="butterWeightGroup">
+              <button class="pill sel" data-val="20">20g &mdash; &#8377;100</button>
+              <button class="pill" data-val="50">50g &mdash; &#8377;250</button>
+              <button class="pill" data-val="100">100g &mdash; &#8377;500</button>
+            </div>
+            <div class="myo-min-note">Minimum: 20g</div>
+            <div class="myo-custom-row">
+              <input class="myo-custom-input" id="butterCustomWeight" type="number" min="20" step="10" placeholder="Custom g">
+              <span class="myo-custom-label">g (min 20g)</span>
             </div>
           </div>
 
-          <!-- Step 5: Add-ons -->
-          <div class="builder-step">
-            <div class="builder-step-header">
-              <span class="builder-step-num">5</span>
-              <h3 class="builder-step-title">Add-ons</h3>
+          <!-- Muscovado Sugar -->
+          <div class="myo-product-card" id="sugarCard">
+            <div class="myo-card-header">
+              <div class="myo-card-title-wrap">
+                <div>
+                  <div class="myo-card-title">Muscovado Sugar</div>
+                  <div class="myo-card-subtitle">&#8377;0.35/g &middot; 1kg = &#8377;350</div>
+                </div>
+              </div>
+              <button class="myo-add-btn" id="sugarAddBtn">Add</button>
             </div>
-            <div class="builder-options" data-select="multi" data-type="addons">
-              <button class="builder-option">Almonds</button>
-              <button class="builder-option">Pistachio</button>
-              <button class="builder-option">Hazelnut</button>
-              <button class="builder-option">Cranberry</button>
-              <button class="builder-option">Orange Peel</button>
-              <button class="builder-option">Coffee</button>
-              <button class="builder-option">Sea Salt</button>
-              <button class="builder-option">Chilli</button>
+            <div class="myo-live-price" id="sugarPrice">&#8377;350</div>
+            <div class="myo-label">Quantity</div>
+            <div class="pill-row" id="sugarWeightGroup">
+              <button class="pill sel" data-val="1000">1 kg &mdash; &#8377;350</button>
+              <button class="pill" data-val="2000">2 kg &mdash; &#8377;700</button>
             </div>
-            <p class="multi-hint">Select as many as you like</p>
+            <div class="myo-min-note">Minimum: 1 kg (1000g)</div>
+            <div class="myo-custom-row">
+              <input class="myo-custom-input" id="sugarCustomWeight" type="number" min="1000" step="100" placeholder="Custom g">
+              <span class="myo-custom-label">g (min 1000g)</span>
+            </div>
           </div>
 
-          <button class="builder-submit">Craft My Chocolate</button>
+          <!-- Chocolate Slab -->
+          <div class="myo-product-card active" id="slabCard">
+            <div class="myo-card-header">
+              <div class="myo-card-title-wrap">
+                <div>
+                  <div class="myo-card-title">Craft Chocolate Slab</div>
+                  <div class="myo-card-subtitle">Custom cocoa % &middot; Sweetener of choice</div>
+                </div>
+              </div>
+              <button class="myo-add-btn added" id="slabAddBtn">Added</button>
+            </div>
+            <div class="myo-live-price" id="slabPrice">&#8377;750</div>
+
+            <div class="myo-label">Slab Size</div>
+            <div class="pill-row" id="slabWeightGroup">
+              <button class="pill sel" data-val="250">250g</button>
+              <button class="pill" data-val="500">500g</button>
+              <button class="pill" data-val="1000">1 kg</button>
+            </div>
+            <div class="myo-min-note">Minimum: 250g</div>
+            <div class="myo-custom-row">
+              <input class="myo-custom-input" id="slabCustomWeight" type="number" min="250" step="50" placeholder="Custom g">
+              <span class="myo-custom-label">g (min 250g)</span>
+            </div>
+
+            <hr class="myo-card-divider">
+
+            <div class="myo-label">Cocoa Percentage</div>
+            <div class="pill-row" id="slabPctGroup">
+              <button class="pill" data-val="50">50%</button>
+              <button class="pill sel" data-val="70">70%</button>
+              <button class="pill" data-val="80">80%</button>
+              <button class="pill" data-val="90">90%</button>
+              <button class="pill" data-val="100">100%</button>
+            </div>
+            <div class="myo-custom-row">
+              <input class="myo-custom-input" id="slabCustomPct" type="number" min="50" max="100" step="5" placeholder="Custom %">
+              <span class="myo-custom-label">% (50&#8211;100)</span>
+            </div>
+
+            <hr class="myo-card-divider">
+
+            <div class="myo-label">Sweetener &amp; Price</div>
+            <div class="pill-row" id="slabSweetGroup">
+              <button class="pill sel" data-val="Muscovado Sugar" data-rate="3">Muscovado &mdash; &#8377;3/g</button>
+              <button class="pill" data-val="Coconut Sugar" data-rate="4">Coconut Sugar &mdash; &#8377;4/g</button>
+              <button class="pill" data-val="Monk Fruit" data-rate="5">Monk Fruit &mdash; &#8377;5/g</button>
+            </div>
+
+            <!-- Hidden elements to prevent JS errors -->
+            <div id="slabToppings" style="display: none;"></div>
+            <input type="hidden" id="slabCustomAddon">
+          </div>
+
         </div>
 
-        <!-- Right: Visual Preview Panel -->
-        <div class="builder-preview-panel">
-          <div class="preview-sticky">
-            <h3 class="preview-title">Your Custom Bar</h3>
-            
-            <!-- Chocolate Bar visualizer -->
+        <!-- RIGHT: Preview + Bag -->
+        <div class="myo-sticky-panel">
+
+          <div id="slabVisualizer">
             <div class="chocolate-bar-visualizer">
               <div class="chocolate-bar">
                 <div class="chocolate-liquid-container">
-                  <div class="liquid-waves" id="liquidWaves" style="transform: translateY(30%);">
+                  <div class="liquid-waves" id="liquidWaves" style="transform:translateY(30%);">
                     <div class="wave wave1"></div>
                     <div class="wave wave2"></div>
                     <div class="wave wave3"></div>
                   </div>
                 </div>
-                <!-- Beveled segments -->
                 <div class="chocolate-grid-overlay">
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
-                  <div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div><div class="chocolate-segment"></div><div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div><div class="chocolate-segment"></div><div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div><div class="chocolate-segment"></div><div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div><div class="chocolate-segment"></div><div class="chocolate-segment"></div>
+                  <div class="chocolate-segment"></div><div class="chocolate-segment"></div><div class="chocolate-segment"></div>
                 </div>
               </div>
             </div>
-
-            <!-- Configuration Summary -->
-            <div class="preview-summary">
-              <div class="summary-row">
-                <span class="summary-label">Base</span>
-                <span class="summary-value" id="summaryBase">Cocoa Beans</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-label">Cocoa %</span>
-                <span class="summary-value" id="summaryPercentage">70%</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-label">Sweetener</span>
-                <span class="summary-value" id="summarySweetener">Muscovado Sugar</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-label">Size</span>
-                <span class="summary-value" id="summarySize">250g</span>
-              </div>
-              <div class="summary-addons">
-                <span class="summary-label">Add-ons</span>
-                <div class="summary-addons-list" id="summaryAddons">None</div>
-              </div>
-            </div>
-
           </div>
+
+          <div class="myo-bag-panel">
+            <div class="myo-bag-title">Make Your Own Chocolate Bag</div>
+            <div id="mcItems"><div class="mc-empty">No items added yet</div></div>
+            <div class="mc-subtotal-row">
+              <span class="mc-subtotal-label">Bag Total</span>
+              <span id="mcSubtotal">&#8377;0</span>
+            </div>
+            <button class="myo-add-to-cart-btn" id="addToBagBtn" disabled>Add Bag to Cart</button>
+          </div>
+
         </div>
 
       </div>
@@ -214,14 +333,15 @@
       <div class="footer-top">
         <div class="footer-brand"><h2 class="footer-logo">RARE COCOA</h2><p class="footer-tagline">Real Chocolate. Real Trust.</p></div>
         <div class="footer-links">
-          <div class="footer-col"><h4>Collections</h4><a href="tablets.html">Tablets</a><a href="snacks.html">Snacks</a><a href="spreads.html">Spreads</a><a href="hot-chocolate-ice-cream.html">Hot Chocolate & Ice Cream</a><a href="make-your-own.html">Make Your Own</a><a href="chocolate-slab.html">Chocolate Slab</a></div>
+          <div class="footer-col"><h4>Collections</h4><a href="tablets.html">Tablets</a><a href="snacks.html">Snacks</a><a href="spreads.html">Spreads</a><a href="hot-chocolate-ice-cream.html">Hot Chocolate &amp; Ice Cream</a><a href="make-your-own.html">Make Your Own</a></div>
           <div class="footer-col"><h4>Explore</h4><a href="index.html">Home</a><a href="manufacturing.html">Manufacturing</a></div>
         </div>
       </div>
       <div class="footer-bottom"><p>&copy; 2026 Rare Cocoa&trade;. All rights reserved.</p><p>Pure Ingredients. Single Origin. Real Chocolate.</p></div>
     </div>
   </footer>
-  <script src="cart.js"></script>
-  <script src="pages.js?v=5"></script>
+
+  <script src="cart.js?v=6"></script>
+  <script src="pages.js?v=24"></script>
 </body>
 </html>

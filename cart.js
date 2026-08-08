@@ -152,7 +152,6 @@ const CartSystem = {
     }
 
     this.saveCart();
-    // Do not automatically open cart to avoid disrupting the user experience
     this.triggerNotification(`Added ${qty} ${product.name} to your selection`);
   },
 
@@ -220,7 +219,7 @@ const CartSystem = {
     } else {
       container.innerHTML = this.items.map(item => {
         // Format options list
-        const optionsHtml = Object.entries(item.options)
+        const optionsHtml = Object.entries(item.options || {})
           .map(([key, value]) => `
             <div class="cart-item-option-row">
               <span class="option-name">${key}:</span>
@@ -453,14 +452,44 @@ const CartSystem = {
         <h3>Delivery Details</h3>
         <p>Please enter your details to place your order via WhatsApp.</p>
         <form id="checkoutDetailsForm">
-          <div class="checkout-form-group">
-            <label for="checkoutName">Full Name</label>
-            <input type="text" id="checkoutName" required placeholder="e.g. Praveen Kumar">
+          <div class="checkout-form-group" style="margin-bottom: 24px;">
+            <label style="margin-bottom: 10px; font-weight: 600; color: #1A0E08; letter-spacing: 0.05em; font-size: 0.75rem;">ORDERING FOR:</label>
+            <div class="recipient-toggle-tabs" style="display: flex; gap: 16px; width: 100%;">
+              <button type="button" class="recipient-tab active" id="btnOrderSelf" style="flex: 1; padding: 12px 20px; font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; border-radius: 30px; border: 1.5px solid #1A0E08; background: #1A0E08; color: #fff; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.05em; text-align: center;">Yourself</button>
+              <button type="button" class="recipient-tab" id="btnOrderOther" style="flex: 1; padding: 12px 20px; font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; border-radius: 30px; border: 1.5px solid rgba(26,14,8,0.15); background: transparent; color: #1A0E08; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.05em; text-align: center;">Someone Else</button>
+            </div>
           </div>
-          <div class="checkout-form-group">
-            <label for="checkoutPhone">Phone Number</label>
-            <input type="tel" id="checkoutPhone" required placeholder="e.g. 9876543210">
+
+          <div id="selfFields">
+            <div class="checkout-form-group">
+              <label for="checkoutName">Full Name</label>
+              <input type="text" id="checkoutName" required placeholder="e.g. Praveen Kumar">
+            </div>
+            <div class="checkout-form-group">
+              <label for="checkoutPhone">Phone Number</label>
+              <input type="tel" id="checkoutPhone" required placeholder="e.g. 9876543210">
+            </div>
           </div>
+
+          <div id="otherFields" style="display: none;">
+            <div class="checkout-form-group">
+              <label for="checkoutReceiverName">Receiver's Name</label>
+              <input type="text" id="checkoutReceiverName" placeholder="e.g. Rohan Sharma">
+            </div>
+            <div class="checkout-form-group">
+              <label for="checkoutReceiverPhone">Receiver's Phone Number</label>
+              <input type="tel" id="checkoutReceiverPhone" placeholder="e.g. 9876543210">
+            </div>
+            <div class="checkout-form-group">
+              <label for="checkoutSenderName">Your Name (Sender)</label>
+              <input type="text" id="checkoutSenderName" placeholder="e.g. Praveen Kumar">
+            </div>
+            <div class="checkout-form-group">
+              <label for="checkoutSenderPhone">Your Phone Number (Sender)</label>
+              <input type="tel" id="checkoutSenderPhone" placeholder="e.g. 917674931380">
+            </div>
+          </div>
+
           <div class="checkout-form-group">
             <label for="checkoutAddress">Delivery Address</label>
             <textarea id="checkoutAddress" required placeholder="e.g. Flat 304, Royal Apartments, HSR Layout" rows="3"></textarea>
@@ -488,14 +517,81 @@ const CartSystem = {
     const form = document.getElementById('checkoutDetailsForm');
     const nameInput = document.getElementById('checkoutName');
     const phoneInput = document.getElementById('checkoutPhone');
+    const receiverNameInput = document.getElementById('checkoutReceiverName');
+    const receiverPhoneInput = document.getElementById('checkoutReceiverPhone');
+    const senderNameInput = document.getElementById('checkoutSenderName');
+    const senderPhoneInput = document.getElementById('checkoutSenderPhone');
     const addressInput = document.getElementById('checkoutAddress');
     const pincodeInput = document.getElementById('checkoutPincode');
     const mapsLinkInput = document.getElementById('checkoutMapsLink');
     const submitBtn = document.getElementById('checkoutSubmitBtn');
 
+    const btnOrderSelf = document.getElementById('btnOrderSelf');
+    const btnOrderOther = document.getElementById('btnOrderOther');
+    const selfFields = document.getElementById('selfFields');
+    const otherFields = document.getElementById('otherFields');
+
+    let orderFor = 'self';
+
+    btnOrderSelf.addEventListener('click', () => {
+      orderFor = 'self';
+      
+      btnOrderSelf.style.background = '#1A0E08';
+      btnOrderSelf.style.color = '#fff';
+      btnOrderSelf.style.borderColor = '#1A0E08';
+      
+      btnOrderOther.style.background = 'transparent';
+      btnOrderOther.style.color = '#1A0E08';
+      btnOrderOther.style.borderColor = 'rgba(26,14,8,0.15)';
+      
+      selfFields.style.display = 'block';
+      otherFields.style.display = 'none';
+
+      nameInput.setAttribute('required', 'true');
+      phoneInput.setAttribute('required', 'true');
+      receiverNameInput.removeAttribute('required');
+      receiverPhoneInput.removeAttribute('required');
+      senderNameInput.removeAttribute('required');
+      senderPhoneInput.removeAttribute('required');
+
+      validateForm();
+    });
+
+    btnOrderOther.addEventListener('click', () => {
+      orderFor = 'other';
+      
+      btnOrderOther.style.background = '#1A0E08';
+      btnOrderOther.style.color = '#fff';
+      btnOrderOther.style.borderColor = '#1A0E08';
+      
+      btnOrderSelf.style.background = 'transparent';
+      btnOrderSelf.style.color = '#1A0E08';
+      btnOrderSelf.style.borderColor = 'rgba(26,14,8,0.15)';
+      
+      selfFields.style.display = 'none';
+      otherFields.style.display = 'block';
+
+      nameInput.removeAttribute('required');
+      phoneInput.removeAttribute('required');
+      receiverNameInput.setAttribute('required', 'true');
+      receiverPhoneInput.setAttribute('required', 'true');
+      senderNameInput.setAttribute('required', 'true');
+      senderPhoneInput.setAttribute('required', 'true');
+
+      validateForm();
+    });
+
     const validateForm = () => {
-      const name = nameInput.value.trim();
-      const phone = phoneInput.value.trim();
+      let isNamePhoneValid = false;
+      if (orderFor === 'self') {
+        isNamePhoneValid = nameInput.value.trim() !== '' && phoneInput.value.trim() !== '';
+      } else {
+        isNamePhoneValid = receiverNameInput.value.trim() !== '' && 
+                           receiverPhoneInput.value.trim() !== '' && 
+                           senderNameInput.value.trim() !== '' && 
+                           senderPhoneInput.value.trim() !== '';
+      }
+
       const address = addressInput.value.trim();
       const pincode = pincodeInput.value.trim();
       const mapsLink = needsMapLink ? (mapsLinkInput?.value.trim() || '') : '';
@@ -503,14 +599,14 @@ const CartSystem = {
       const isPincodeValid = /^[0-9]{6}$/.test(pincode);
       const isMapsValid = !needsMapLink || (mapsLink !== '');
 
-      if (name && phone && address && isPincodeValid && isMapsValid) {
+      if (isNamePhoneValid && address && isPincodeValid && isMapsValid) {
         submitBtn.removeAttribute('disabled');
       } else {
         submitBtn.setAttribute('disabled', 'true');
       }
     };
 
-    [nameInput, phoneInput, addressInput, pincodeInput].forEach(input => {
+    [nameInput, phoneInput, receiverNameInput, receiverPhoneInput, senderNameInput, senderPhoneInput, addressInput, pincodeInput].forEach(input => {
       input.addEventListener('input', validateForm);
     });
     if (needsMapLink && mapsLinkInput) {
@@ -598,13 +694,23 @@ const CartSystem = {
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = nameInput.value.trim();
-      const phone = phoneInput.value.trim();
       const address = addressInput.value.trim();
       const pincode = pincodeInput.value.trim();
       const mapsLink = needsMapLink ? (mapsLinkInput?.value.trim() || '') : '';
 
-      if (!name || !phone || !address || !pincode) { alert('Please fill out all fields.'); return; }
+      const name = nameInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const receiverName = receiverNameInput.value.trim();
+      const receiverPhone = receiverPhoneInput.value.trim();
+      const senderName = senderNameInput.value.trim();
+      const senderPhone = senderPhoneInput.value.trim();
+
+      if (orderFor === 'self') {
+        if (!name || !phone) { alert('Please fill out all fields.'); return; }
+      } else {
+        if (!receiverName || !receiverPhone || !senderName || !senderPhone) { alert('Please fill out all fields.'); return; }
+      }
+      if (!address || !pincode) { alert('Please fill out all fields.'); return; }
       if (needsMapLink && !mapsLink) { alert('Please paste your Google Maps Location Link.'); return; }
       if (!/^[0-9]{6}$/.test(pincode)) { alert('Please enter a valid 6-digit pincode.'); return; }
 
@@ -612,7 +718,12 @@ const CartSystem = {
       message += `• *Delivery Region:* ${location}\n`;
       if (location !== 'Other States') message += `• *Temperature Agreement:* Accepted ✓\n`;
       message += `• *Delivery Pincode:* ${pincode}\n=================================\n\n`;
-      message += `*Recipient Information:*\n• *Name:* ${name}\n• *Contact:* ${phone}\n• *Address:* ${address}\n`;
+      
+      if (orderFor === 'self') {
+        message += `*Recipient Information:*\n• *Name:* ${name}\n• *Contact:* ${phone}\n• *Address:* ${address}\n`;
+      } else {
+        message += `*Delivery Information (Gift/For Other):*\n• *Receiver Name:* ${receiverName}\n• *Receiver Phone:* ${receiverPhone}\n• *Sender Name:* ${senderName}\n• *Sender Phone:* ${senderPhone}\n• *Address:* ${address}\n`;
+      }
       if (mapsLink) message += `• *Location Link:* ${mapsLink}\n`;
       message += `\n*Curated Selection:*\n`;
 
@@ -679,10 +790,13 @@ const CartSystem = {
   }
 };
 
-// Auto initialize on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
+// Auto initialize on DOM ready or immediately if already loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => CartSystem.init());
+} else {
   CartSystem.init();
-});
+}
+
 
 // Register Service Worker for background pre-caching
 if ('serviceWorker' in navigator) {

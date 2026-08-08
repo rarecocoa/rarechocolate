@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rare-cocoa-assets-v11';
+const CACHE_NAME = 'rare-cocoa-assets-v14';
 const ASSETS_TO_CACHE = [
   'assets/almond_tablet.avif?v=2',
   'assets/almond-raisin_tablet.avif?v=2',
@@ -55,7 +55,10 @@ const ASSETS_TO_CACHE = [
   'assets/popsicle1.avif?v=2',
   'assets/popsicle2.avif?v=2',
   'assets/farmer.avif?v=2',
-  'assets/founder_praveen.avif?v=2'];
+  'assets/founder_praveen.avif?v=2',
+  'assets/hazelnut_cluster.avif?v=2',
+  'assets/medjoldates_cluster.avif?v=2',
+  'assets/cocoa_tea.avif?v=2'];
 
 // Install Service Worker and pre-cache assets
 self.addEventListener('install', event => {

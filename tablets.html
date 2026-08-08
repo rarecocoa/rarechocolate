@@ -12,7 +12,7 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"></noscript>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="pages.css?v=22">
+  <link rel="stylesheet" href="pages.css?v=24">
 </head>
 <body class="tablets-page">
   <!-- SVG Filter for gooey liquid chocolate (used by mini card bar) -->
@@ -232,16 +232,16 @@
   </footer>
 
   <script src="cart.js?v=6"></script>
-  <script src="pages.js?v=22"></script>
-  <script src="products-db.js"></script>
+  <script src="pages.js?v=24"></script>
+  <script src="products-db.js?v=24"></script>
   <script>
     // ── PASTE YOUR GOOGLE SHEET ID BELOW ──────────────────────────
-    var RC_SHEET_ID = '1wM-aKr9fj9yP8nQECRR2yY8Rlbff6MzvpmkEKOJX0vU';
-    var RC_TAB_NAME = 'tablets';
+    var RC_SHEET_ID = '1rZu7brDiJkQMpblZ3owkhRBCu31U7vCzHvY6QcO6ZQc';
+    var RC_TAB_NAME = 'products';
     // ──────────────────────────────────────────────────────────────
     var TABLETS_BANNER = '<div class="tablets-info-banner" style="display:flex;justify-content:center;gap:24px;margin:0 auto 30px auto;padding:12px 24px;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:var(--radius-md);max-width:fit-content;font-size:0.85rem;font-family:var(--font-body);color:var(--text-secondary);"><div><strong>Shelf Life:</strong> 6 Months</div><div style="width:1px;background:rgba(212,175,55,0.2);height:16px;align-self:center;"></div><div><strong>Storage Condition:</strong> 16 - 18&deg;C</div></div>';
     document.addEventListener('DOMContentLoaded', function() {
-      RCProductsDB.load(RC_SHEET_ID, RC_TAB_NAME, 'rc-products-container', TABLETS_BANNER);
+      RCProductsDB.load(RC_SHEET_ID, RC_TAB_NAME, 'rc-products-container', 'tablets', TABLETS_BANNER);
     });
   </script>
 </body>

@@ -2,6 +2,10 @@
    RARE COCOA™ — Collection Pages & Product Modal Styles
    ========================================================== */
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ── Page Hero Banner ──────────────────────────────────── */
 .page-hero {
   padding: clamp(100px, 9vw, 120px) 0 clamp(30px, 4vw, 45px);
@@ -103,11 +107,16 @@
 @media (max-width: 768px) {
   .sub-tabs {
     top: 62px;
-    padding: 10px 12px;
-    background: rgba(255, 252, 247, 0.9);
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    padding: 16px 20px;
+    background: rgba(255, 252, 247, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-radius: 12px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
     margin-bottom: clamp(16px, 4vw, 24px);
     display: flex;
     justify-content: flex-start;
@@ -124,8 +133,8 @@
   .sub-tab {
     flex: 0 0 auto;
     scroll-snap-align: start;
-    padding: 8px 16px;
-    font-size: 0.75rem;
+    padding: 12px 24px;
+    font-size: 0.78rem;
   }
 }
 
@@ -136,23 +145,25 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 12px 28px;
-  color: var(--text-tertiary);
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
+  color: #8b6e4b;
+  background: linear-gradient(135deg, rgba(255, 252, 247, 0.9) 0%, rgba(245, 230, 200, 0.5) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.25);
   border-radius: 100px;
   cursor: pointer;
   transition: all 0.3s var(--ease);
 }
 
 .sub-tab:hover {
-  border-color: var(--border-gold);
-  color: var(--accent);
+  border-color: rgba(212, 175, 55, 0.6);
+  color: #b8860b;
+  background: linear-gradient(135deg, rgba(255, 252, 247, 1) 0%, rgba(245, 230, 200, 0.7) 100%);
 }
 
 .sub-tab.active {
-  background: var(--text-primary);
-  color: var(--bg-primary);
-  border-color: var(--text-primary);
+  background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+  color: #ffffff;
+  border-color: #d4af37;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.22);
 }
 
 /* ── Product Grid ──────────────────────────────────────── */
@@ -455,6 +466,9 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s var(--ease), visibility 0.3s;
+  will-change: opacity;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 .modal-backdrop.active {
@@ -471,9 +485,11 @@
   overflow-y: auto;
   box-shadow: 0 32px 80px rgba(26, 14, 8, 0.15);
   border: 1px solid var(--border-light);
-  transform: translateY(24px) scale(0.97);
+  transform: translateY(24px) scale(0.97) translate3d(0, 0, 0);
+  -webkit-transform: translateY(24px) scale(0.97) translate3d(0, 0, 0);
   transition: transform 0.4s var(--ease);
   position: relative;
+  will-change: transform, opacity;
 }
 
 .modal-backdrop.active .modal {
@@ -683,44 +699,58 @@
 .modal-qty-row {
   display: flex;
   align-items: center;
-  gap: 0;
-  background: var(--bg-secondary);
-  border: 1px solid rgba(201,164,86,0.25);
-  border-radius: 50px;
+  justify-content: space-between;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-light);
+  border-radius: 8px;
   overflow: hidden;
-  width: fit-content;
+  width: 240px;
   margin: 0 auto;
+  box-shadow: var(--shadow-gold);
 }
 .modal-qty-btn {
   background: transparent;
   border: none;
-  width: 44px;
-  height: 44px;
-  font-size: 1.25rem;
-  font-weight: 400;
+  width: 75px;
+  height: 50px;
+  font-size: 1.4rem;
+  font-weight: 300;
   color: var(--accent);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: background 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.modal-qty-btn:hover { background: rgba(201,164,86,0.12); }
-.modal-qty-btn:active { background: rgba(201,164,86,0.22); }
+@media (hover: hover) {
+  .modal-qty-btn:hover { background: var(--accent-bg); }
+}
+.modal-qty-btn.flash-active {
+  animation: qtyGoldBlink 0.5s ease-out forwards;
+}
+@keyframes qtyGoldBlink {
+  0%   { background: var(--accent-light); color: #fff; }
+  70%  { background: rgba(201,164,86,0.15); color: var(--accent); }
+  100% { background: transparent; color: var(--accent); }
+}
 .modal-qty-val {
-  min-width: 40px;
+  flex: 1;
   text-align: center;
   font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
-  border-left: 1px solid rgba(201,164,86,0.2);
-  border-right: 1px solid rgba(201,164,86,0.2);
-  padding: 0 6px;
-  line-height: 44px;
+  border-left: 1px solid var(--border-gold);
+  border-right: 1px solid var(--border-gold);
+  line-height: 50px;
   user-select: none;
+  letter-spacing: 0.08em;
 }
+
+
+
 
 .modal-price-display {
   font-family: var(--font-heading);
@@ -1520,28 +1550,202 @@ body.page-loading .product-grid-img span {
   }
 }
 
-/* Quantity Button Gold Hover Effect */
-.modal-qty-btn {
-  background: none;
-  border: none;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  color: var(--text-secondary);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.25s var(--ease);
+
+
+@media (max-width: 992px) {
+  .builder-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .builder-preview-panel {
+    order: -1; /* Move preview panel to top on mobile */
+    position: relative !important;
+    top: 0 !important;
+    margin-bottom: 24px;
+    z-index: 10;
 }
 
-.modal-qty-btn:hover {
-  background: var(--accent);
-  color: var(--bg-primary) !important;
-  box-shadow: var(--shadow-gold);
+.chocolate-bar {
+  width: 156px;
+  height: 270px;
+  background: var(--bg-secondary);
+  border: 7px solid #2A170F; /* Rich chocolate boundary */
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 15px 35px rgba(26, 14, 8, 0.15),
+    inset 0 4px 12px rgba(0, 0, 0, 0.12);
 }
+
+.chocolate-liquid-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #E8DEC9; /* Empty bar inner cream backing */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Viscous Wave Animation */
+.liquid-waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+  background: var(--cocoa-color, #4A2E1B);
+  filter: url('#goo'); /* Viscous gooey blending filter */
+}
+
+.wave {
+  position: absolute;
+  left: -50%;
+  width: 200%;
+  height: 120px; /* Tall enough to overlap the top surface */
+  background: var(--cocoa-color, #4A2E1B);
+  border-radius: 40%;
+  transform-origin: center;
+  animation: wave-spin 7s linear infinite;
+  will-change: transform;
+}
+
+.wave1 {
+  top: -60px; /* Position at the surface of rising liquid */
+  opacity: 1;
+  animation-duration: 6s;
+}
+
+.wave2 {
+  top: -55px;
+  opacity: 0.7;
+  animation-duration: 9s;
+  animation-delay: -2s;
+  background: var(--cocoa-color-light, #5D3C2A);
+}
+
+.wave3 {
+  top: -50px;
+  opacity: 0.4;
+  animation-duration: 12s;
+  animation-delay: -5s;
+  background: var(--cocoa-color-dark, #3B2315);
+}
+
+@keyframes wave-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Beveled Grid Segments */
+.chocolate-grid-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 5px;
+  padding: 5px;
+  pointer-events: none;
+}
+
+.chocolate-segment {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.18);
+  border-right: 2px solid rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+  box-shadow: 
+    inset 1px 1px 3px rgba(255, 255, 255, 0.12),
+    inset -1px -1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Preview Summary Details */
+.preview-summary {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+}
+
+.summary-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.summary-value {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.summary-addons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-addons-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.summary-addon-pill {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--border-light);
+}
+
+/* ── Mobile Scroll-Focus (Gold Boundary Glow) ────────────── */
+@media (max-width: 768px) {
+  .product-grid-card {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .product-grid-card.scroll-focus {
+    transform: scale(1.02) translateY(-4px);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+    border-color: transparent;
+  }
+
+  .product-grid-card.scroll-focus::after {
+    border-color: var(--accent-light);
+  }
+
+  .product-grid-card.scroll-focus .img-gradient {
+    transform: scale(1.04);
+  }
+}
+
+
 
 @media (max-width: 992px) {
   .builder-layout {
@@ -1561,12 +1765,17 @@ body.page-loading .product-grid-img span {
 @media (max-width: 768px) {
   body .products-section .sub-tabs {
     top: 62px !important;
-    padding: 10px 12px !important;
+    width: 100vw !important;
+    margin-left: calc(-50vw + 50%) !important;
+    margin-right: calc(-50vw + 50%) !important;
+    padding: 16px 20px !important;
     background: rgba(255, 252, 247, 0.95) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
-    border-radius: 12px !important;
-    margin-bottom: clamp(16px, 4vw, 24px) !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    margin-bottom: 0px !important;
     display: flex !important;
     justify-content: flex-start !important;
     flex-wrap: nowrap !important;
@@ -1584,8 +1793,8 @@ body.page-loading .product-grid-img span {
   body .products-section .sub-tab {
     flex: 0 0 auto !important;
     scroll-snap-align: start !important;
-    padding: 8px 16px !important;
-    font-size: 0.72rem !important;
+    padding: 12px 24px !important;
+    font-size: 0.78rem !important;
     margin: 0 !important;
   }
 }
@@ -1593,13 +1802,51 @@ body.page-loading .product-grid-img span {
 @media (max-width: 500px) {
   body .products-section .sub-tabs {
     gap: 6px !important;
-    padding: 8px 10px !important;
+    padding: 15px 20px !important;
   }
   
   body .products-section .sub-tab {
-    padding: 6px 12px !important;
-    font-size: 0.68rem !important;
+    padding: 11px 20px !important;
+    font-size: 0.76rem !important;
   }
 }
 
+.sub-tabs-scroll-cue {
+  display: none;
+}
 
+@media (max-width: 768px) {
+  .sub-tabs-scroll-cue {
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: 20px;
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(184, 134, 11, 0.7);
+    position: sticky;
+    top: 130px;
+    z-index: 101;
+    background: rgba(255, 252, 247, 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 5px 14px 7px 14px;
+    margin-top: -1px;
+    margin-bottom: clamp(12px, 3vw, 16px);
+    box-shadow: 0 4px 10px rgba(26, 14, 8, 0.04);
+    opacity: 1;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    animation: goldShimmer 2.5s infinite alternate;
+  }
+}
+
+@keyframes goldShimmer {
+  0% { color: rgba(184, 134, 11, 0.5); }
+  100% { color: rgba(212, 175, 55, 0.95); }
+}
