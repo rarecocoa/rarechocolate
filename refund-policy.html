@@ -37,25 +37,45 @@
     </div>
   </div>
   <script>
-    (function(){
-      var loader=document.getElementById('premium-loader');
-      var line=document.getElementById('loader-progress-line');
-      var status=document.getElementById('loader-status');
-      var p=0;
-      var iv=setInterval(function(){
-        p+=Math.random()*18+6;
-        if(p>=100){p=100;clearInterval(iv);setTimeout(function(){loader.classList.add('hidden');},300);}
-        line.style.width=p+'%';
-        status.textContent=Math.round(p)+'%';
-      },100);
+    (function() {
+      var loader = document.getElementById('premium-loader');
+      var line = document.getElementById('loader-progress-line');
+      var status = document.getElementById('loader-status');
+      var progress = 0;
+      var interval = setInterval(function() {
+        progress += Math.random() * 18 + 5;
+        if (progress > 100) progress = 100;
+        if (line) line.style.width = progress + '%';
+        if (status) status.textContent = Math.round(progress) + '%';
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(function() {
+            if (loader) {
+              loader.classList.add('fade-out');
+              setTimeout(function() { loader.remove(); }, 600);
+            }
+          }, 200);
+        }
+      }, 180);
+      setTimeout(function() {
+        clearInterval(interval);
+        if (line) line.style.width = '100%';
+        if (status) status.textContent = '100%';
+        setTimeout(function() {
+          if (loader && !loader.classList.contains('fade-out')) {
+            loader.classList.add('fade-out');
+            setTimeout(function() { loader.remove(); }, 600);
+          }
+        }, 200);
+      }, 2000);
     })();
   </script>
 
   <!-- Nav -->
-  <nav class="nav" id="mainNav">
+  <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">
-        <img src="logo.avif" alt="Rare Cocoa" class="nav-logo-img">
+        <img src="logo.avif" alt="Rare Cocoa Logo" class="nav-logo-img">
         <span>RARE COCOA</span>
       </a>
       <div class="nav-links">
@@ -90,43 +110,51 @@
   <div class="policy-body">
     <p class="policy-updated">Last updated: August 2026</p>
 
-    <p>At Rare Cocoa™, we take great pride in every batch we handcraft. We want you to be completely satisfied with your purchase. Please read our refund and cancellation policy carefully.</p>
+    <p>At Rare Cocoa, every product is <strong>freshly handcrafted to order</strong> using pure, natural ingredients. Because of this made-to-order nature, our cancellation and refund policy is as follows. Please read carefully before placing an order.</p>
 
-    <h2>1. Order Cancellations</h2>
+    <h2>1. No Cancellations</h2>
+    <p>Once an order is confirmed and payment is received, it <strong>cannot be cancelled or modified</strong> under any circumstances. Our products are prepared specifically for your order and cannot be resold. We encourage you to verify all details — product, quantity, and delivery address — before making payment.</p>
+
+    <h2>2. When Will We Issue a Refund?</h2>
+    <p>Refunds are only applicable in the following situations:</p>
     <ul>
-      <li>Cancellations are accepted within <strong>24 hours</strong> of placing the order, provided the order has not yet been dispatched.</li>
-      <li>To cancel an order, email us at <a href="mailto:rarecocoa7@gmail.com">rarecocoa7@gmail.com</a> or WhatsApp us at <a href="https://wa.me/917674931380">+91 76749 31380</a> with your order details.</li>
-      <li>Once an order has been dispatched, it cannot be cancelled.</li>
+      <li>You received a product that is visibly damaged or broken upon delivery.</li>
+      <li>You received the wrong product (different from what was confirmed on WhatsApp).</li>
+      <li>Your order was not delivered and the courier confirms it as lost in transit.</li>
+    </ul>
+    <p>In all refund cases, you must contact us within <strong>48 hours of delivery</strong> with a clear photo or video of the issue sent via WhatsApp.</p>
+
+    <h2>3. How Refunds Are Processed</h2>
+    <ul>
+      <li>Approved refunds will be returned to your original UPI account within <strong>5–7 business days</strong>.</li>
+      <li>We may offer a replacement instead of a refund at our discretion, depending on stock availability.</li>
     </ul>
 
-    <h2>2. Damaged or Incorrect Orders</h2>
-    <p>If you receive a product that is damaged, defective, or incorrect, we will resolve the issue promptly. Please:</p>
+    <h2>4. Non-Refundable Cases</h2>
+    <p>Refunds will not be issued in the following situations:</p>
     <ul>
-      <li>Contact us within <strong>48 hours</strong> of delivery.</li>
-      <li>Share a clear photo or video of the damaged or incorrect product.</li>
-      <li>We will offer a replacement or full refund at our discretion.</li>
-    </ul>
-
-    <h2>3. Non-Refundable Situations</h2>
-    <p>We are unable to process refunds in the following cases:</p>
-    <ul>
-      <li>Products returned without prior communication and approval.</li>
+      <li>Dissatisfaction due to personal taste preferences. Our chocolates use real cocoa and natural ingredients — the taste profile differs from commercial, sugar-heavy chocolates and this is intentional.</li>
+      <li>Damage caused after delivery due to improper storage (e.g., left in heat or sunlight).</li>
+      <li>Claims raised after 48 hours of delivery.</li>
       <li>Products that have been partially or fully consumed.</li>
-      <li>Dissatisfaction due to personal taste preferences (our chocolates use pure, natural ingredients with no artificial sweeteners or additives — flavour profiles may differ from mass-market products).</li>
-      <li>Claims made after 48 hours of delivery.</li>
     </ul>
 
-    <h2>4. Refund Process</h2>
-    <p>Approved refunds will be processed within <strong>5–7 business days</strong> to the original payment method. Depending on your bank or payment provider, it may take an additional 3–5 days to reflect in your account.</p>
-
-    <h2>5. Custom Orders</h2>
-    <p>Custom and made-to-order products (such as Make Your Own blends) are non-refundable once production has begun, except in cases of damage or error on our part.</p>
+    <h2>5. How to Raise a Refund Request</h2>
+    <p>Contact us within 48 hours of delivery via:</p>
+    <ul>
+      <li>WhatsApp: <a href="https://wa.me/917674931380">+91 76749 31380</a></li>
+      <li>Email: <a href="mailto:rarecocoa7@gmail.com">rarecocoa7@gmail.com</a></li>
+    </ul>
+    <p>Please share your order details (product name, quantity, date of order) and a clear photo/video of the issue.</p>
 
     <h2>6. Contact Us</h2>
-    <p>For any refund or cancellation requests:<br>
-    <strong>Rare Cocoa™</strong><br>
-    Email: <a href="mailto:rarecocoa7@gmail.com">rarecocoa7@gmail.com</a><br>
-    WhatsApp: <a href="https://wa.me/917674931380">+91 76749 31380</a></p>
+    <p>
+      <strong>Rare Cocoa</strong><br>
+      Flat No. 38, 2, Ramapuram Colony Rd, Ramapuram Colony,<br>
+      Poranki, Andhra Pradesh — 521 137<br>
+      Email: <a href="mailto:rarecocoa7@gmail.com">rarecocoa7@gmail.com</a><br>
+      WhatsApp: <a href="https://wa.me/917674931380">+91 76749 31380</a>
+    </p>
   </div>
 
   <!-- Footer -->
