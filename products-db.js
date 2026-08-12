@@ -69,7 +69,85 @@
     return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  function overrideCookieImages(row) {
+    if (!row || !row.name) return;
+    var nameLower = row.name.toLowerCase();
+    if (nameLower.indexOf('cookie') !== -1) {
+      if (nameLower.indexOf('almond') !== -1) {
+        row.image = 'assets/almondcookie.avif';
+        row.image2 = '';
+      } else if (nameLower.indexOf('oat') !== -1) {
+        row.image = 'assets/oatscookie.avif';
+        row.image2 = '';
+      } else if (nameLower.indexOf('cashew') !== -1) {
+        row.image = 'assets/cashewcookie.avif';
+        row.image2 = '';
+      } else if (nameLower.indexOf('seeds') !== -1 && nameLower.indexOf('nuts') !== -1) {
+        row.image = 'assets/seedsandnutscookie.avif';
+        row.image2 = '';
+      }
+    }
+  }
+
+  function injectCashewCookie(products, pageCategory) {
+    if (pageCategory === 'snacks') {
+      var hasCashewCookie = false;
+      for (var i = 0; i < products.length; i++) {
+        var p = products[i];
+        if (p.name && p.name.toLowerCase().indexOf('cashew') !== -1 && p.name.toLowerCase().indexOf('cookie') !== -1) {
+          hasCashewCookie = true;
+          break;
+        }
+      }
+      if (!hasCashewCookie) {
+        products.push({
+          active: "TRUE",
+          name: "Cashew Cookie",
+          description: "Crisp artisanal cookies loaded with roasted cashews and rich cocoa",
+          subcategory: "Cookies",
+          price_label: "From ₹300",
+          image: "assets/cashewcookie.avif",
+          image2: "",
+          emoji: "🍪",
+          option1_label: "Choose Your Sweetener",
+          option1_values: "Muscovado Sugar",
+          option2_label: "Quantity",
+          option2_values: "100g (₹300),250g (₹750),300g (₹900)",
+          category: "snacks, hot-chocolate-ice-cream, slabs"
+        });
+      }
+    }
+  }
+
+  function fixIceCreamProducts(products, tabName) {
+    if (tabName !== 'hot_chocolate_ice_cream') return;
+    for (var i = 0; i < products.length; i++) {
+      var p = products[i];
+      var nameLower = (p.name || '').toLowerCase();
+      if (nameLower.indexOf('dark chocolate') !== -1 && nameLower.indexOf('hot') === -1) {
+        p.name = 'Chocolate';
+        p.price_label = 'Launching soon...';
+        p.emoji = '🍨';
+      } else if (nameLower.indexOf('hazelnut') !== -1) {
+        p.name = 'Almond';
+        p.description = 'Roasted almond with premium dark cocoa gelato';
+        p.price_label = 'Launching soon...';
+        p.emoji = '🍨';
+      } else if (nameLower.indexOf('coffee') !== -1) {
+        p.name = 'Coffee';
+        p.price_label = 'Launching soon...';
+        p.emoji = '🍨';
+      } else if (nameLower.indexOf('berry') !== -1) {
+        p.name = 'Mango';
+        p.description = 'Sweet Alphonso mango chocolate gelato experience';
+        p.price_label = 'Launching soon...';
+        p.emoji = '🍨';
+      }
+    }
+  }
+
   function buildImageHTML(row) {
+    overrideCookieImages(row);
     var img1 = row.image || '';
     var img2 = row.image2 || '';
     var altText = esc(row.name || 'Product');
@@ -99,6 +177,7 @@
   }
 
   function buildDataProduct(row) {
+    overrideCookieImages(row);
     var icons = [];
     var img1 = row.image || '';
     var img2 = row.image2 || '';
@@ -365,6 +444,8 @@
             }
             return true;
           });
+          injectCashewCookie(products, pageCategory);
+          fixIceCreamProducts(products, tabName);
           if (!products.length) throw new Error('No active products found.');
           saveCache(key, products);
           renderProducts(products, container, tabsBannerHTML || '');
@@ -373,6 +454,8 @@
           console.warn('[RCProductsDB] Fetch failed:', err.message, '- trying cache...');
           var cached = loadCache(key);
           if (cached && cached.length) {
+            injectCashewCookie(cached, pageCategory);
+            fixIceCreamProducts(cached, tabName);
             renderProducts(cached, container, tabsBannerHTML || '');
           } else {
             showError(container, 'Could not load products. Please refresh the page.');

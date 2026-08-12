@@ -134,6 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (menuOpen) toggleMenu();
       });
     });
+    mobileMenu.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+    }, { passive: false });
   }
 
   // ── Smooth Scroll for Anchor Links ───────────────────────

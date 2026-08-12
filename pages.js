@@ -52,6 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => { if (menuOpen) toggleMenu(); });
     });
+    mobileMenu.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+    }, { passive: false });
   }
 
   // ── Scroll Reveal ────────────────────────────────────────
@@ -208,6 +211,133 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!backdrop || !modal) return;
 
     let modalQty = 1;
+    const pctColors = { 50: '#6B3D28', 65: '#523220', 70: '#4A2E1B', 100: '#1A0D07' };
+    let chocoWavesEl = null;
+
+    function adjustCocoaOptions(cleanSelectedSweetener) {
+      const isTabletPage = window.location.pathname.toLowerCase().includes('tablets');
+      const nameLower = (product.name || '').toLowerCase();
+      const isClusterDragPopsicle = nameLower.includes('cluster') || nameLower.includes('drag') || nameLower.includes('popsicle');
+      if (!isTabletPage && !isClusterDragPopsicle) return;
+
+      const cocoaGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+        const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+        return lbl.toLowerCase().includes('cocoa') && lbl.toLowerCase().includes('percent');
+      });
+      if (!cocoaGroup) return;
+
+      const optionsContainer = cocoaGroup.querySelector('.modal-options');
+      if (!optionsContainer) return;
+
+      const isCustomTablet = nameLower.includes('custom');
+      
+      const isCoconutSugar = cleanSelectedSweetener.toLowerCase().includes('coconut sugar');
+      const isMonk = cleanSelectedSweetener.toLowerCase().includes('monk');
+
+      // Get or create the 65% Dark pill
+      let pill65 = [...optionsContainer.querySelectorAll('.modal-option-pill')].find(p => p.textContent.includes('65%'));
+      if (isMonk && !pill65) {
+        pill65 = document.createElement('button');
+        pill65.className = 'modal-option-pill';
+        pill65.textContent = '65% Dark';
+        pill65.setAttribute('data-original', '65% Dark');
+        pill65.addEventListener('click', () => {
+          optionsContainer.querySelectorAll('.modal-option-pill').forEach(p => p.classList.remove('selected'));
+          pill65.classList.add('selected');
+          const customInput = optionsContainer.querySelector('.modal-cocoa-custom-input');
+          if (customInput) customInput.value = '';
+          
+          if (chocoWavesEl) {
+            const pctColorVal = pctColors[65] || '#523220';
+            chocoWavesEl.style.transform = `translateY(${100 - 65}%)`;
+            chocoWavesEl.style.background = pctColorVal;
+            chocoWavesEl.querySelectorAll('.wave').forEach(w => w.style.background = pctColorVal);
+          }
+          updateModalLivePrice();
+        });
+        const customInput = optionsContainer.querySelector('.modal-cocoa-custom-input');
+        if (customInput) {
+          optionsContainer.insertBefore(pill65, customInput);
+        } else {
+          optionsContainer.appendChild(pill65);
+        }
+      }
+
+      // Loop through all pills and control visibility
+      const pills = optionsContainer.querySelectorAll('.modal-option-pill');
+      pills.forEach(pill => {
+        const txt = pill.textContent || '';
+        if (isMonk) {
+          if (txt.includes('65%')) {
+            pill.style.display = '';
+          } else {
+            pill.style.display = 'none';
+          }
+        } else if (isCoconutSugar) {
+          if (txt.includes('65%')) {
+            pill.style.display = 'none';
+          } else if (txt.includes('70%')) {
+            pill.style.display = 'none';
+          } else if (txt.includes('100%')) {
+            pill.style.display = 'none';
+          } else {
+            pill.style.display = '';
+          }
+        } else {
+          if (txt.includes('65%')) {
+            pill.style.display = 'none';
+          } else {
+            pill.style.display = '';
+          }
+        }
+      });
+
+      // Handle custom input if custom tablet product
+      const customInput = optionsContainer.querySelector('.modal-cocoa-custom-input');
+      if (customInput) {
+        if (isMonk) {
+          customInput.min = 65;
+          const val = parseInt(customInput.value, 10);
+          if (!isNaN(val) && val < 65) {
+            customInput.value = 65;
+          }
+        } else {
+          customInput.min = 50;
+        }
+      }
+
+      // Ensure a visible option is selected if the currently selected one is hidden
+      const selectedPill = optionsContainer.querySelector('.modal-option-pill.selected');
+      const isCustomInputSelected = customInput && customInput.value !== '';
+      
+      const updateVisualizer = (pct) => {
+        if (chocoWavesEl) {
+          const color = pctColors[pct] || '#4A2E1B';
+          chocoWavesEl.style.transform = `translateY(${100 - pct}%)`;
+          chocoWavesEl.style.background = color;
+          chocoWavesEl.querySelectorAll('.wave').forEach(w => w.style.background = color);
+        }
+      };
+
+      if (!isCustomInputSelected && (!selectedPill || selectedPill.style.display === 'none')) {
+        const firstVisiblePill = [...pills].find(p => p.style.display !== 'none');
+        if (firstVisiblePill) {
+          pills.forEach(p => p.classList.remove('selected'));
+          firstVisiblePill.classList.add('selected');
+          
+          const m = firstVisiblePill.textContent.match(/(\d+)%/);
+          const pct = m ? parseInt(m[1], 10) : 70;
+          updateVisualizer(pct);
+        }
+      } else if (selectedPill && selectedPill.style.display !== 'none') {
+        const m = selectedPill.textContent.match(/(\d+)%/);
+        const pct = m ? parseInt(m[1], 10) : 70;
+        updateVisualizer(pct);
+      } else if (isCustomInputSelected) {
+        const pct = parseInt(customInput.value, 10) || 70;
+        updateVisualizer(pct);
+      }
+    }
 
     // Set product info
     const nameEl = modal.querySelector('.modal-product-name');
@@ -247,6 +377,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateModalLivePrice() {
       const nameLower = product.name?.toLowerCase() || '';
+
+      // Adjust cocoa options dynamically based on sweetener selection first
+      const sweetenerGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+        const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+        return lbl.includes('Sweetener');
+      });
+      if (sweetenerGroup) {
+        const selectedSweetenerPill = sweetenerGroup.querySelector('.modal-option-pill.selected');
+        if (selectedSweetenerPill) {
+          const originalVal = selectedSweetenerPill.getAttribute('data-original') || selectedSweetenerPill.textContent;
+          const cleanSelectedSweetener = originalVal.split(' (₹')[0].trim();
+          adjustCocoaOptions(cleanSelectedSweetener);
+        }
+      }
       
       // Gather currently selected options
       const selOpts = {};
@@ -269,11 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       // 1. Update Sweetener pills text dynamically to show prices
-      const sweetenerGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
-        const lbl = g.querySelector('.modal-option-label')?.textContent || '';
-        return lbl.includes('Sweetener');
-      });
-
       if (sweetenerGroup) {
         const pills = sweetenerGroup.querySelectorAll('.modal-option-pill');
         pills.forEach(pill => {
@@ -505,7 +644,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const isSpreadsPage = window.location.pathname.toLowerCase().includes('spreads');
       const isCocoaOpt = (o) => o && o.label && o.label.toLowerCase().includes('cocoa') && o.label.toLowerCase().includes('percent');
       
-      const needsCocoa = (isTabletPage || (isSpreadsPage && product.options.some(o => o.label && o.label.toLowerCase().includes('sweetener')))) && !product.options.some(isCocoaOpt);
+      const nameLower = (product.name || '').toLowerCase();
+      const isClusterDragPopsicle = nameLower.includes('cluster') || nameLower.includes('drag') || nameLower.includes('popsicle');
+      
+      const needsCocoa = (isTabletPage || 
+                          isClusterDragPopsicle || 
+                          (isSpreadsPage && product.options.some(o => o.label && o.label.toLowerCase().includes('sweetener')))) 
+                         && !product.options.some(isCocoaOpt);
       
       if (needsCocoa) {
         product.options.unshift({
@@ -518,9 +663,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ? [...product.options].sort((a, b) => (isCocoaOpt(a) ? -1 : 1))
         : product.options;
 
-      // Colors for cocoa % levels
-      const pctColors = { 50: '#6B3D28', 70: '#4A2E1B', 100: '#1A0D07' };
-      let chocoWavesEl = null;
+      // Colors and wave visualizer reference are defined at the top of openModal
 
       sortedOpts.forEach(optGroup => {
         const isCocoa = isCocoaOpt(optGroup);
@@ -611,7 +754,8 @@ document.addEventListener('DOMContentLoaded', () => {
             customInput.addEventListener('blur', () => {
               customInput.style.borderColor = 'var(--border-light)';
               let val = parseInt(customInput.value, 10);
-              if (!isNaN(val) && val < 50) customInput.value = 50;
+              const minVal = parseInt(customInput.min, 10) || 50;
+              if (!isNaN(val) && val < minVal) customInput.value = minVal;
               if (!isNaN(val) && val > 100) customInput.value = 100;
             });
             customInput.addEventListener('input', () => {
@@ -738,7 +882,16 @@ document.addEventListener('DOMContentLoaded', () => {
           const optLabel = group.querySelector('.modal-option-label').textContent;
           const customCocoaInput = group.querySelector('.modal-cocoa-custom-input');
           if (customCocoaInput && customCocoaInput.value !== '') {
-            selectedOptions[optLabel] = customCocoaInput.value + '%';
+            const val = parseInt(customCocoaInput.value, 10);
+            const minVal = parseInt(customCocoaInput.min, 10) || 50;
+            const maxVal = parseInt(customCocoaInput.max, 10) || 100;
+            let clampedVal = val;
+            if (!isNaN(val)) {
+              if (val < minVal) clampedVal = minVal;
+              if (val > maxVal) clampedVal = maxVal;
+              customCocoaInput.value = clampedVal;
+            }
+            selectedOptions[optLabel] = clampedVal + '%';
           } else {
             const selectedPills = [...group.querySelectorAll('.modal-option-pill.selected')].map(p => p.getAttribute('data-original') || p.textContent);
             const inputVal = group.querySelector('.modal-option-input')?.value;
