@@ -49,7 +49,7 @@
     });
   }
 
-  function cacheKey(sheetId, tabName) { return 'rc_products_v5_' + sheetId + '_' + tabName; }
+  function cacheKey(sheetId, tabName) { return 'rc_products_v6_' + sheetId + '_' + tabName; }
 
   function saveCache(key, data) {
     try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
@@ -390,8 +390,24 @@
         dots.forEach(function(d, i){ d.classList.toggle('active', i === current); });
       }
       if (dots.length) dots[0].classList.add('active');
-      if (prevBtn) prevBtn.addEventListener('click', function(e){ e.stopPropagation(); goTo(current - 1); });
-      if (nextBtn) nextBtn.addEventListener('click', function(e){ e.stopPropagation(); goTo(current + 1); });
+
+      var timer = setInterval(function() {
+        goTo(current + 1);
+      }, 3500);
+
+      function resetTimer() {
+        if (timer) clearInterval(timer);
+        timer = setInterval(function() { goTo(current + 1); }, 3500);
+      }
+
+      carousel.addEventListener('mouseenter', function() { if (timer) clearInterval(timer); });
+      carousel.addEventListener('mouseleave', function() { resetTimer(); });
+
+      if (prevBtn) prevBtn.addEventListener('click', function(e){ e.stopPropagation(); goTo(current - 1); resetTimer(); });
+      if (nextBtn) nextBtn.addEventListener('click', function(e){ e.stopPropagation(); goTo(current + 1); resetTimer(); });
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function(e){ e.stopPropagation(); goTo(i); resetTimer(); });
+      });
     });
   }
 
