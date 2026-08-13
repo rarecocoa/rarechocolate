@@ -18,27 +18,11 @@
   <link rel="apple-touch-icon" href="favicon.png">
   <style>
     body.blog-page {
-      background-color: #120905 !important;
-      color: #ffffff !important;
-    }
-    body.blog-page .nav {
-      background: #120905 !important;
-    }
-    body.blog-page .nav.scrolled {
-      background: rgba(18, 9, 5, 0.96) !important;
-      backdrop-filter: blur(24px) !important;
-      -webkit-backdrop-filter: blur(24px) !important;
-      border-bottom: 1px solid rgba(212,175,55,0.15) !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-    }
-    body.blog-page .nav-links a {
-      color: rgba(255, 255, 255, 0.8) !important;
-    }
-    body.blog-page .nav-logo span {
-      color: #ffffff !important;
+      background-color: var(--bg-main, #FFFDF7);
+      color: var(--text-primary, #1b0e07);
     }
     .blog-section {
-      background-color: #120905;
+      background-color: var(--bg-main, #FFFDF7);
       padding: 40px 0 80px 0;
     }
     .blog-grid {
@@ -48,26 +32,27 @@
       margin-top: 30px;
     }
     .blog-card {
-      background: #1c100a !important;
-      border: 1px solid rgba(212,175,55,0.25) !important;
+      background: #ffffff !important;
+      border: 1px solid rgba(139, 90, 43, 0.15) !important;
       border-radius: var(--radius-md, 12px);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
+      box-shadow: 0 4px 16px rgba(44, 24, 16, 0.05);
     }
     .blog-card:hover {
       transform: translateY(-6px);
-      border-color: rgba(212,175,55,0.5) !important;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      border-color: var(--accent, #D4AF37) !important;
+      box-shadow: 0 12px 30px rgba(44, 24, 16, 0.12);
     }
     .blog-card-img-wrap {
       width: 100%;
       height: 220px;
       overflow: hidden;
       position: relative;
-      background: #1a0d07;
+      background: #f7f3ec;
     }
     .blog-card-img {
       width: 100%;
@@ -79,7 +64,7 @@
       transform: scale(1.05);
     }
     .blog-card-body {
-      background: #1c100a !important;
+      background: #ffffff !important;
       padding: 24px;
       display: flex;
       flex-direction: column;
@@ -91,19 +76,19 @@
       gap: 12px;
       margin-bottom: 12px;
       font-size: 0.85rem;
-      color: rgba(255,255,255,0.75) !important;
+      color: #776655 !important;
     }
     .blog-author-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(212,175,55,0.18) !important;
-      color: #F0C453 !important;
+      background: rgba(212, 175, 55, 0.12) !important;
+      color: #8B6508 !important;
       padding: 4px 12px;
       border-radius: 20px;
       font-weight: 600;
       font-size: 0.8rem;
-      border: 1px solid rgba(212,175,55,0.4) !important;
+      border: 1px solid rgba(212, 175, 55, 0.3) !important;
     }
     .blog-author-avatar {
       width: 18px;
@@ -115,14 +100,14 @@
       font-family: var(--font-heading, 'Outfit', sans-serif);
       font-size: 1.25rem;
       font-weight: 600;
-      color: #ffffff !important;
+      color: #2c1810 !important;
       margin-bottom: 12px;
       line-height: 1.35;
     }
     .blog-excerpt {
       font-family: var(--font-body, 'DM Sans', sans-serif);
       font-size: 0.92rem;
-      color: rgba(255,255,255,0.85) !important;
+      color: #554433 !important;
       line-height: 1.6;
       margin-bottom: 20px;
       flex-grow: 1;
@@ -130,7 +115,7 @@
     .blog-read-link {
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--accent, #D4AF37) !important;
+      color: #8B6508 !important;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -140,7 +125,7 @@
     .blog-reader-backdrop {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.88);
+      background: rgba(20, 10, 5, 0.7);
       z-index: 999999;
       display: none;
       align-items: center;
@@ -156,26 +141,27 @@
       width: 90%;
       max-height: 85vh;
       overflow-y: auto;
-      background: #170e0a;
-      border: 1px solid rgba(212,175,55,0.25);
+      background: #FFFDF7;
+      border: 1px solid rgba(212, 175, 55, 0.3);
       border-radius: 16px;
       padding: 36px;
-      color: #eaeaea;
+      color: #2c1810;
       position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
     }
     .blog-modal-header { margin-bottom: 24px; }
     .blog-modal-title {
       font-family: var(--font-heading, 'Outfit', sans-serif);
       font-size: 1.85rem;
       line-height: 1.3;
-      color: #fff;
+      color: #1b0e07;
       margin-top: 12px;
     }
     .blog-modal-body {
       font-family: var(--font-body, 'DM Sans', sans-serif);
       font-size: 1.05rem;
       line-height: 1.8;
-      color: rgba(255,255,255,0.85);
+      color: #3d2b1f;
     }
     .blog-modal-body p { margin-bottom: 18px; }
     .blog-modal-img {
@@ -245,7 +231,7 @@
   <!-- Article Modal -->
   <div class="blog-reader-backdrop" id="blogModalBackdrop">
     <div class="blog-modal-content" id="blogModalContent">
-      <button class="modal-close" id="blogModalClose" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;">&times;</button>
+      <button class="modal-close" id="blogModalClose" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#1b0e07;font-size:2rem;cursor:pointer;">&times;</button>
       <div id="blogModalBody"></div>
     </div>
   </div>
