@@ -49,7 +49,7 @@
     });
   }
 
-  function cacheKey(sheetId, tabName) { return 'rc_products_v3_' + sheetId + '_' + tabName; }
+  function cacheKey(sheetId, tabName) { return 'rc_products_v4_' + sheetId + '_' + tabName; }
 
   function saveCache(key, data) {
     try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
@@ -71,7 +71,18 @@
 
   function overrideCookieImages(row) {
     if (!row || !row.name) return;
-    var nameLower = row.name.toLowerCase();
+    var nameLower = row.name.toLowerCase().trim();
+    if (nameLower === 'cocoa nibs tablet' || nameLower === 'custom tablet blend') {
+      if (!row.image) row.image = 'assets/nibs_tablet.avif';
+    } else if (nameLower === 'almond') {
+      if (!row.image2) row.image2 = 'assets/almond_tablet2.avif';
+    } else if (nameLower === 'cranberry blueberry') {
+      if (!row.image2) row.image2 = 'assets/cranberryblueberry_tablet2.avif';
+    } else if (nameLower === 'blueberry almond') {
+      if (!row.image2) row.image2 = 'assets/blueberryalmond2_tablet.avif';
+    } else if (nameLower === 'cranberry almond') {
+      if (!row.image2) row.image2 = 'assets/cranberryalmond_tablet2.avif';
+    }
     if (nameLower.indexOf('cookie') !== -1) {
       if (nameLower.indexOf('almond') !== -1) {
         row.image = 'assets/almondcookie.avif';
