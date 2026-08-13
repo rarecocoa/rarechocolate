@@ -486,7 +486,7 @@ const CartSystem = {
             </div>
             <div class="checkout-form-group">
               <label for="checkoutSenderPhone">Your Phone Number (Sender)</label>
-              <input type="tel" id="checkoutSenderPhone" placeholder="e.g. 917674931380">
+              <input type="tel" id="checkoutSenderPhone" placeholder="e.g. 918121725892">
             </div>
           </div>
 
@@ -752,7 +752,7 @@ const CartSystem = {
       });
       message += `---------------------------------\n*Total Order Value:* ₹${Math.round(this.getCartTotal())}\n---------------------------------\n_Thank you for choosing Rare Cocoa™._ ✨`;
 
-      window.open(`https://api.whatsapp.com/send?phone=917674931380&text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://api.whatsapp.com/send?phone=918121725892&text=${encodeURIComponent(message)}`, '_blank');
       overlay.remove();
       this.showCheckoutSuccess();
     });
