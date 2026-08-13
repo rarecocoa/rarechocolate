@@ -17,7 +17,14 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="favicon.png">
   <style>
-    .blog-section { padding: 40px 0 80px 0; }
+    body.blog-page {
+      background-color: #120905 !important;
+      color: #ffffff !important;
+    }
+    .blog-section {
+      background-color: #120905;
+      padding: 40px 0 80px 0;
+    }
     .blog-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -25,8 +32,8 @@
       margin-top: 30px;
     }
     .blog-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(212,175,55,0.15);
+      background: #1c100a !important;
+      border: 1px solid rgba(212,175,55,0.25) !important;
       border-radius: var(--radius-md, 12px);
       overflow: hidden;
       display: flex;
@@ -36,8 +43,8 @@
     }
     .blog-card:hover {
       transform: translateY(-6px);
-      border-color: rgba(212,175,55,0.4);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      border-color: rgba(212,175,55,0.5) !important;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
     }
     .blog-card-img-wrap {
       width: 100%;
@@ -56,6 +63,7 @@
       transform: scale(1.05);
     }
     .blog-card-body {
+      background: #1c100a !important;
       padding: 24px;
       display: flex;
       flex-direction: column;
@@ -66,20 +74,20 @@
       align-items: center;
       gap: 12px;
       margin-bottom: 12px;
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.75) !important;
     }
     .blog-author-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(212,175,55,0.12);
-      color: var(--accent, #D4AF37);
-      padding: 4px 10px;
+      background: rgba(212,175,55,0.18) !important;
+      color: #F0C453 !important;
+      padding: 4px 12px;
       border-radius: 20px;
-      font-weight: 500;
-      font-size: 0.78rem;
-      border: 1px solid rgba(212,175,55,0.25);
+      font-weight: 600;
+      font-size: 0.8rem;
+      border: 1px solid rgba(212,175,55,0.4) !important;
     }
     .blog-author-avatar {
       width: 18px;
@@ -91,14 +99,14 @@
       font-family: var(--font-heading, 'Outfit', sans-serif);
       font-size: 1.25rem;
       font-weight: 600;
-      color: #fff;
+      color: #ffffff !important;
       margin-bottom: 12px;
       line-height: 1.35;
     }
     .blog-excerpt {
       font-family: var(--font-body, 'DM Sans', sans-serif);
       font-size: 0.92rem;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255,255,255,0.85) !important;
       line-height: 1.6;
       margin-bottom: 20px;
       flex-grow: 1;
@@ -106,7 +114,7 @@
     .blog-read-link {
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--accent, #D4AF37);
+      color: var(--accent, #D4AF37) !important;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -264,7 +272,7 @@
           title: "The Soul of Single-Origin Cocoa: Why Pure Chocolate Tastes Different",
           date: "August 13, 2026",
           author: "Founder - Praveen",
-          image: "assets/farmer.avif",
+          image: "assets/founder_praveen.avif",
           excerpt: "Commercial chocolates use alkali processing and palm oil to cut costs. Discover how stone-grinding pure cocoa beans preserves natural antioxidants and rich flavors.",
           content: "<p>When we started Rare Cocoa, our promise was simple: zero palm oil, zero preservatives, and zero shortcuts. Most commercial dark chocolate available in supermarkets uses heavily processed cocoa powder combined with hydrogenated oils and artificial flavors.</p><p>We source single-origin cocoa beans directly from regional farmers. Each batch is slowly stone-ground to retain its natural cocoa butter, complex berry notes, and rich dark finish.</p><p>When you taste a tablet crafted after ordering, you are experiencing chocolate in its purest, most honest form.</p>"
         },
