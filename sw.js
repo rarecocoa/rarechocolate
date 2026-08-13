@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rare-cocoa-assets-v15';
+const CACHE_NAME = 'rare-cocoa-assets-v16';
 const ASSETS_TO_CACHE = [
   'assets/almond_tablet.avif?v=2',
   'assets/almond_tablet2.avif?v=2',
@@ -25,6 +25,7 @@ const ASSETS_TO_CACHE = [
   'assets/macadamia-brazilnuts_tablet.avif?v=2',
   'assets/pecan-brazilbuts_tablet.avif?v=2',
   'assets/nibs_tablet.avif?v=2',
+  'assets/customblend_tablet.avif?v=2',
   'assets/almond_drags.avif?v=2',
   'assets/orange_drags.avif?v=2',
   'assets/roastedpeanut_drags.avif?v=2',

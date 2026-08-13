@@ -49,7 +49,7 @@
     });
   }
 
-  function cacheKey(sheetId, tabName) { return 'rc_products_v4_' + sheetId + '_' + tabName; }
+  function cacheKey(sheetId, tabName) { return 'rc_products_v5_' + sheetId + '_' + tabName; }
 
   function saveCache(key, data) {
     try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
@@ -72,8 +72,10 @@
   function overrideCookieImages(row) {
     if (!row || !row.name) return;
     var nameLower = row.name.toLowerCase().trim();
-    if (nameLower === 'cocoa nibs tablet' || nameLower === 'custom tablet blend') {
+    if (nameLower === 'cocoa nibs tablet') {
       if (!row.image) row.image = 'assets/nibs_tablet.avif';
+    } else if (nameLower === 'custom tablet blend') {
+      if (!row.image) row.image = 'assets/customblend_tablet.avif';
     } else if (nameLower === 'almond') {
       if (!row.image2) row.image2 = 'assets/almond_tablet2.avif';
     } else if (nameLower === 'cranberry blueberry') {
