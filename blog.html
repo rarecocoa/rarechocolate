@@ -121,6 +121,20 @@
     }
 
     /* Modal Article Reader */
+    .blog-reader-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.88);
+      z-index: 999999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      padding: 20px;
+    }
+    .blog-reader-backdrop.open {
+      display: flex !important;
+    }
     .blog-modal-content {
       max-width: 800px;
       width: 90%;
@@ -213,7 +227,7 @@
   </section>
 
   <!-- Article Modal -->
-  <div class="modal-backdrop" id="blogModalBackdrop" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+  <div class="blog-reader-backdrop" id="blogModalBackdrop">
     <div class="blog-modal-content" id="blogModalContent">
       <button class="modal-close" id="blogModalClose" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;">&times;</button>
       <div id="blogModalBody"></div>
@@ -395,17 +409,17 @@
         html += '<div class="blog-modal-body">' + (post.content || '<p>' + esc(post.excerpt || '') + '</p>') + '</div>';
 
         body.innerHTML = html;
-        backdrop.style.display = 'flex';
+        backdrop.classList.add('open');
       }
 
       var closeBtn = document.getElementById('blogModalClose');
       var backdrop = document.getElementById('blogModalBackdrop');
       if (closeBtn) {
-        closeBtn.addEventListener('click', function() { backdrop.style.display = 'none'; });
+        closeBtn.addEventListener('click', function() { backdrop.classList.remove('open'); });
       }
       if (backdrop) {
         backdrop.addEventListener('click', function(e) {
-          if (e.target === backdrop) backdrop.style.display = 'none';
+          if (e.target === backdrop) backdrop.classList.remove('open');
         });
       }
 
