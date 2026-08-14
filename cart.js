@@ -561,12 +561,17 @@ const CartSystem = {
           </div>
 
           ${isHyderabad ? `
-          <div class="checkout-form-group">
-            <label for="checkoutAreaName">Area Name</label>
-            <input type="text" id="checkoutAreaName" list="hyderabadAreaList" required placeholder="Type 1st letter to pick or enter custom (e.g. Kukatpally, BHEL)">
-            <datalist id="hyderabadAreaList">
-              ${HYDERABAD_AREAS.map(a => `<option value="${a}"></option>`).join('')}
-            </datalist>
+          <div class="checkout-form-group" style="margin-bottom: 16px;">
+            <label for="checkoutAreaSelect" style="display: block; font-weight: 600; color: #1A0E08; margin-bottom: 6px; font-size: 0.85rem;">Area Name</label>
+            <select id="checkoutAreaSelect" required style="width: 100%; padding: 12px 14px; border: 1.5px solid rgba(26,14,8,0.2); border-radius: 8px; font-family: var(--font-body); font-size: 0.95rem; background: #fff; color: #1A0E08; outline: none;">
+              <option value="">-- Select Area Name --</option>
+              ${HYDERABAD_AREAS.map(a => `<option value="${a}">${a}</option>`).join('')}
+              <option value="Other">Other (Not in list)</option>
+            </select>
+            <div id="customAreaGroup" style="display: none; margin-top: 10px;">
+              <label for="checkoutAreaCustomInput" style="display: block; font-weight: 600; color: #1A0E08; margin-bottom: 6px; font-size: 0.8rem;">Custom Area Name</label>
+              <input type="text" id="checkoutAreaCustomInput" placeholder="Enter your Area Name" style="width: 100%; padding: 12px 14px; border: 1.5px solid rgba(26,14,8,0.2); border-radius: 8px; font-family: var(--font-body); font-size: 0.95rem; outline: none;">
+            </div>
           </div>
           ` : ''}
           <div class="checkout-form-group">
@@ -600,7 +605,17 @@ const CartSystem = {
     const receiverPhoneInput = document.getElementById('checkoutReceiverPhone');
     const senderNameInput = document.getElementById('checkoutSenderName');
     const senderPhoneInput = document.getElementById('checkoutSenderPhone');
-    const areaNameInput = document.getElementById('checkoutAreaName');
+    const areaSelect = document.getElementById('checkoutAreaSelect');
+    const customAreaGroup = document.getElementById('customAreaGroup');
+    const areaCustomInput = document.getElementById('checkoutAreaCustomInput');
+
+    const getAreaName = () => {
+      if (!isHyderabad || !areaSelect) return '';
+      if (areaSelect.value === 'Other') {
+        return areaCustomInput ? areaCustomInput.value.trim() : '';
+      }
+      return areaSelect.value.trim();
+    };
     const addressInput = document.getElementById('checkoutAddress');
     const pincodeInput = document.getElementById('checkoutPincode');
     const mapsLinkInput = document.getElementById('checkoutMapsLink');
@@ -675,7 +690,7 @@ const CartSystem = {
       const address = addressInput.value.trim();
       const pincode = pincodeInput.value.trim();
       const mapsLink = needsMapLink ? (mapsLinkInput?.value.trim() || '') : '';
-      const areaName = isHyderabad ? (areaNameInput?.value.trim() || '') : '';
+      const areaName = getAreaName();
 
       const isPincodeValid = /^[0-9]{6}$/.test(pincode);
       const isMapsValid = !needsMapLink || (mapsLink !== '');
@@ -694,8 +709,23 @@ const CartSystem = {
     if (needsMapLink && mapsLinkInput) {
       mapsLinkInput.addEventListener('input', validateForm);
     }
-    if (isHyderabad && areaNameInput) {
-      areaNameInput.addEventListener('input', validateForm);
+    if (isHyderabad && areaSelect) {
+      areaSelect.addEventListener('change', () => {
+        if (areaSelect.value === 'Other') {
+          if (customAreaGroup) customAreaGroup.style.display = 'block';
+          if (areaCustomInput) {
+            areaCustomInput.value = '';
+            areaCustomInput.focus();
+          }
+        } else {
+          if (customAreaGroup) customAreaGroup.style.display = 'none';
+          if (areaCustomInput) areaCustomInput.value = '';
+        }
+        validateForm();
+      });
+      if (areaCustomInput) {
+        areaCustomInput.addEventListener('input', validateForm);
+      }
     }
 
     document.getElementById('btnBackToLoc').addEventListener('click', () => {
@@ -782,7 +812,7 @@ const CartSystem = {
       const address = addressInput.value.trim();
       const pincode = pincodeInput.value.trim();
       const mapsLink = needsMapLink ? (mapsLinkInput?.value.trim() || '') : '';
-      const areaName = isHyderabad ? (areaNameInput?.value.trim() || '') : '';
+      const areaName = getAreaName();
 
       const name = nameInput.value.trim();
       const phone = phoneInput.value.trim();
