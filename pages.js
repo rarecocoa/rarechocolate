@@ -210,7 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function openModal(product) {
     if (!backdrop || !modal) return;
 
-    let modalQty = 1;
+    const isCavities = (product.name || '').toLowerCase().includes('cavities');
+    const defaultMinQty = isCavities ? 25 : 1;
+    let modalQty = defaultMinQty;
     const pctColors = { 50: '#6B3D28', 65: '#523220', 70: '#4A2E1B', 100: '#1A0D07' };
     let chocoWavesEl = null;
 
@@ -855,13 +857,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Quantity +/- row (injected after options)
     const qtyRow = document.createElement('div');
     qtyRow.className = 'modal-qty-row';
-    qtyRow.innerHTML = `<button class="modal-qty-btn" id="modalQtyMinus">−</button><span class="modal-qty-val" id="modalQtyVal">1</span><button class="modal-qty-btn" id="modalQtyPlus">+</button>`;
+    qtyRow.innerHTML = `<button class="modal-qty-btn" id="modalQtyMinus">−</button><span class="modal-qty-val" id="modalQtyVal">${modalQty}</span><button class="modal-qty-btn" id="modalQtyPlus">+</button>`;
     body.appendChild(qtyRow);
     const minusBtn = qtyRow.querySelector('#modalQtyMinus');
     const plusBtn = qtyRow.querySelector('#modalQtyPlus');
 
     minusBtn.addEventListener('click', () => {
-      if (modalQty > 1) { 
+      if (modalQty > defaultMinQty) { 
         modalQty--; 
         qtyRow.querySelector('#modalQtyVal').textContent = modalQty; 
       }
@@ -1100,7 +1102,7 @@ document.addEventListener('DOMContentLoaded', () => {
               icon: product.icon || '🍫',
               price: itemPrice,
               options: selectedOptions,
-              minQty: product.minQty || 1
+              minQty: defaultMinQty
             }, modalQty);
           }
           closeModal();
