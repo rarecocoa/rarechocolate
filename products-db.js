@@ -211,6 +211,13 @@
     if (row.price && row.price.trim()) {
       var p = parseFloat(row.price.trim());
       if (!isNaN(p)) obj.price = p;
+    } else if (row.price_label && row.price_label.trim()) {
+      var cleanLabel = row.price_label.replace(/,/g, '');
+      var m = cleanLabel.match(/₹\s*([\d.]+)/);
+      if (m) {
+        var p = parseFloat(m[1]);
+        if (!isNaN(p)) obj.price = p;
+      }
     }
 
     if (row.options_json && row.options_json.trim()) {

@@ -640,11 +640,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (product.options && product.options.length > 0) {
+      const nameLower = (product.name || '').toLowerCase();
+      const isCustomTrailPack = nameLower.includes('custom trail pack');
+      if (isCustomTrailPack) {
+        if (!product._flavorValuesBackup) {
+          const origFlavorOpt = product.options.find(o => o.label && o.label.toLowerCase().includes('select flavor'));
+          if (origFlavorOpt && origFlavorOpt.values && origFlavorOpt.values.length > 0) {
+            product._flavorValuesBackup = origFlavorOpt.values;
+          } else {
+            product._flavorValuesBackup = ['Almond', 'Almond Raisin', 'Blueberry Almond', 'Cashew Almond', 'Cranberry Almond', 'Creamy Coffee', 'Mango', 'Orange Almond', 'Signature', 'Strawberry Pineapple'];
+          }
+        }
+        product.options = product.options.filter(o => !o.label || !o.label.toLowerCase().includes('select flavor'));
+        for (let i = 1; i <= 6; i++) {
+          product.options.push({
+            label: `Select Flavor ${i}`,
+            values: product._flavorValuesBackup
+          });
+        }
+      }
+
       const isTabletPage = window.location.pathname.toLowerCase().includes('tablets');
       const isSpreadsPage = window.location.pathname.toLowerCase().includes('spreads');
       const isCocoaOpt = (o) => o && o.label && o.label.toLowerCase().includes('cocoa') && o.label.toLowerCase().includes('percent');
       
-      const nameLower = (product.name || '').toLowerCase();
       const isClusterDragPopsicle = nameLower.includes('cluster') || nameLower.includes('drag') || nameLower.includes('popsicle');
       
       const needsCocoa = (isTabletPage || 
