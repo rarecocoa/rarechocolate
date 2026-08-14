@@ -467,6 +467,7 @@ const CartSystem = {
 
   showDeliveryForm(location) {
     const needsMapLink = location === 'Vijayawada' || location === 'Hyderabad';
+    const isHyderabad = location === 'Hyderabad';
     const deliveryFee = location === 'Vijayawada' ? 30 : (location === 'Hyderabad' ? 100 : 200);
     const subtotalVal = this.getCartTotal();
     const totalVal = subtotalVal + deliveryFee;
@@ -538,6 +539,12 @@ const CartSystem = {
             </div>
           </div>
 
+          ${isHyderabad ? `
+          <div class="checkout-form-group">
+            <label for="checkoutAreaName">Area Name</label>
+            <input type="text" id="checkoutAreaName" required placeholder="e.g. Kukatpally, BHEL, Madhapur, Gachibowli">
+          </div>
+          ` : ''}
           <div class="checkout-form-group">
             <label for="checkoutAddress">Delivery Address</label>
             <textarea id="checkoutAddress" required placeholder="e.g. Flat 304, Royal Apartments, HSR Layout" rows="3"></textarea>
@@ -569,6 +576,7 @@ const CartSystem = {
     const receiverPhoneInput = document.getElementById('checkoutReceiverPhone');
     const senderNameInput = document.getElementById('checkoutSenderName');
     const senderPhoneInput = document.getElementById('checkoutSenderPhone');
+    const areaNameInput = document.getElementById('checkoutAreaName');
     const addressInput = document.getElementById('checkoutAddress');
     const pincodeInput = document.getElementById('checkoutPincode');
     const mapsLinkInput = document.getElementById('checkoutMapsLink');
@@ -643,11 +651,13 @@ const CartSystem = {
       const address = addressInput.value.trim();
       const pincode = pincodeInput.value.trim();
       const mapsLink = needsMapLink ? (mapsLinkInput?.value.trim() || '') : '';
+      const areaName = isHyderabad ? (areaNameInput?.value.trim() || '') : '';
 
       const isPincodeValid = /^[0-9]{6}$/.test(pincode);
       const isMapsValid = !needsMapLink || (mapsLink !== '');
+      const isAreaValid = !isHyderabad || (areaName !== '');
 
-      if (isNamePhoneValid && address && isPincodeValid && isMapsValid) {
+      if (isNamePhoneValid && address && isPincodeValid && isMapsValid && isAreaValid) {
         submitBtn.removeAttribute('disabled');
       } else {
         submitBtn.setAttribute('disabled', 'true');
@@ -659,6 +669,9 @@ const CartSystem = {
     });
     if (needsMapLink && mapsLinkInput) {
       mapsLinkInput.addEventListener('input', validateForm);
+    }
+    if (isHyderabad && areaNameInput) {
+      areaNameInput.addEventListener('input', validateForm);
     }
 
     document.getElementById('btnBackToLoc').addEventListener('click', () => {
@@ -745,6 +758,7 @@ const CartSystem = {
       const address = addressInput.value.trim();
       const pincode = pincodeInput.value.trim();
       const mapsLink = needsMapLink ? (mapsLinkInput?.value.trim() || '') : '';
+      const areaName = isHyderabad ? (areaNameInput?.value.trim() || '') : '';
 
       const name = nameInput.value.trim();
       const phone = phoneInput.value.trim();
@@ -758,12 +772,14 @@ const CartSystem = {
       } else {
         if (!receiverName || !receiverPhone || !senderName || !senderPhone) { alert('Please fill out all fields.'); return; }
       }
+      if (isHyderabad && !areaName) { alert('Please enter your Area Name.'); return; }
       if (!address || !pincode) { alert('Please fill out all fields.'); return; }
       if (needsMapLink && !mapsLink) { alert('Please paste your Google Maps Location Link.'); return; }
       if (!/^[0-9]{6}$/.test(pincode)) { alert('Please enter a valid 6-digit pincode.'); return; }
 
       let message = `*RARE COCOA™* 🍫\n_The Soul of Chocolate_\n=================================\n`;
       message += `• *Delivery Region:* ${location}\n`;
+      if (isHyderabad && areaName) message += `• *Area Name:* ${areaName}\n`;
       if (location !== 'Other States') message += `• *Temperature Agreement:* Accepted ✓\n`;
       message += `• *Delivery Pincode:* ${pincode}\n=================================\n\n`;
       
