@@ -626,7 +626,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         // Fallback: check if any selected option has a price format in parentheses
-        Object.values(selOpts).forEach(val => {
+        Object.entries(selOpts).forEach(([optLabel, val]) => {
+          if (optLabel.toLowerCase().includes('sweetener')) return;
           const match = val.match(/\(₹\s*(\d+)(?:\/[a-zA-Z]+)?\)/);
           if (match) finalPrice = parseFloat(match[1]);
         });
@@ -940,9 +941,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Check if any selected option has a price format like (₹180) or similar
         let priceFromOptions = null;
-        Object.values(selectedOptions).forEach(val => {
+        Object.entries(selectedOptions).forEach(([optLabel, val]) => {
           // Exclude rates like (₹3/g) from setting a flat price
           if (val.indexOf('/g') !== -1 || val.indexOf('/pc') !== -1) return;
+          // Exclude sweetener options from overriding flat prices
+          if (optLabel.toLowerCase().includes('sweetener')) return;
           const match = val.match(/\(₹\s*(\d+)(?:\/[a-zA-Z]+)?\)/);
           if (match) {
             priceFromOptions = parseFloat(match[1]);

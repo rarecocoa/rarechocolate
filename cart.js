@@ -93,7 +93,15 @@ const CartSystem = {
             <span>Subtotal</span>
             <span class="cart-subtotal-val" id="cartSubtotalVal">₹0</span>
           </div>
-          <button class="cart-checkout-btn" id="cartCheckoutBtn">Proceed to Checkout</button>
+          <div class="cart-summary-row" style="margin-top: 4px; font-size: 0.9rem; color: var(--text-muted);">
+            <span>Delivery Fee</span>
+            <span id="cartDeliveryFeeVal">₹200</span>
+          </div>
+          <div class="cart-summary-row" style="margin-top: 8px; border-top: 1px dashed var(--border-light); padding-top: 8px; font-weight: 600;">
+            <span>Total</span>
+            <span class="cart-total-val" id="cartTotalVal">₹0</span>
+          </div>
+          <button class="cart-checkout-btn" id="cartCheckoutBtn" style="margin-top: 12px;">Proceed to Checkout</button>
         </div>
       `;
       document.body.appendChild(drawer);
@@ -114,6 +122,7 @@ const CartSystem = {
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', () => {
         if (this.items.length === 0) return;
+        if (this.getCartTotal() < 350) return;
         this.showCheckoutForm();
       });
     }
@@ -272,10 +281,15 @@ const CartSystem = {
       }).join('');
     }
 
-    // 3. Update Subtotal
+    // 3. Update Subtotal and Total
+    const subtotal = this.getCartTotal();
     const subtotalEl = document.getElementById('cartSubtotalVal');
     if (subtotalEl) {
-      subtotalEl.textContent = `₹${Math.round(this.getCartTotal())}`;
+      subtotalEl.textContent = `₹${Math.round(subtotal)}`;
+    }
+    const totalEl = document.getElementById('cartTotalVal');
+    if (totalEl) {
+      totalEl.textContent = `₹${subtotal > 0 ? Math.round(subtotal + 200) : 0}`;
     }
 
     // 4. Update checkout button disabled state
@@ -284,9 +298,15 @@ const CartSystem = {
       if (this.items.length === 0) {
         checkoutBtn.setAttribute('disabled', 'true');
         checkoutBtn.classList.add('disabled');
+        checkoutBtn.textContent = 'Proceed to Checkout';
+      } else if (subtotal < 350) {
+        checkoutBtn.setAttribute('disabled', 'true');
+        checkoutBtn.classList.add('disabled');
+        checkoutBtn.textContent = `Min. Order ₹350 (Add ₹${350 - Math.round(subtotal)} more)`;
       } else {
         checkoutBtn.removeAttribute('disabled');
         checkoutBtn.classList.remove('disabled');
+        checkoutBtn.textContent = 'Proceed to Checkout';
       }
     }
   },
@@ -764,7 +784,15 @@ const CartSystem = {
           message += `  _Price: ₹${Math.round(item.price * item.quantity)}_\n\n`;
         });
       });
-      message += `---------------------------------\n*Total Order Value:* ₹${Math.round(this.getCartTotal())}\n---------------------------------\n_Thank you for choosing Rare Cocoa™._ ✨`;
+      const subtotalVal = this.getCartTotal();
+      const deliveryFee = 200;
+      const finalTotal = subtotalVal + deliveryFee;
+
+      message += `---------------------------------\n`;
+      message += `*Subtotal:* ₹${Math.round(subtotalVal)}\n`;
+      message += `*Delivery Fee:* ₹${deliveryFee}\n`;
+      message += `*Total Order Value:* ₹${Math.round(finalTotal)}\n`;
+      message += `---------------------------------\n_Thank you for choosing Rare Cocoa™._ ✨`;
 
       window.open(`https://api.whatsapp.com/send?phone=918121725892&text=${encodeURIComponent(message)}`, '_blank');
       overlay.remove();
