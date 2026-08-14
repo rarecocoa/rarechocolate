@@ -1,7 +1,28 @@
-/* ==========================================================
-   RARE COCOA™ — Global Shopping Cart System
-   Persistent State · Premium Slide-out Drawer · Dynamic Injection
-   ========================================================== */
+const HYDERABAD_AREAS = [
+  "Addagutta", "Adibatla", "Adikmet", "AG Colony", "Ahmed Nagar", "Allapur", "Allwyn Colony", "Amberpet", "Ameenpur", "Ameerpet", "Anjaiah Nagar", "Asif Nagar", "Attapur",
+  "Bachupally", "Badangpet", "Bagh Amberpet", "Bagh Lingampally", "Bahadurpally", "Bairamalguda", "Bakaram", "Balaji Nagar", "Balanagar", "Balapur", "Balram Nagar", "Bandlaguda Jagir", "Banjara Hills", "Bansilalpet", "Bapuji Nagar", "Barkatpura", "Beeramguda", "Beerappagadda", "Begumpet", "Bhagya Nagar Colony", "Bhandari Layout", "Bharathi Nagar", "Bholakpur", "Bhudevi Nagar", "BK Guda", "BN Reddy Nagar", "Boduppal", "Bollaram", "Borabanda", "Boudha Nagar", "Bowrampet",
+  "Chaitanyapuri", "Champapet", "Chanda Nagar", "Chandrapuri Colony", "Chengicherla", "Cherlapally", "Chilkalguda", "Chilkanagar", "Chintal", "Chintalkunta",
+  "Dammaiguda", "Deepthisri Nagar", "Doctors Colony", "Doolapally", "Dr AS Rao Nagar", "Dundigal",
+  "East Anandbagh", "Edulabad", "Erragadda", "Exhibition Grounds",
+  "Fateh Nagar", "Film Nagar",
+  "Gachibowli", "Gaddiannaram", "Gajularamaram", "Gandhi Nagar", "Gandipet", "Ganesh Nagar", "Gayatri Nagar", "Ghatkesar", "Giri Nagar", "Golconda", "Golnaka", "Goutham Nagar", "GSI", "Gudimalkapur", "Gundlapochampally", "Gunfoundry",
+  "H.B. Colony", "Habsiguda", "Hafeezpet", "Hasmathpet", "Hastinapuram", "Hayathnagar", "High Court Colony", "Himayathnagar", "HITEC City", "HMT Nagar", "Hyder Nagar", "Hyderguda", "Hydershahkote",
+  "Ibrahimbagh", "Irrum Manzil", "Izzath Nagar",
+  "Jagathgiri Gutta", "Jalpally", "Jawahar Nagar", "Jillelaguda", "JP Colony", "Jubilee Hills",
+  "Kachiguda", "Kaithalapur", "Kakatiya Nagar", "Kanajiguda", "Kapra", "Karmika Nagar", "Katedan", "Kavadiguda", "Keesara", "Khairatabad", "Kharmanghat", "Kismatpur", "Kokapet", "Kompally", "Kondapur", "Kongara Kalan", "Kothapet", "KPHB Colony", "Krishna Nagar", "Kukatpally", "Kuntloor", "Kushaiguda",
+  "Lalapet", "Lecturers Colony", "Lingojiguda",
+  "Macha Bollaram", "Madeenaguda", "Madhapur", "Mahadevpuram", "Mailardevpally", "Maktha Mahabubpet", "Malkajgiri", "Mallapur", "Mallepally", "Manikonda", "Mankhal", "Mansoorabad", "Masjid Banda", "Matrusri Nagar", "Mayuri Nagar", "Medipally", "Meerpet", "Mehdipatnam", "Mettuguda", "Mirjalguda", "Miyapur", "Monda Market", "Moosapet", "Moti Nagar", "Moula Ali", "Musheerabad", "Muthangi",
+  "Nacharam", "Nadargul", "Nagaram", "Nagole", "Nallagandla", "Nallakunta", "Nanalnagar", "Narsingi", "Neknampur", "Neredmet", "Nizam Colony", "Nizampet", "North Lalaguda", "NTR Nagar",
+  "Old Bowenpally", "OU Colony",
+  "Padma Nagar", "Padmanabha Nagar", "Padmarao Nagar", "Pahadi Shareef", "Patancheruvu", "Patel Nagar", "Pedda Amberpet", "Peerzadiguda", "Pet Basheerabad", "Pocharam", "Pragathi Nagar", "Prakash Nagar", "Prashanth Nagar", "Prashanthi Hills", "Pudur-Kistapur",
+  "Quthbullapur",
+  "Rahamath Nagar", "Rajeev Nagar", "Rajendra Nagar", "Ramachandrapuram", "Ramanthapur", "Ramgopalpet", "Ramnagar", "Ranga Reddy Nagar", "Red Hills", "RK Puram", "Rodamestri Nagar",
+  "Sahebnagar", "Saibaba Nagar", "Sanathnagar", "Saroornagar", "Seethaphalmandi", "Serilingampally", "Shaheen Nagar", "Shaikpet", "Shakthi Sai Nagar", "Shamirpet", "Shamshiguda", "Shanti Nagar", "Shapur Nagar", "Shastripuram", "Somajiguda", "SR Nagar", "Sri Ram Nagar", "Srinagar Colony", "Subhash Nagar", "Suleman Nagar", "Suraram", "Syed Nagar",
+  "Tarnaka", "Tellapur", "Temple Alwal", "Thorrur", "Thukkuguda", "Tilak Nagar", "Tolichowki", "Turkapally", "Turkayamjal",
+  "Uppal",
+  "Vampuguda", "Vanasthalipuram", "Vasanth Nagar", "Vengal Rao Nagar", "Venkat Reddy Nagar", "Venkatapuram", "Venkateshwara Colony", "Venkateshwara Nagar", "Vijayanagar Colony", "Vinayak Nagar", "Vivekananda Nagar Colony",
+  "Yapral", "Yousufguda"
+];
 
 const CartSystem = {
   storageKey: 'rarecocoa_cart',
@@ -542,7 +563,10 @@ const CartSystem = {
           ${isHyderabad ? `
           <div class="checkout-form-group">
             <label for="checkoutAreaName">Area Name</label>
-            <input type="text" id="checkoutAreaName" required placeholder="e.g. Kukatpally, BHEL, Madhapur, Gachibowli">
+            <input type="text" id="checkoutAreaName" list="hyderabadAreaList" required placeholder="Type 1st letter to pick or enter custom (e.g. Kukatpally, BHEL)">
+            <datalist id="hyderabadAreaList">
+              ${HYDERABAD_AREAS.map(a => `<option value="${a}"></option>`).join('')}
+            </datalist>
           </div>
           ` : ''}
           <div class="checkout-form-group">
