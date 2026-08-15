@@ -526,16 +526,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sweetName.includes('Coconut Sugar')) optPrice = 35;
             else if (sweetName.includes('Monk Fruit')) optPrice = 45;
             else optPrice = 25;
-          } else if (nameLower.includes('custom tablet blend')) {
+          } else if (nameLower.includes('custom tablet blend') || nameLower.includes('tablet') || window.location.pathname.toLowerCase().includes('tablets')) {
             const addonGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
               const lbl = g.querySelector('.modal-option-label')?.textContent || '';
               return lbl.includes('Add-on');
             });
             const selectedAddons = [...addonGroup?.querySelectorAll('.modal-option-pill.selected') || []].map(p => p.textContent.toLowerCase());
             const isHazelnut = selectedAddons.some(a => a.includes('hazelnut'));
+            const basePrice = product.price || 180;
             if (sweetName.includes('Coconut Sugar')) optPrice = 250;
             else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) optPrice = 350;
-            else optPrice = isHazelnut ? 215 : 180;
+            else optPrice = isHazelnut ? 215 : basePrice;
           }
 
           if (optPrice !== null) {
@@ -614,15 +615,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const m = qtyOpt.match(/(\d+)g/);
         if (m) grams = parseInt(m[1], 10);
         if (grams > 0) finalPrice = grams * rate;
-      } else if (nameLower.includes('custom tablet blend')) {
+      } else if (nameLower.includes('custom tablet blend') || nameLower.includes('tablet') || window.location.pathname.toLowerCase().includes('tablets')) {
         const addon = selOpts['Choose Add-on'] || '';
         const isHazelnut = addon.toLowerCase().includes('hazelnut');
+        const basePrice = product.price || 180;
         if (cleanSelectedSweetener.includes('Coconut Sugar')) {
           finalPrice = 250;
         } else if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) {
           finalPrice = 350;
         } else {
-          finalPrice = isHazelnut ? 215 : 180;
+          finalPrice = isHazelnut ? 215 : basePrice;
         }
       } else {
         // Fallback: check if any selected option has a price format in parentheses
@@ -1079,18 +1081,20 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        // Special pricing for Custom Tablet Blend
-        if (nameLower.includes('custom tablet blend')) {
+        // Special pricing for ALL Tablets (Standard & Custom)
+        const isTabletPage = window.location.pathname.toLowerCase().includes('tablets');
+        if (nameLower.includes('custom tablet blend') || nameLower.includes('tablet') || isTabletPage) {
           const addon = selectedOptions['Choose Add-on'] || '';
-          const sweetener = selectedOptions['Choose Your Sweetener'] || '';
+          const sweetener = selectedOptions['Choose Your Sweetener'] || selectedOptions['Choose Sweetener'] || '';
           const cleanSweetener = sweetener.split(' (₹')[0].trim();
           const isHazelnut = addon.toLowerCase().includes('hazelnut');
+          const basePrice = product.price || 180;
           if (cleanSweetener.includes('Coconut Sugar')) {
             itemPrice = 250;
           } else if (cleanSweetener.includes('Monk Fruit') || cleanSweetener.includes('Monk Sweetener')) {
             itemPrice = 350;
           } else {
-            itemPrice = isHazelnut ? 215 : 180;
+            itemPrice = isHazelnut ? 215 : basePrice;
           }
         }
 
