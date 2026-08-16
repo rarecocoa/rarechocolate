@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pills.forEach(pill => {
           const originalVal = pill.getAttribute('data-original') || pill.textContent;
           const cleanName = originalVal.split(' (₹')[0].trim().toLowerCase();
-          if (isHazelnutActive && cleanName.includes('coconut sugar')) {
+          if ((isHazelnutActive || nameLower.includes('custom')) && cleanName.includes('coconut sugar')) {
             pill.style.display = 'none';
             if (pill.classList.contains('selected')) {
               pill.classList.remove('selected');
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customRate = parseFloat(rateMatch[1]);
           }
 
-          if (nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) {
+          if ((nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) && !nameLower.includes('cocoa butter') && !nameLower.includes('cocoa powder')) {
             let rate = 3;
             if (customRate !== null) {
               rate = customRate;
@@ -580,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const selectedSweetener = selOpts['Choose Your Sweetener'] || selOpts['Choose Sweetener'] || '';
       const cleanSelectedSweetener = selectedSweetener.split(' (₹')[0].trim();
       
-      if (nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) {
+      if ((nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) && !nameLower.includes('cocoa butter') && !nameLower.includes('cocoa powder')) {
         let rate = 3;
         let checkHazelnut = nameLower.includes('hazelnut');
         let checkMedjool = nameLower.includes('medjool');
@@ -994,7 +994,7 @@ document.addEventListener('DOMContentLoaded', () => {
           customRate = parseFloat(rateMatch[1]);
         }
 
-        if (nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) {
+        if ((nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) && !nameLower.includes('cocoa butter') && !nameLower.includes('cocoa powder')) {
           let rate = 3; // default Muscovado
           if (customRate !== null) {
             rate = customRate;

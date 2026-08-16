@@ -76,6 +76,14 @@
       row.price_label = 'From ₹350';
       row.price = '350';
     }
+    if (nameLower === 'cocoa butter') {
+      row.price_label = 'From ₹100';
+      row.price = '100';
+      row.option1_label = 'Choose Your Sweetener';
+      row.option1_values = 'Muscovado Sugar,Coconut Sugar,Monk Fruit';
+      row.option2_label = 'Quantity';
+      row.option2_values = '20g (₹100),50g (₹250),100g (₹500)';
+    }
     if (nameLower === 'cocoa nibs tablet') {
       if (!row.image) row.image = 'assets/nibs_tablet.avif';
     } else if (nameLower === 'custom tablet blend') {
@@ -260,20 +268,29 @@
           }
         }
 
-        // Fix weight/quantity options for Macadamia and Brazil Nut Spreads (should have 100g, 250g, 300g options)
-        if (lblLower.indexOf('quantity') !== -1 || lblLower.indexOf('weight') !== -1) {
-          if (rName.indexOf('macadamia') !== -1 && rName.indexOf('spread') !== -1) {
-            parsedVals = ['100g (₹600)', '250g (₹1500)', '300g (₹1800)'];
-          } else if (rName.indexOf('brazil') !== -1 && rName.indexOf('spread') !== -1) {
-            parsedVals = ['100g (₹600)', '250g (₹1500)', '300g (₹1800)'];
-          }
-        }
-
         obj.options.push({
           label: lbl,
           values: parsedVals
         });
       }
+    }
+
+    var rName = (row.name || '').toLowerCase().trim();
+    if (rName === 'hazelnut spread' || rName === 'hazelnut cluster') {
+      obj.price = 350;
+    }
+    if (rName === 'cocoa butter') {
+      obj.price = 100;
+    }
+
+    if (rName.indexOf('custom') !== -1) {
+      obj.options.forEach(function(opt) {
+        if (opt.label && opt.label.toLowerCase().indexOf('sweetener') !== -1) {
+          opt.values = opt.values.filter(function(v) {
+            return v.toLowerCase().indexOf('coconut sugar') === -1;
+          });
+        }
+      });
     }
 
     return JSON.stringify(obj).replace(/'/g, '&#39;');
