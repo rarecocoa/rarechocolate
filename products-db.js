@@ -80,7 +80,6 @@
     if (nameLower === 'hazelnut cluster') {
       row.price_label = 'From ₹350';
       row.price = '350';
-      row.option2_values = '50g, 100g, 250g';
     }
     if (nameLower === 'pecan spread') {
       row.price_label = 'From ₹600';
@@ -292,6 +291,10 @@
         var parsedVals = vals.split(',').map(function(v){ return v.trim(); }).filter(Boolean);
         var lblLower = lbl.toLowerCase();
         var rName = (row.name || '').toLowerCase();
+
+        if (lblLower.indexOf('sweetener') !== -1) {
+          parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(\+?₹\d+(?:\/g)?\)/g, '').trim(); });
+        }
 
         // Fix accidental sweetener copies in Google Sheet columns
         if (vals.indexOf('Sugar') !== -1 || vals.indexOf('Muscovado') !== -1) {
