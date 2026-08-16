@@ -577,7 +577,17 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           if (optPrice !== null) {
-            pill.textContent = `${sweetName} (₹${optPrice})`;
+            // Check if weight option pill has explicit price tag
+            const qtyGroupCheck = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+              const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+              return lbl.includes('Weight') || lbl.includes('Quantity');
+            });
+            const qtyVal = qtyGroupCheck?.querySelector('.modal-option-pill.selected')?.textContent || '';
+            if (qtyVal.indexOf('(₹') !== -1) {
+              pill.textContent = sweetName;
+            } else {
+              pill.textContent = `${sweetName} (₹${optPrice})`;
+            }
           }
         });
       }
@@ -585,11 +595,28 @@ document.addEventListener('DOMContentLoaded', () => {
       // 2. Calculate final selected item price
       let finalPrice = product.price;
       
-      // If there's a selected sweetener and weight/drags pricing applies
       const selectedSweetener = selOpts['Choose Your Sweetener'] || selOpts['Choose Sweetener'] || '';
       const cleanSelectedSweetener = selectedSweetener.split(' (₹')[0].trim();
+
+      // Check if selected weight/quantity pill has an explicit price tag in parentheses (e.g., "50g (₹350)")
+      let explicitPriceFound = false;
+      Object.keys(selOpts).forEach(key => {
+        if (key.toLowerCase().includes('weight') || key.toLowerCase().includes('quantity')) {
+          const val = selOpts[key];
+          if (typeof val === 'string') {
+            const pm = val.match(/₹([\d.]+)/);
+            if (pm) {
+              const parsedP = parseFloat(pm[1]);
+              if (!isNaN(parsedP)) {
+                finalPrice = parsedP;
+                explicitPriceFound = true;
+              }
+            }
+          }
+        }
+      });
       
-      if ((nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) && !nameLower.includes('cocoa butter') && !nameLower.includes('cocoa powder')) {
+      if (!explicitPriceFound && (nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) && !nameLower.includes('cocoa butter') && !nameLower.includes('cocoa powder')) {
         let rate = 3;
         let checkHazelnut = nameLower.includes('hazelnut spread');
         let checkMedjool = nameLower.includes('medjool');

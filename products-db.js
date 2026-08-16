@@ -77,6 +77,11 @@
       row.price = '350';
       row.option1_values = 'Muscovado Sugar, Monk Fruit';
     }
+    if (nameLower === 'hazelnut cluster') {
+      row.price_label = 'From ₹350';
+      row.price = '350';
+      row.option2_values = '50g, 100g, 250g';
+    }
     if (nameLower === 'pecan spread') {
       row.price_label = 'From ₹600';
       row.price = '600';
