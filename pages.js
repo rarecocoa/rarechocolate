@@ -380,13 +380,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateModalLivePrice() {
       const nameLower = product.name?.toLowerCase() || '';
 
-      // Check if product or selected add-on involves Hazelnut Spread or Hazelnut custom add-on
-      let isHazelnutActive = nameLower.includes('hazelnut spread');
+      // Check if product or selected add-on involves Hazelnut Spread
+      // Only hide Coconut Sugar for the actual Hazelnut Spread product, NOT for custom blends with hazelnut addon
+      let isHazelnutActive = nameLower === 'hazelnut spread';
       const addonGroupForCheck = [...modal.querySelectorAll('.modal-option-group')].find(g => {
         const lbl = g.querySelector('.modal-option-label')?.textContent || '';
         return lbl.includes('Add-on');
       });
-      if (addonGroupForCheck) {
+      if (addonGroupForCheck && nameLower === 'custom spread blend') {
+        // Only apply hazelnut hiding on custom SPREAD blend, not cluster blend
         const selAddons = [...addonGroupForCheck.querySelectorAll('.modal-option-pill.selected')].map(p => p.textContent.toLowerCase());
         if (selAddons.some(a => a.includes('hazelnut'))) {
           isHazelnutActive = true;
@@ -475,7 +477,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (customRate !== null) {
               rate = customRate;
             } else {
-              let checkHazelnutClusterAddon = false; // handled same as hazelnut spread (3.5/g)
+              let checkHazelnutCluster = nameLower === 'hazelnut cluster';
+              let checkHazelnutClusterAddon = false;
               let checkHazelnut = nameLower === 'hazelnut spread';
               let checkMedjool = nameLower.includes('medjool');
               let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
@@ -487,8 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const selectedAddons = [...addonGroup?.querySelectorAll('.modal-option-pill.selected') || []].map(p => p.textContent.toLowerCase());
                 // Check all selected add-ons (not else-if, so both can be detected)
                 if (selectedAddons.some(a => a.includes('hazelnut'))) {
-                  if (nameLower.includes('custom cluster blend')) checkHazelnutClusterAddon = true;
-                  else checkHazelnut = true;
+                  checkHazelnutClusterAddon = true;
                 }
                 if (selectedAddons.some(a => a.includes('medjool'))) {
                   checkMedjool = true;
@@ -497,6 +499,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
               if (check6RsSpread) {
                 rate = 6;
+              } else if (checkHazelnutCluster) {
+                // Hazelnut Cluster product: 3.5/g Muscovado, 4.5/g Coconut, 5.5/g Monk
+                rate = 3.5;
+                if (sweetName.includes('Coconut Sugar')) rate = 4.5;
+                else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 5.5;
+              } else if (checkHazelnutClusterAddon && checkMedjool) {
+                // Both Hazelnut + Medjool addons selected: Medjool is more expensive (5/g > 3.5/g)
+                rate = 5;
+                if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 6;
               } else if (checkHazelnutClusterAddon) {
                 rate = 3.5;
                 if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 5.5;
@@ -510,7 +521,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (sweetName.includes('Coconut Sugar')) rate = 4;
                 else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 5;
               }
-              // Hazelnut cluster rate (7/g) is higher than Medjool (5/g), so it already wins when both selected
             }
 
 
@@ -606,19 +616,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
           const addon = selOpts['Choose Add-on'] || '';
           if (addon.toLowerCase().includes('hazelnut')) {
-            // Cluster blend uses cluster rate; spread blend uses spread rate
             if (nameLower.includes('custom cluster blend')) checkHazelnutCluster = true;
             else checkHazelnutSpread = true;
-          } else if (addon.toLowerCase().includes('medjool')) {
+          }
+          if (addon.toLowerCase().includes('medjool')) {
             checkMedjool = true;
           }
         }
 
         if (check6RsSpread) {
           rate = 6;
+        } else if (checkHazelnutCluster && checkMedjool) {
+          // Both Hazelnut + Medjool addons: Medjool rate wins (5/g > 3.5/g)
+          rate = 5;
+          if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 6;
         } else if (checkHazelnutCluster) {
+          // Hazelnut Cluster product or Custom Cluster + Hazelnut addon
           rate = 3.5;
-          if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 5.5;
+          if (cleanSelectedSweetener.includes('Coconut Sugar')) rate = 4.5;
+          else if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 5.5;
         } else if (checkHazelnutSpread) {
           rate = 3.5;
           if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 5.5;
@@ -1045,16 +1061,22 @@ document.addEventListener('DOMContentLoaded', () => {
               if (addon.toLowerCase().includes('hazelnut')) {
                 if (nameLower.includes('custom cluster blend')) checkHazelnutCluster = true;
                 else checkHazelnutSpread = true;
-              } else if (addon.toLowerCase().includes('medjool')) {
+              }
+              if (addon.toLowerCase().includes('medjool')) {
                 checkMedjool = true;
               }
             }
 
             if (check6RsSpread) {
               rate = 6;
+            } else if (checkHazelnutCluster && checkMedjool) {
+              // Both Hazelnut + Medjool addons: Medjool rate wins (5/g > 3.5/g)
+              rate = 5;
+              if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) rate = 6;
             } else if (checkHazelnutCluster) {
               rate = 3.5;
-              if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) rate = 5.5;
+              if (sweetener.includes('Coconut Sugar')) rate = 4.5;
+              else if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) rate = 5.5;
             } else if (checkHazelnutSpread) {
               rate = 3.5;
               if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) {
