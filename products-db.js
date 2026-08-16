@@ -10,7 +10,7 @@
 
   function csvUrl(sheetId, tabName) {
     return 'https://docs.google.com/spreadsheets/d/' + sheetId +
-      '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(tabName) + '&t=' + Date.now();
+      '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(tabName) + '&t=' + Date.now() + '&_cb=' + Math.random().toString(36).substring(7);
   }
 
   function parseCSV(text) {
@@ -49,7 +49,7 @@
     });
   }
 
-  function cacheKey(sheetId, tabName) { return 'rc_products_v6_' + sheetId + '_' + tabName; }
+  function cacheKey(sheetId, tabName) { return 'rc_products_v7_' + sheetId + '_' + tabName; }
 
   function saveCache(key, data) {
     try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
@@ -60,7 +60,7 @@
       var raw = localStorage.getItem(key);
       if (!raw) return null;
       var parsed = JSON.parse(raw);
-      if (Date.now() - parsed.ts < CACHE_TTL_MS) return parsed.data;
+      return parsed.data;
     } catch(e) {}
     return null;
   }
@@ -500,32 +500,50 @@
       if (!container) return;
       var key = cacheKey(sheetId, tabName + (pageCategory ? '_' + pageCategory : ''));
       showLoading(container);
-      fetch(csvUrl(sheetId, tabName), { cache: 'no-store' })
-        .then(function(res){
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          return res.text();
+
+      function fetchTab(targetTab) {
+        return fetch(csvUrl(sheetId, targetTab), {
+          cache: 'no-store',
+          headers: { 'pragma': 'no-cache', 'cache-control': 'no-cache' }
         })
-        .then(function(text){
-          var rows = parseCSV(text);
-          var all = rowsToObjects(rows);
-          var products = all.filter(function(p){
-            var isActive = (p.active || '').toUpperCase() === 'TRUE' && p.name;
-            if (!isActive) return false;
-            if (pageCategory && p.category) {
-              var cats = p.category.split(',').map(function(c){ return c.trim().toLowerCase(); });
-              return cats.indexOf(pageCategory.toLowerCase()) !== -1;
-            }
-            return true;
+          .then(function(res){
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
+          })
+          .then(function(text){
+            var rows = parseCSV(text);
+            var all = rowsToObjects(rows);
+            var products = all.filter(function(p){
+              var isActive = (p.active || '').toUpperCase() === 'TRUE' && p.name;
+              if (!isActive) return false;
+              if (pageCategory && p.category && targetTab === 'products') {
+                var cats = p.category.split(',').map(function(c){ return c.trim().toLowerCase(); });
+                return cats.indexOf(pageCategory.toLowerCase()) !== -1;
+              }
+              return true;
+            });
+            injectPecanSpread(products, pageCategory);
+            injectCashewCookie(products, pageCategory);
+            fixIceCreamProducts(products, targetTab);
+            if (!products.length) throw new Error('No active products found in ' + targetTab);
+            return products;
           });
-          injectPecanSpread(products, pageCategory);
-          injectCashewCookie(products, pageCategory);
-          fixIceCreamProducts(products, tabName);
-          if (!products.length) throw new Error('No active products found.');
+      }
+
+      fetchTab(tabName)
+        .catch(function(err){
+          if (tabName !== 'products') {
+            console.warn('[RCProductsDB] Tab "' + tabName + '" failed (' + err.message + '), falling back to "products" tab...');
+            return fetchTab('products');
+          }
+          throw err;
+        })
+        .then(function(products){
           saveCache(key, products);
           renderProducts(products, container, tabsBannerHTML || '');
         })
         .catch(function(err){
-          console.warn('[RCProductsDB] Fetch failed:', err.message, '- trying cache...');
+          console.warn('[RCProductsDB] Fetch failed:', err.message, '- trying offline cache...');
           var cached = loadCache(key);
           if (cached && cached.length) {
             injectCashewCookie(cached, pageCategory);
