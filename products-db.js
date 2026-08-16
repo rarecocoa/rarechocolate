@@ -72,7 +72,7 @@
   function overrideCookieImages(row) {
     if (!row || !row.name) return;
     var nameLower = row.name.toLowerCase().trim();
-    if (nameLower === 'hazelnut spread' || nameLower === 'hazelnut cluster') {
+    if (nameLower === 'hazelnut spread') {
       row.price_label = 'From ₹350';
       row.price = '350';
       row.option1_values = 'Muscovado Sugar, Monk Fruit';
@@ -315,7 +315,7 @@
     }
 
     var rName = (row.name || '').toLowerCase().trim();
-    if (rName === 'hazelnut spread' || rName === 'hazelnut cluster') {
+    if (rName === 'hazelnut spread') {
       obj.price = 350;
     }
     if (rName === 'cocoa butter') {

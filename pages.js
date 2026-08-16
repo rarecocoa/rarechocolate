@@ -380,8 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateModalLivePrice() {
       const nameLower = product.name?.toLowerCase() || '';
 
-      // Check if product or selected add-on involves Hazelnut
-      let isHazelnutActive = nameLower.includes('hazelnut');
+      // Check if product or selected add-on involves Hazelnut Spread or Hazelnut custom add-on
+      let isHazelnutActive = nameLower.includes('hazelnut spread');
       const addonGroupForCheck = [...modal.querySelectorAll('.modal-option-group')].find(g => {
         const lbl = g.querySelector('.modal-option-label')?.textContent || '';
         return lbl.includes('Add-on');
@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (customRate !== null) {
               rate = customRate;
             } else {
-              let checkHazelnut = nameLower.includes('hazelnut');
+              let checkHazelnut = nameLower.includes('hazelnut spread');
               let checkMedjool = nameLower.includes('medjool');
               let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
               if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
@@ -591,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       if ((nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) && !nameLower.includes('cocoa butter') && !nameLower.includes('cocoa powder')) {
         let rate = 3;
-        let checkHazelnut = nameLower.includes('hazelnut');
+        let checkHazelnut = nameLower.includes('hazelnut spread');
         let checkMedjool = nameLower.includes('medjool');
         let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
         if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
@@ -1008,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (customRate !== null) {
             rate = customRate;
           } else {
-            let checkHazelnut = nameLower.includes('hazelnut');
+            let checkHazelnut = nameLower.includes('hazelnut spread');
             let checkMedjool = nameLower.includes('medjool');
             let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
             if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
