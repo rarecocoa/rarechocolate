@@ -237,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (nameLower.includes('medjool') && !nameLower.includes('custom')) {
         if (isMonk) return 6;
+        if (isCoconut) return 5.5;
         return 5;
       }
 
@@ -249,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addonList.forEach(addon => {
           let addonRate = baseRate;
           if (addon.includes('medjool')) {
-            addonRate = isMonk ? 6 : 5;
+            addonRate = isMonk ? 6 : (isCoconut ? 5.5 : 5);
           } else if (addon.includes('hazelnut')) {
             if (nameLower.includes('cluster')) {
               addonRate = isMonk ? 5.5 : (isCoconut ? 4.5 : 3.5);
