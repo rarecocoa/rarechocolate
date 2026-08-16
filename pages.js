@@ -658,7 +658,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Update Add to Selection button text
       const modalAddBtn = modal.querySelector('.modal-add-btn');
-      const isMaintActive = typeof RC_MAINTENANCE_MODE !== 'undefined' ? RC_MAINTENANCE_MODE : true;
+      const isMaintActive = (typeof window.RC_MAINTENANCE_MODE !== 'undefined') ? window.RC_MAINTENANCE_MODE : ((typeof RC_MAINTENANCE_MODE !== 'undefined') ? RC_MAINTENANCE_MODE : false);
       const isAdmin = window.location.search.indexOf('admin=true') !== -1;
       if (modalAddBtn) {
         if (!isMaintActive || isAdmin) {

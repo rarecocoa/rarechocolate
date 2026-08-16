@@ -1,6 +1,7 @@
 // ── Maintenance Mode Toggle Flag ──────────────────────────────
 // Set to true to pause online ordering. Set to false for normal store operation.
 const RC_MAINTENANCE_MODE = false;
+if (typeof window !== 'undefined') window.RC_MAINTENANCE_MODE = false;
 
 (function() {
   if (!RC_MAINTENANCE_MODE || window.location.search.indexOf('admin=true') !== -1) {
@@ -624,7 +625,7 @@ const CartSystem = {
             <input type="text" id="checkoutPincode" required placeholder="e.g. 560001" pattern="^[0-9]{6}$" maxlength="6">
           </div>
           <div class="checkout-form-actions">
-            <button type="submit" class="checkout-submit-btn" id="checkoutSubmitBtn" disabled style="opacity: 0.6; cursor: not-allowed;">ORDERS PAUSED (SITE MAINTENANCE)</button>
+            <button type="submit" class="checkout-submit-btn" id="checkoutSubmitBtn" disabled>Review &amp; Place Order →</button>
             <button type="button" class="checkout-cancel-btn" id="btnBackToLoc">← Back</button>
           </div>
         </form>

@@ -2922,4 +2922,8 @@ body.page-loading .image-placeholder .placeholder-text {
   }
 }
 
+#rc-maintenance-banner {
+  display: none !important;
+}
+
 
