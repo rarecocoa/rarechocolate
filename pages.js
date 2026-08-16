@@ -577,17 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           if (optPrice !== null) {
-            // Check if weight option pill has explicit price tag
-            const qtyGroupCheck = [...modal.querySelectorAll('.modal-option-group')].find(g => {
-              const lbl = g.querySelector('.modal-option-label')?.textContent || '';
-              return lbl.includes('Weight') || lbl.includes('Quantity');
-            });
-            const qtyVal = qtyGroupCheck?.querySelector('.modal-option-pill.selected')?.textContent || '';
-            if (qtyVal.indexOf('(₹') !== -1) {
-              pill.textContent = sweetName;
-            } else {
-              pill.textContent = `${sweetName} (₹${optPrice})`;
-            }
+            pill.textContent = `${sweetName} (₹${optPrice})`;
           }
         });
       }
@@ -597,34 +587,17 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const selectedSweetener = selOpts['Choose Your Sweetener'] || selOpts['Choose Sweetener'] || '';
       const cleanSelectedSweetener = selectedSweetener.split(' (₹')[0].trim();
-
-      // Check if selected weight/quantity pill has an explicit price tag in parentheses (e.g., "50g (₹350)")
-      let explicitPriceFound = false;
-      Object.keys(selOpts).forEach(key => {
-        if (key.toLowerCase().includes('weight') || key.toLowerCase().includes('quantity')) {
-          const val = selOpts[key];
-          if (typeof val === 'string') {
-            const pm = val.match(/₹([\d.]+)/);
-            if (pm) {
-              const parsedP = parseFloat(pm[1]);
-              if (!isNaN(parsedP)) {
-                finalPrice = parsedP;
-                explicitPriceFound = true;
-              }
-            }
-          }
-        }
-      });
       
-      if (!explicitPriceFound && (nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) && !nameLower.includes('cocoa butter') && !nameLower.includes('cocoa powder')) {
+      if ((nameLower.includes('cluster') || nameLower.includes('slab') || nameLower.includes('spread') || nameLower.includes('peanut butter') || nameLower.includes('almond butter') || nameLower.includes('custom butter') || nameLower.includes('cookie')) && !nameLower.includes('cocoa butter') && !nameLower.includes('cocoa powder')) {
         let rate = 3;
-        let checkHazelnut = nameLower.includes('hazelnut spread');
+        let checkHazelnutSpread = nameLower === 'hazelnut spread';
+        let checkHazelnutCluster = nameLower === 'hazelnut cluster';
         let checkMedjool = nameLower.includes('medjool');
         let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
         if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
           const addon = selOpts['Choose Add-on'] || '';
           if (addon.toLowerCase().includes('hazelnut')) {
-            checkHazelnut = true;
+            checkHazelnutSpread = true;
           } else if (addon.toLowerCase().includes('medjool')) {
             checkMedjool = true;
           }
@@ -632,7 +605,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (check6RsSpread) {
           rate = 6;
-        } else if (checkHazelnut) {
+        } else if (checkHazelnutCluster) {
+          rate = 7;
+          if (cleanSelectedSweetener.includes('Coconut Sugar')) rate = 8;
+          else if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 9;
+        } else if (checkHazelnutSpread) {
           rate = 3.5;
           if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 5.5;
         } else if (checkMedjool) {
@@ -1049,13 +1026,14 @@ document.addEventListener('DOMContentLoaded', () => {
           if (customRate !== null) {
             rate = customRate;
           } else {
-            let checkHazelnut = nameLower.includes('hazelnut spread');
+            let checkHazelnutSpread = nameLower === 'hazelnut spread';
+            let checkHazelnutCluster = nameLower === 'hazelnut cluster';
             let checkMedjool = nameLower.includes('medjool');
             let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
             if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
               const addon = selectedOptions['Choose Add-on'] || '';
               if (addon.toLowerCase().includes('hazelnut')) {
-                checkHazelnut = true;
+                checkHazelnutSpread = true;
               } else if (addon.toLowerCase().includes('medjool')) {
                 checkMedjool = true;
               }
@@ -1063,7 +1041,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (check6RsSpread) {
               rate = 6;
-            } else if (checkHazelnut) {
+            } else if (checkHazelnutCluster) {
+              rate = 7;
+              if (sweetener.includes('Coconut Sugar')) rate = 8;
+              else if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) rate = 9;
+            } else if (checkHazelnutSpread) {
               rate = 3.5;
               if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) {
                 rate = 5.5;

@@ -26,23 +26,23 @@ for filename in html_files:
         
         new_content = content
         
-        # Replace styles.css(?v=...) with styles.css?v=48
-        new_content = re.sub(r'styles\.css(?:\?v=\d+)?', 'styles.css?v=48', new_content)
-        # Replace pages.css(?v=...) with pages.css?v=48
-        new_content = re.sub(r'pages\.css(?:\?v=\d+)?', 'pages.css?v=48', new_content)
-        # Replace pages.js(?v=...) with pages.js?v=48
-        new_content = re.sub(r'pages\.js(?:\?v=\d+)?', 'pages.js?v=48', new_content)
-        # Replace products-db.js(?v=...) with products-db.js?v=48
-        new_content = re.sub(r'products-db\.js(?:\?v=\d+)?', 'products-db.js?v=48', new_content)
-        # Replace script.js(?v=...) with script.js?v=48
-        new_content = re.sub(r'script\.js(?:\?v=\d+)?', 'script.js?v=48', new_content)
-        # Replace cart.js(?v=...) with cart.js?v=48
-        new_content = re.sub(r'cart\.js(?:\?v=\d+)?', 'cart.js?v=48', new_content)
+        # Replace styles.css(?v=...) with styles.css?v=49
+        new_content = re.sub(r'styles\.css(?:\?v=\d+)?', 'styles.css?v=49', new_content)
+        # Replace pages.css(?v=...) with pages.css?v=49
+        new_content = re.sub(r'pages\.css(?:\?v=\d+)?', 'pages.css?v=49', new_content)
+        # Replace pages.js(?v=...) with pages.js?v=49
+        new_content = re.sub(r'pages\.js(?:\?v=\d+)?', 'pages.js?v=49', new_content)
+        # Replace products-db.js(?v=...) with products-db.js?v=49
+        new_content = re.sub(r'products-db\.js(?:\?v=\d+)?', 'products-db.js?v=49', new_content)
+        # Replace script.js(?v=...) with script.js?v=49
+        new_content = re.sub(r'script\.js(?:\?v=\d+)?', 'script.js?v=49', new_content)
+        # Replace cart.js(?v=...) with cart.js?v=49
+        new_content = re.sub(r'cart\.js(?:\?v=\d+)?', 'cart.js?v=49', new_content)
         
         if new_content != content:
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(new_content)
-            print(f"Successfully bumped cache buster to v=48 for {filename}")
+            print(f"Successfully bumped cache buster to v=49 for {filename}")
         else:
             print(f"No changes needed for {filename}")
             
