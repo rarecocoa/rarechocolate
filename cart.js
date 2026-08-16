@@ -24,11 +24,20 @@ const HYDERABAD_AREAS = [
   "Yapral", "Yousufguda"
 ];
 
-const CartSystem = {
+  // ── Maintenance Mode Banner & Ordering Pause ──────────────
+  initMaintenanceMode: function() {
+    if (document.getElementById('rc-maintenance-banner')) return;
+    const banner = document.createElement('div');
+    banner.id = 'rc-maintenance-banner';
+    banner.style.cssText = 'background: #dc2626; color: #ffffff; text-align: center; padding: 14px 20px; font-weight: 700; font-size: 0.95rem; position: sticky; top: 0; z-index: 9999999; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-family: var(--font-body, sans-serif); letter-spacing: 0.5px;';
+    banner.innerHTML = '⚠️ SITE UNDER MAINTENANCE — Online ordering is temporarily paused while we update system data. We will be back online shortly!';
+    document.body.prepend(banner);
+  },
   storageKey: 'rarecocoa_cart',
   items: [],
 
   init() {
+    this.initMaintenanceMode();
     this.loadCart();
     this.injectCartMarkup();
     this.setupListeners();
@@ -590,7 +599,7 @@ const CartSystem = {
             <input type="text" id="checkoutPincode" required placeholder="e.g. 560001" pattern="^[0-9]{6}$" maxlength="6">
           </div>
           <div class="checkout-form-actions">
-            <button type="submit" class="checkout-submit-btn" id="checkoutSubmitBtn" disabled>Send Order via WhatsApp</button>
+            <button type="submit" class="checkout-submit-btn" id="checkoutSubmitBtn" disabled style="opacity: 0.6; cursor: not-allowed;">ORDERS PAUSED (SITE MAINTENANCE)</button>
             <button type="button" class="checkout-cancel-btn" id="btnBackToLoc">← Back</button>
           </div>
         </form>
