@@ -597,7 +597,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
           const addon = selOpts['Choose Add-on'] || '';
           if (addon.toLowerCase().includes('hazelnut')) {
-            checkHazelnutSpread = true;
+            // Cluster blend uses cluster rate; spread blend uses spread rate
+            if (nameLower.includes('custom cluster blend')) checkHazelnutCluster = true;
+            else checkHazelnutSpread = true;
           } else if (addon.toLowerCase().includes('medjool')) {
             checkMedjool = true;
           }
@@ -1033,7 +1035,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
               const addon = selectedOptions['Choose Add-on'] || '';
               if (addon.toLowerCase().includes('hazelnut')) {
-                checkHazelnutSpread = true;
+                if (nameLower.includes('custom cluster blend')) checkHazelnutCluster = true;
+                else checkHazelnutSpread = true;
               } else if (addon.toLowerCase().includes('medjool')) {
                 checkMedjool = true;
               }
