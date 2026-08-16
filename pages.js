@@ -698,13 +698,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Update Add to Selection button text for Site Maintenance
+      // Update Add to Selection button text
       const modalAddBtn = modal.querySelector('.modal-add-btn');
+      const isAdmin = window.location.search.indexOf('admin=true') !== -1;
       if (modalAddBtn) {
-        modalAddBtn.textContent = 'ORDERS TEMPORARILY PAUSED (SITE MAINTENANCE)';
-        modalAddBtn.style.pointerEvents = 'none';
-        modalAddBtn.style.opacity = '0.65';
-        modalAddBtn.style.cursor = 'not-allowed';
+        if (isAdmin) {
+          modalAddBtn.style.pointerEvents = 'auto';
+          modalAddBtn.style.opacity = '1';
+          modalAddBtn.style.cursor = 'pointer';
+          if (finalPrice !== undefined && finalPrice !== null) {
+            modalAddBtn.textContent = `Add to Selection — ₹${finalPrice}`;
+          } else {
+            modalAddBtn.textContent = 'Add to Selection';
+          }
+        } else {
+          modalAddBtn.textContent = 'ORDERS TEMPORARILY PAUSED (SITE MAINTENANCE)';
+          modalAddBtn.style.pointerEvents = 'none';
+          modalAddBtn.style.opacity = '0.65';
+          modalAddBtn.style.cursor = 'not-allowed';
+        }
       }
     }
 

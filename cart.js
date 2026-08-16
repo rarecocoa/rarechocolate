@@ -1,3 +1,14 @@
+// ── Instant Admin Mode Check ──────────────────────────────
+(function() {
+  if (window.location.search.indexOf('admin=true') !== -1) {
+    var s = document.createElement('style');
+    s.id = 'rc-admin-mode-style';
+    s.innerHTML = '#rc-maintenance-banner { display: none !important; }';
+    if (document.head) document.head.appendChild(s);
+    else document.addEventListener('DOMContentLoaded', function() { document.head.appendChild(s); });
+  }
+})();
+
 const HYDERABAD_AREAS = [
   "Addagutta", "Adibatla", "Adikmet", "AG Colony", "Ahmed Nagar", "Allapur", "Allwyn Colony", "Amberpet", "Ameenpur", "Ameerpet", "Anjaiah Nagar", "Asif Nagar", "Attapur",
   "Bachupally", "Badangpet", "Bagh Amberpet", "Bagh Lingampally", "Bahadurpally", "Bairamalguda", "Bakaram", "Balaji Nagar", "Balanagar", "Balapur", "Balram Nagar", "Bandlaguda Jagir", "Banjara Hills", "Bansilalpet", "Bapuji Nagar", "Barkatpura", "Beeramguda", "Beerappagadda", "Begumpet", "Bhagya Nagar Colony", "Bhandari Layout", "Bharathi Nagar", "Bholakpur", "Bhudevi Nagar", "BK Guda", "BN Reddy Nagar", "Boduppal", "Bollaram", "Borabanda", "Boudha Nagar", "Bowrampet",
