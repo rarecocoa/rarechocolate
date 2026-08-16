@@ -72,31 +72,6 @@
   function overrideCookieImages(row) {
     if (!row || !row.name) return;
     var nameLower = row.name.toLowerCase().trim();
-    if (nameLower === 'hazelnut spread') {
-      row.price_label = 'From ₹350';
-      row.price = '350';
-      row.option1_values = 'Muscovado Sugar, Monk Fruit';
-    }
-    if (nameLower === 'hazelnut cluster') {
-      row.price_label = 'From ₹350';
-      row.price = '350';
-    }
-    if (nameLower === 'pecan spread') {
-      row.price_label = 'From ₹600';
-      row.price = '600';
-      row.option1_label = 'Choose Your Sweetener';
-      row.option1_values = 'Muscovado Sugar';
-      row.option2_label = 'Quantity';
-      row.option2_values = '100g (₹600), 250g (₹1500), 300g (₹1800)';
-    }
-    if (nameLower === 'cocoa butter') {
-      row.price_label = 'From ₹100';
-      row.price = '100';
-      row.option1_label = 'Choose Your Sweetener';
-      row.option1_values = 'Muscovado Sugar,Coconut Sugar,Monk Fruit';
-      row.option2_label = 'Quantity';
-      row.option2_values = '20g (₹100),50g (₹250),100g (₹500)';
-    }
     if (nameLower === 'cocoa nibs tablet') {
       if (!row.image) row.image = 'assets/nibs_tablet.avif';
     } else if (nameLower === 'custom tablet blend') {
@@ -323,12 +298,6 @@
     }
 
     var rName = (row.name || '').toLowerCase().trim();
-    if (rName === 'hazelnut spread') {
-      obj.price = 350;
-    }
-    if (rName === 'cocoa butter') {
-      obj.price = 100;
-    }
 
     if (rName.indexOf('custom') !== -1) {
       obj.options.forEach(function(opt) {
