@@ -1,6 +1,6 @@
 // ── Maintenance Mode Toggle Flag ──────────────────────────────
 // Set to true to pause online ordering. Set to false for normal store operation.
-const RC_MAINTENANCE_MODE = true;
+const RC_MAINTENANCE_MODE = false;
 
 (function() {
   if (!RC_MAINTENANCE_MODE || window.location.search.indexOf('admin=true') !== -1) {
@@ -38,6 +38,7 @@ const HYDERABAD_AREAS = [
   "Yapral", "Yousufguda"
 ];
 
+const CartSystem = {
   // ── Maintenance Mode Banner & Ordering Pause ──────────────
   initMaintenanceMode: function() {
     const existing = document.getElementById('rc-maintenance-banner');
