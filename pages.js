@@ -403,7 +403,16 @@ document.addEventListener('DOMContentLoaded', () => {
         pills.forEach(pill => {
           const originalVal = pill.getAttribute('data-original') || pill.textContent;
           const cleanName = originalVal.split(' (₹')[0].trim().toLowerCase();
-          if ((isHazelnutActive || nameLower.includes('custom')) && cleanName.includes('coconut sugar')) {
+          const isMuscovadoOnlySpread = nameLower.includes('pecan') || nameLower.includes('brazil') || nameLower.includes('macadamia');
+
+          if (isMuscovadoOnlySpread && !cleanName.includes('muscovado')) {
+            pill.style.display = 'none';
+            if (pill.classList.contains('selected')) {
+              pill.classList.remove('selected');
+              const muscovadoPill = [...pills].find(p => p.textContent.toLowerCase().includes('muscovado'));
+              if (muscovadoPill) muscovadoPill.classList.add('selected');
+            }
+          } else if ((isHazelnutActive || nameLower.includes('custom')) && cleanName.includes('coconut sugar')) {
             pill.style.display = 'none';
             if (pill.classList.contains('selected')) {
               pill.classList.remove('selected');
@@ -468,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
               let checkHazelnut = nameLower.includes('hazelnut');
               let checkMedjool = nameLower.includes('medjool');
-              let checkMacadamiaOrBrazil = nameLower.includes('macadamia') || nameLower.includes('brazil');
+              let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
               if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
                 const addonGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
                   const lbl = g.querySelector('.modal-option-label')?.textContent || '';
@@ -482,7 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
               }
 
-              if (checkMacadamiaOrBrazil) {
+              if (check6RsSpread) {
                 rate = 6;
               } else if (checkHazelnut) {
                 rate = 3.5;
@@ -584,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let rate = 3;
         let checkHazelnut = nameLower.includes('hazelnut');
         let checkMedjool = nameLower.includes('medjool');
-        let checkMacadamiaOrBrazil = nameLower.includes('macadamia') || nameLower.includes('brazil');
+        let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
         if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
           const addon = selOpts['Choose Add-on'] || '';
           if (addon.toLowerCase().includes('hazelnut')) {
@@ -594,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        if (checkMacadamiaOrBrazil) {
+        if (check6RsSpread) {
           rate = 6;
         } else if (checkHazelnut) {
           rate = 3.5;
@@ -1001,7 +1010,7 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             let checkHazelnut = nameLower.includes('hazelnut');
             let checkMedjool = nameLower.includes('medjool');
-            let checkMacadamiaOrBrazil = nameLower.includes('macadamia') || nameLower.includes('brazil');
+            let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
             if (nameLower.includes('custom cluster blend') || nameLower.includes('custom spread blend')) {
               const addon = selectedOptions['Choose Add-on'] || '';
               if (addon.toLowerCase().includes('hazelnut')) {
@@ -1011,7 +1020,7 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             }
 
-            if (checkMacadamiaOrBrazil) {
+            if (check6RsSpread) {
               rate = 6;
             } else if (checkHazelnut) {
               rate = 3.5;

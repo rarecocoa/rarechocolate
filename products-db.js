@@ -75,6 +75,15 @@
     if (nameLower === 'hazelnut spread' || nameLower === 'hazelnut cluster') {
       row.price_label = 'From ₹350';
       row.price = '350';
+      row.option1_values = 'Muscovado Sugar, Monk Fruit';
+    }
+    if (nameLower === 'pecan spread') {
+      row.price_label = 'From ₹600';
+      row.price = '600';
+      row.option1_label = 'Choose Your Sweetener';
+      row.option1_values = 'Muscovado Sugar';
+      row.option2_label = 'Quantity';
+      row.option2_values = '100g (₹600), 250g (₹1500), 300g (₹1800)';
     }
     if (nameLower === 'cocoa butter') {
       row.price_label = 'From ₹100';
@@ -110,6 +119,36 @@
       } else if (nameLower.indexOf('seeds') !== -1 && nameLower.indexOf('nuts') !== -1) {
         row.image = 'assets/seedsandnutscookie.avif';
         row.image2 = '';
+      }
+    }
+  }
+
+  function injectPecanSpread(products, pageCategory) {
+    if (pageCategory === 'spreads' || !pageCategory) {
+      var hasPecanSpread = false;
+      for (var i = 0; i < products.length; i++) {
+        var p = products[i];
+        if (p.name && p.name.toLowerCase().indexOf('pecan') !== -1 && p.name.toLowerCase().indexOf('spread') !== -1) {
+          hasPecanSpread = true;
+          break;
+        }
+      }
+      if (!hasPecanSpread) {
+        products.push({
+          active: "TRUE",
+          name: "Pecan Spread",
+          description: "Rich artisanal pecan spread made with 100% pure cocoa butter and organic muscovado sugar",
+          subcategory: "Spreads",
+          price_label: "From ₹600",
+          image: "assets/almondspread.png",
+          image2: "",
+          emoji: "🫙",
+          option1_label: "Choose Your Sweetener",
+          option1_values: "Muscovado Sugar",
+          option2_label: "Quantity",
+          option2_values: "100g (₹600),250g (₹1500),300g (₹1800)",
+          category: "spreads"
+        });
       }
     }
   }
@@ -501,6 +540,7 @@
             }
             return true;
           });
+          injectPecanSpread(products, pageCategory);
           injectCashewCookie(products, pageCategory);
           fixIceCreamProducts(products, tabName);
           if (!products.length) throw new Error('No active products found.');
