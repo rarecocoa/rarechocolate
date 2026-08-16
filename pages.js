@@ -380,12 +380,41 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateModalLivePrice() {
       const nameLower = product.name?.toLowerCase() || '';
 
+      // Check if product or selected add-on involves Hazelnut
+      let isHazelnutActive = nameLower.includes('hazelnut');
+      const addonGroupForCheck = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+        const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+        return lbl.includes('Add-on');
+      });
+      if (addonGroupForCheck) {
+        const selAddons = [...addonGroupForCheck.querySelectorAll('.modal-option-pill.selected')].map(p => p.textContent.toLowerCase());
+        if (selAddons.some(a => a.includes('hazelnut'))) {
+          isHazelnutActive = true;
+        }
+      }
+
       // Adjust cocoa options dynamically based on sweetener selection first
       const sweetenerGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
         const lbl = g.querySelector('.modal-option-label')?.textContent || '';
         return lbl.includes('Sweetener');
       });
       if (sweetenerGroup) {
+        const pills = sweetenerGroup.querySelectorAll('.modal-option-pill');
+        pills.forEach(pill => {
+          const originalVal = pill.getAttribute('data-original') || pill.textContent;
+          const cleanName = originalVal.split(' (₹')[0].trim().toLowerCase();
+          if (isHazelnutActive && cleanName.includes('coconut sugar')) {
+            pill.style.display = 'none';
+            if (pill.classList.contains('selected')) {
+              pill.classList.remove('selected');
+              const muscovadoPill = [...pills].find(p => p.textContent.toLowerCase().includes('muscovado'));
+              if (muscovadoPill) muscovadoPill.classList.add('selected');
+            }
+          } else {
+            pill.style.display = 'inline-flex';
+          }
+        });
+
         const selectedSweetenerPill = sweetenerGroup.querySelector('.modal-option-pill.selected');
         if (selectedSweetenerPill) {
           const originalVal = selectedSweetenerPill.getAttribute('data-original') || selectedSweetenerPill.textContent;
@@ -455,10 +484,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
               if (checkMacadamiaOrBrazil) {
                 rate = 6;
-              } else if (checkHazelnut && (nameLower.includes('spread') || nameLower.includes('cluster'))) {
-                rate = 7;
-                if (sweetName.includes('Coconut Sugar')) rate = 8;
-                else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 9;
+              } else if (checkHazelnut) {
+                rate = 3.5;
+                if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 5.5;
               } else if (checkMedjool) {
                 rate = 5;
                 if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 6;
@@ -568,10 +596,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (checkMacadamiaOrBrazil) {
           rate = 6;
-        } else if (checkHazelnut && (nameLower.includes('spread') || nameLower.includes('cluster'))) {
-          rate = 7;
-          if (cleanSelectedSweetener.includes('Coconut Sugar')) rate = 8;
-          else if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 9;
+        } else if (checkHazelnut) {
+          rate = 3.5;
+          if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 5.5;
         } else if (checkMedjool) {
           rate = 5;
           if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 6;
@@ -986,12 +1013,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (checkMacadamiaOrBrazil) {
               rate = 6;
-            } else if (checkHazelnut && (nameLower.includes('spread') || nameLower.includes('cluster'))) {
-              rate = 7;
-              if (sweetener.includes('Coconut Sugar')) {
-                rate = 8;
-              } else if (sweetener.includes('Monk Fruit')) {
-                rate = 9;
+            } else if (checkHazelnut) {
+              rate = 3.5;
+              if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) {
+                rate = 5.5;
               }
             } else if (checkMedjool) {
               rate = 5;

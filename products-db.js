@@ -72,6 +72,10 @@
   function overrideCookieImages(row) {
     if (!row || !row.name) return;
     var nameLower = row.name.toLowerCase().trim();
+    if (nameLower === 'hazelnut spread' || nameLower === 'hazelnut cluster') {
+      row.price_label = 'From ₹350';
+      row.price = '350';
+    }
     if (nameLower === 'cocoa nibs tablet') {
       if (!row.image) row.image = 'assets/nibs_tablet.avif';
     } else if (nameLower === 'custom tablet blend') {
