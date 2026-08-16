@@ -1,6 +1,9 @@
-// ── Instant Admin Mode Check ──────────────────────────────
+// ── Maintenance Mode Toggle Flag ──────────────────────────────
+// Set to true to pause online ordering. Set to false for normal store operation.
+const RC_MAINTENANCE_MODE = true;
+
 (function() {
-  if (window.location.search.indexOf('admin=true') !== -1) {
+  if (!RC_MAINTENANCE_MODE || window.location.search.indexOf('admin=true') !== -1) {
     var s = document.createElement('style');
     s.id = 'rc-admin-mode-style';
     s.innerHTML = '#rc-maintenance-banner { display: none !important; }';
@@ -37,8 +40,12 @@ const HYDERABAD_AREAS = [
 
   // ── Maintenance Mode Banner & Ordering Pause ──────────────
   initMaintenanceMode: function() {
-    const isAdmin = window.location.search.indexOf('admin=true') !== -1;
     const existing = document.getElementById('rc-maintenance-banner');
+    if (typeof RC_MAINTENANCE_MODE !== 'undefined' && !RC_MAINTENANCE_MODE) {
+      if (existing) existing.remove();
+      return;
+    }
+    const isAdmin = window.location.search.indexOf('admin=true') !== -1;
     if (isAdmin) {
       if (existing) existing.remove();
       return;

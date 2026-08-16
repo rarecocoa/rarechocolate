@@ -700,9 +700,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Update Add to Selection button text
       const modalAddBtn = modal.querySelector('.modal-add-btn');
+      const isMaintActive = typeof RC_MAINTENANCE_MODE !== 'undefined' ? RC_MAINTENANCE_MODE : true;
       const isAdmin = window.location.search.indexOf('admin=true') !== -1;
       if (modalAddBtn) {
-        if (isAdmin) {
+        if (!isMaintActive || isAdmin) {
           modalAddBtn.style.pointerEvents = 'auto';
           modalAddBtn.style.opacity = '1';
           modalAddBtn.style.cursor = 'pointer';
