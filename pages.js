@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (customRate !== null) {
               rate = customRate;
             } else {
-              let checkHazelnutClusterAddon = nameLower === 'hazelnut cluster';
+              let checkHazelnutClusterAddon = false; // handled same as hazelnut spread (3.5/g)
               let checkHazelnut = nameLower === 'hazelnut spread';
               let checkMedjool = nameLower.includes('medjool');
               let check6RsSpread = nameLower.includes('macadamia') || nameLower.includes('brazil') || nameLower.includes('pecan');
@@ -498,10 +498,8 @@ document.addEventListener('DOMContentLoaded', () => {
               if (check6RsSpread) {
                 rate = 6;
               } else if (checkHazelnutClusterAddon) {
-                // Hazelnut cluster add-on: 7/g Muscovado, 8/g Coconut, 9/g Monk
-                rate = 7;
-                if (sweetName.includes('Coconut Sugar')) rate = 8;
-                else if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 9;
+                rate = 3.5;
+                if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 5.5;
               } else if (checkHazelnut) {
                 rate = 3.5;
                 if (sweetName.includes('Monk Fruit') || sweetName.includes('Monk Sweetener')) rate = 5.5;
@@ -619,9 +617,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (check6RsSpread) {
           rate = 6;
         } else if (checkHazelnutCluster) {
-          rate = 7;
-          if (cleanSelectedSweetener.includes('Coconut Sugar')) rate = 8;
-          else if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 9;
+          rate = 3.5;
+          if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 5.5;
         } else if (checkHazelnutSpread) {
           rate = 3.5;
           if (cleanSelectedSweetener.includes('Monk Fruit') || cleanSelectedSweetener.includes('Monk Sweetener')) rate = 5.5;
@@ -1056,9 +1053,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (check6RsSpread) {
               rate = 6;
             } else if (checkHazelnutCluster) {
-              rate = 7;
-              if (sweetener.includes('Coconut Sugar')) rate = 8;
-              else if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) rate = 9;
+              rate = 3.5;
+              if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) rate = 5.5;
             } else if (checkHazelnutSpread) {
               rate = 3.5;
               if (sweetener.includes('Monk Fruit') || sweetener.includes('Monk Sweetener')) {
