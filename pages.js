@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
               const muscovadoPill = [...pills].find(p => p.textContent.toLowerCase().includes('muscovado'));
               if (muscovadoPill) muscovadoPill.classList.add('selected');
             }
-          } else if ((isHazelnutActive || nameLower.includes('custom')) && cleanName.includes('coconut sugar')) {
+          } else if (isHazelnutActive && cleanName.includes('coconut sugar')) {
             pill.style.display = 'none';
             if (pill.classList.contains('selected')) {
               pill.classList.remove('selected');

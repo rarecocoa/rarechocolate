@@ -299,16 +299,6 @@
 
     var rName = (row.name || '').toLowerCase().trim();
 
-    if (rName.indexOf('custom') !== -1) {
-      obj.options.forEach(function(opt) {
-        if (opt.label && opt.label.toLowerCase().indexOf('sweetener') !== -1) {
-          opt.values = opt.values.filter(function(v) {
-            return v.toLowerCase().indexOf('coconut sugar') === -1;
-          });
-        }
-      });
-    }
-
     return JSON.stringify(obj).replace(/'/g, '&#39;');
   }
 
