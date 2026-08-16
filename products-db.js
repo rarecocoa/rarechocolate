@@ -299,6 +299,16 @@
 
     var rName = (row.name || '').toLowerCase().trim();
 
+    // Temporary fix: Google CSV cache is stale for Custom Cluster Blend add-on list.
+    // Remove this block once Google's CSV propagates the sheet update.
+    if (rName === 'custom cluster blend') {
+      obj.options.forEach(function(opt) {
+        if (opt.label && opt.label.toLowerCase().indexOf('add-on') !== -1) {
+          opt.values = ['Almond','Apricot','Blueberry','Cashew','Cranberry','Coffee','Hazelnut','Mango','Medjool Dates','Orange','Raisins','Rice Crisper','Roasted Peanuts','Seeds & Nuts'];
+        }
+      });
+    }
+
     return JSON.stringify(obj).replace(/'/g, '&#39;');
   }
 
