@@ -26,7 +26,13 @@ const HYDERABAD_AREAS = [
 
   // ── Maintenance Mode Banner & Ordering Pause ──────────────
   initMaintenanceMode: function() {
-    if (document.getElementById('rc-maintenance-banner')) return;
+    const isAdmin = window.location.search.indexOf('admin=true') !== -1;
+    const existing = document.getElementById('rc-maintenance-banner');
+    if (isAdmin) {
+      if (existing) existing.remove();
+      return;
+    }
+    if (existing) return;
     const banner = document.createElement('div');
     banner.id = 'rc-maintenance-banner';
     banner.style.cssText = 'background: #dc2626; color: #ffffff; text-align: center; padding: 14px 20px; font-weight: 700; font-size: 0.95rem; position: sticky; top: 0; z-index: 9999999; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-family: var(--font-body, sans-serif); letter-spacing: 0.5px;';
