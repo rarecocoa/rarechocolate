@@ -613,6 +613,10 @@ const CartSystem = {
             <label for="checkoutAddress">Delivery Address</label>
             <textarea id="checkoutAddress" required placeholder="e.g. Flat 304, Royal Apartments, HSR Layout" rows="3"></textarea>
           </div>
+          <div class="checkout-form-group">
+            <label for="checkoutCity">City / Town Name *</label>
+            <input type="text" id="checkoutCity" required placeholder="e.g. Visakhapatnam, Guntur, Vijayawada, Bangalore, Chennai">
+          </div>
           ${needsMapLink ? `
           <div class="checkout-form-group" style="margin-top: -10px; margin-bottom: 20px;">
             <label for="checkoutMapsLink" style="font-weight: 600; color: var(--accent);">Paste your Google Maps Location Link</label>
@@ -652,6 +656,7 @@ const CartSystem = {
       return areaSelect.value.trim();
     };
     const addressInput = document.getElementById('checkoutAddress');
+    const cityInput = document.getElementById('checkoutCity');
     const pincodeInput = document.getElementById('checkoutPincode');
     const mapsLinkInput = document.getElementById('checkoutMapsLink');
     const submitBtn = document.getElementById('checkoutSubmitBtn');
@@ -723,6 +728,7 @@ const CartSystem = {
       }
 
       const address = addressInput.value.trim();
+      const city = cityInput ? cityInput.value.trim() : '';
       const pincode = pincodeInput.value.trim();
       const mapsLink = needsMapLink ? (mapsLinkInput?.value.trim() || '') : '';
       const areaName = getAreaName();
@@ -730,16 +736,17 @@ const CartSystem = {
       const isPincodeValid = /^[0-9]{6}$/.test(pincode);
       const isMapsValid = !needsMapLink || (mapsLink !== '');
       const isAreaValid = !isHyderabad || (areaName !== '');
+      const isCityValid = (city !== '');
 
-      if (isNamePhoneValid && address && isPincodeValid && isMapsValid && isAreaValid) {
+      if (isNamePhoneValid && address && isCityValid && isPincodeValid && isMapsValid && isAreaValid) {
         submitBtn.removeAttribute('disabled');
       } else {
         submitBtn.setAttribute('disabled', 'true');
       }
     };
 
-    [nameInput, phoneInput, receiverNameInput, receiverPhoneInput, senderNameInput, senderPhoneInput, addressInput, pincodeInput].forEach(input => {
-      input.addEventListener('input', validateForm);
+    [nameInput, phoneInput, receiverNameInput, receiverPhoneInput, senderNameInput, senderPhoneInput, addressInput, cityInput, pincodeInput].forEach(input => {
+      if (input) input.addEventListener('input', validateForm);
     });
     if (needsMapLink && mapsLinkInput) {
       mapsLinkInput.addEventListener('input', validateForm);
@@ -845,6 +852,7 @@ const CartSystem = {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const address = addressInput.value.trim();
+      const city = cityInput ? cityInput.value.trim() : '';
       const pincode = pincodeInput.value.trim();
       const mapsLink = needsMapLink ? (mapsLinkInput?.value.trim() || '') : '';
       const areaName = getAreaName();
@@ -862,13 +870,14 @@ const CartSystem = {
         if (!receiverName || !receiverPhone || !senderName || !senderPhone) { alert('Please fill out all fields.'); return; }
       }
       if (isHyderabad && !areaName) { alert('Please enter your Area Name.'); return; }
-      if (!address || !pincode) { alert('Please fill out all fields.'); return; }
+      if (!address || !city || !pincode) { alert('Please fill out all compulsory fields.'); return; }
       if (needsMapLink && !mapsLink) { alert('Please paste your Google Maps Location Link.'); return; }
       if (!/^[0-9]{6}$/.test(pincode)) { alert('Please enter a valid 6-digit pincode.'); return; }
 
       let message = `*RARE COCOA™* 🍫\n_The Soul of Chocolate_\n=================================\n`;
       message += `• *Delivery Region:* ${location}\n`;
       if (isHyderabad && areaName) message += `• *Area Name:* ${areaName}\n`;
+      if (city) message += `• *City / Town:* ${city}\n`;
       if (location !== 'Other States') message += `• *Temperature Agreement:* Accepted ✓\n`;
       message += `• *Delivery Pincode:* ${pincode}\n=================================\n\n`;
       
