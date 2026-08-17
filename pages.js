@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   initCardCarousels();
+  window.initCardCarousels = initCardCarousels;
 
   // ── Pricing Engine Helpers ─────────────────────────────────
   function RC_getDynamicRate(productName, sweetenerStr, addons) {

@@ -419,40 +419,9 @@
 
 
   function reinitCarousels(container) {
-    container.querySelectorAll('.card-carousel').forEach(function(carousel){
-      var track = carousel.querySelector('.card-carousel-track');
-      var slides = carousel.querySelectorAll('.card-carousel-slide');
-      var dots = carousel.querySelectorAll('.card-carousel-dot');
-      var prevBtn = carousel.querySelector('.card-carousel-btn.prev');
-      var nextBtn = carousel.querySelector('.card-carousel-btn.next');
-      if (!track || slides.length < 2) return;
-      var current = 0;
-
-      function goTo(idx) {
-        current = (idx + slides.length) % slides.length;
-        track.style.transform = 'translateX(-' + (current * 100) + '%)';
-        dots.forEach(function(d, i){ d.classList.toggle('active', i === current); });
-      }
-      if (dots.length) dots[0].classList.add('active');
-
-      var timer = setInterval(function() {
-        goTo(current + 1);
-      }, 3500);
-
-      function resetTimer() {
-        if (timer) clearInterval(timer);
-        timer = setInterval(function() { goTo(current + 1); }, 3500);
-      }
-
-      carousel.addEventListener('mouseenter', function() { if (timer) clearInterval(timer); });
-      carousel.addEventListener('mouseleave', function() { resetTimer(); });
-
-      if (prevBtn) prevBtn.addEventListener('click', function(e){ e.stopPropagation(); goTo(current - 1); resetTimer(); });
-      if (nextBtn) nextBtn.addEventListener('click', function(e){ e.stopPropagation(); goTo(current + 1); resetTimer(); });
-      dots.forEach(function(dot, i) {
-        dot.addEventListener('click', function(e){ e.stopPropagation(); goTo(i); resetTimer(); });
-      });
-    });
+    if (typeof window.initCardCarousels === 'function') {
+      window.initCardCarousels();
+    }
   }
 
   function reinitReveal(container) {
