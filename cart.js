@@ -65,17 +65,77 @@ const CartSystem = {
     if (window.location.search.indexOf('admin=true') !== -1) return;
     if (document.getElementById('rc-hold-popup-overlay')) return;
 
+    if (!document.getElementById('rc-popup-styles')) {
+      const st = document.createElement('style');
+      st.id = 'rc-popup-styles';
+      st.innerHTML = `
+        @keyframes rcOverlayFadeIn {
+          from { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+          to { opacity: 1; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        }
+        @keyframes rcModalPopIn {
+          0% { opacity: 0; transform: translateY(35px) scale(0.92); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes rcGoldSweep {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes rcGoldGlow {
+          0%, 100% { box-shadow: 0 5px 18px rgba(139,105,20,0.35); }
+          50% { box-shadow: 0 8px 28px rgba(201,164,86,0.65), 0 0 15px rgba(212,175,55,0.4); }
+        }
+
+        #rc-hold-popup-overlay {
+          animation: rcOverlayFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .rc-popup-card {
+          animation: rcModalPopIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .rc-explore-btn {
+          background: linear-gradient(135deg, #7c5d0f 0%, #a88120 35%, #c9a456 50%, #a88120 65%, #7c5d0f 100%) !important;
+          background-size: 200% 100% !important;
+          animation: rcGoldSweep 3.5s ease-in-out infinite, rcGoldGlow 2.8s ease-in-out infinite !important;
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease !important;
+        }
+        .rc-explore-btn:hover {
+          transform: translateY(-2px) scale(1.015) !important;
+          box-shadow: 0 10px 30px rgba(201,164,86,0.7), 0 0 20px rgba(212,175,55,0.5) !important;
+        }
+        .rc-explore-btn:hover .rc-arrow {
+          transform: translateX(6px) !important;
+        }
+        .rc-explore-btn:active {
+          transform: translateY(1px) scale(0.98) !important;
+        }
+        .rc-arrow {
+          display: inline-block;
+          transition: transform 0.25s ease;
+          margin-left: 6px;
+        }
+        #rcHoldCloseBtn {
+          transition: transform 0.2s ease, background-color 0.2s ease !important;
+        }
+        #rcHoldCloseBtn:hover {
+          transform: scale(1.12) rotate(90deg) !important;
+          background-color: rgba(0,0,0,0.75) !important;
+        }
+      `;
+      document.head.appendChild(st);
+    }
+
     const overlay = document.createElement('div');
     overlay.id = 'rc-hold-popup-overlay';
-    overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 99999999; display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;';
+    overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 99999999; display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;';
     overlay.innerHTML = `
-      <div style="background: #FFFDF9; border-radius: 20px; max-width: 420px; width: 100%; max-height: 90vh; overflow: hidden; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; box-sizing: border-box; display: flex; flex-direction: column;">
+      <div class="rc-popup-card" style="background: #FFFDF9; border-radius: 20px; max-width: 420px; width: 100%; max-height: 90vh; overflow: hidden; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.55); border: 1px solid rgba(139,105,20,0.2); position: relative; box-sizing: border-box; display: flex; flex-direction: column;">
         <button id="rcHoldCloseBtn" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.5); border: none; font-size: 1.25rem; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: #ffffff; display: flex; align-items: center; justify-content: center; line-height: 1; z-index: 10;">&times;</button>
         <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; background: #ebd5b3;">
           <img src="assets/orders_hold.avif?v=2" alt="Notice Regarding Orders" style="width: 100%; height: auto; display: block; object-fit: contain; max-height: 65vh;">
         </div>
-        <div style="padding: 16px 20px; background: #FFFDF9; border-radius: 0 0 20px 20px; width: 100%; box-sizing: border-box;">
-          <button id="rcExploreMenuBtn" style="width: 100%; padding: 13px 24px; background: #8B6914; color: #ffffff; border: none; border-radius: 100px; font-family: var(--font-body, sans-serif); font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 15px rgba(139,105,20,0.3);">Explore Our Menu</button>
+        <div style="padding: 18px 20px; background: #FFFDF9; border-radius: 0 0 20px 20px; width: 100%; box-sizing: border-box;">
+          <button id="rcExploreMenuBtn" class="rc-explore-btn" style="width: 100%; padding: 14px 24px; color: #ffffff; border: none; border-radius: 100px; font-family: var(--font-body, sans-serif); font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 0.07em;">Explore Our Menu <span class="rc-arrow">→</span></button>
         </div>
       </div>
     `;
