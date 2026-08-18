@@ -1,7 +1,7 @@
 // ── Maintenance Mode Toggle Flag ──────────────────────────────
 // Set to true to pause online ordering. Set to false for normal store operation.
-const RC_MAINTENANCE_MODE = false;
-if (typeof window !== 'undefined') window.RC_MAINTENANCE_MODE = false;
+const RC_MAINTENANCE_MODE = true;
+if (typeof window !== 'undefined') window.RC_MAINTENANCE_MODE = true;
 
 (function() {
   if (!RC_MAINTENANCE_MODE || window.location.search.indexOf('admin=true') !== -1) {

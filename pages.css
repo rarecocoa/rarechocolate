@@ -6,10 +6,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-#rc-maintenance-banner {
-  display: none !important;
-}
-
 /* ── Page Hero Banner ──────────────────────────────────── */
 .page-hero {
   padding: clamp(100px, 9vw, 120px) 0 clamp(30px, 4vw, 45px);
