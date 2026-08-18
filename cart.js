@@ -55,9 +55,9 @@ const CartSystem = {
     if (existing) return;
     const banner = document.createElement('div');
     banner.id = 'rc-maintenance-banner';
-    banner.style.cssText = 'background: #dc2626; color: #ffffff; text-align: center; padding: 14px 20px; font-weight: 700; font-size: 0.95rem; position: sticky; top: 0; z-index: 9999999; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-family: var(--font-body, sans-serif); letter-spacing: 0.5px;';
+    banner.style.cssText = 'background: #dc2626; color: #ffffff; text-align: center; padding: 7px 16px; font-weight: 600; font-size: 0.8rem; position: fixed; bottom: 0; left: 0; right: 0; width: 100%; z-index: 9999999; box-shadow: 0 -2px 10px rgba(0,0,0,0.25); font-family: var(--font-body, sans-serif); letter-spacing: 0.3px;';
     banner.innerHTML = '⚠️ Currently we are not accepting orders, we will be back soon.';
-    document.body.prepend(banner);
+    document.body.appendChild(banner);
   },
 
   initHoldPopup: function() {
@@ -67,12 +67,16 @@ const CartSystem = {
 
     const overlay = document.createElement('div');
     overlay.id = 'rc-hold-popup-overlay';
-    overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 99999999; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;';
+    overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 99999999; display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;';
     overlay.innerHTML = `
-      <div style="background: #FFFDF9; border-radius: 20px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; text-align: center; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); border: 1.5px solid rgba(26,14,8,0.1); position: relative; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;">
-        <button id="rcHoldCloseBtn" aria-label="Close" style="position: absolute; top: 12px; right: 16px; background: rgba(0,0,0,0.06); border: none; font-size: 1.5rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #1A0E08; display: flex; align-items: center; justify-content: center; line-height: 1;">&times;</button>
-        <img src="assets/orders_hold.avif?v=2" alt="Notice Regarding Orders" style="width: 100%; height: auto; border-radius: 14px; margin-bottom: 20px; display: block; object-fit: contain; max-height: 60vh;">
-        <button id="rcExploreMenuBtn" style="width: 100%; padding: 14px 24px; background: #1A0E08; color: #FFFDF9; border: none; border-radius: 100px; font-family: var(--font-body, sans-serif); font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 15px rgba(26,14,8,0.2);">Explore Our Menu</button>
+      <div style="background: #FFFDF9; border-radius: 20px; max-width: 420px; width: 100%; max-height: 90vh; overflow: hidden; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; box-sizing: border-box; display: flex; flex-direction: column;">
+        <button id="rcHoldCloseBtn" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.5); border: none; font-size: 1.25rem; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: #ffffff; display: flex; align-items: center; justify-content: center; line-height: 1; z-index: 10;">&times;</button>
+        <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; background: #ebd5b3;">
+          <img src="assets/orders_hold.avif?v=2" alt="Notice Regarding Orders" style="width: 100%; height: auto; display: block; object-fit: contain; max-height: 65vh;">
+        </div>
+        <div style="padding: 16px 20px; background: #FFFDF9; border-radius: 0 0 20px 20px; width: 100%; box-sizing: border-box;">
+          <button id="rcExploreMenuBtn" style="width: 100%; padding: 13px 24px; background: #8B6914; color: #ffffff; border: none; border-radius: 100px; font-family: var(--font-body, sans-serif); font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 15px rgba(139,105,20,0.3);">Explore Our Menu</button>
+        </div>
       </div>
     `;
     document.body.appendChild(overlay);

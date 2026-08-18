@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rare-cocoa-assets-v47';
+const CACHE_NAME = 'rare-cocoa-assets-v48';
 const ASSETS_TO_CACHE = [
   'assets/almond_tablet.avif?v=2',
   'assets/almond_tablet2.avif?v=2',
