@@ -56,14 +56,46 @@ const CartSystem = {
     const banner = document.createElement('div');
     banner.id = 'rc-maintenance-banner';
     banner.style.cssText = 'background: #dc2626; color: #ffffff; text-align: center; padding: 14px 20px; font-weight: 700; font-size: 0.95rem; position: sticky; top: 0; z-index: 9999999; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-family: var(--font-body, sans-serif); letter-spacing: 0.5px;';
-    banner.innerHTML = '⚠️ SITE UNDER MAINTENANCE — Online ordering is temporarily paused while we update system data. We will be back online shortly!';
+    banner.innerHTML = '⚠️ Currently we are not accepting orders, we will be back soon.';
     document.body.prepend(banner);
   },
+
+  initHoldPopup: function() {
+    if (typeof RC_MAINTENANCE_MODE !== 'undefined' && !RC_MAINTENANCE_MODE) return;
+    if (window.location.search.indexOf('admin=true') !== -1) return;
+    if (document.getElementById('rc-hold-popup-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'rc-hold-popup-overlay';
+    overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 99999999; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;';
+    overlay.innerHTML = `
+      <div style="background: #FFFDF9; border-radius: 20px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; text-align: center; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); border: 1.5px solid rgba(26,14,8,0.1); position: relative; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;">
+        <button id="rcHoldCloseBtn" aria-label="Close" style="position: absolute; top: 12px; right: 16px; background: rgba(0,0,0,0.06); border: none; font-size: 1.5rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #1A0E08; display: flex; align-items: center; justify-content: center; line-height: 1;">&times;</button>
+        <img src="assets/orders_hold.avif?v=2" alt="Notice Regarding Orders" style="width: 100%; height: auto; border-radius: 14px; margin-bottom: 20px; display: block; object-fit: contain; max-height: 60vh;">
+        <button id="rcExploreMenuBtn" style="width: 100%; padding: 14px 24px; background: #1A0E08; color: #FFFDF9; border: none; border-radius: 100px; font-family: var(--font-body, sans-serif); font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 15px rgba(26,14,8,0.2);">Explore Our Menu</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const closePopup = () => {
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.25s ease';
+      setTimeout(() => overlay.remove(), 250);
+    };
+
+    document.getElementById('rcHoldCloseBtn').addEventListener('click', closePopup);
+    document.getElementById('rcExploreMenuBtn').addEventListener('click', closePopup);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closePopup();
+    });
+  },
+
   storageKey: 'rarecocoa_cart',
   items: [],
 
   init() {
     this.initMaintenanceMode();
+    this.initHoldPopup();
     this.loadCart();
     this.injectCartMarkup();
     this.setupListeners();
