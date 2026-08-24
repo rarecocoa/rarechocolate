@@ -190,7 +190,7 @@ const CartSystem = {
     if (!document.getElementById('floatingWhatsappBtn')) {
       const waBtn = document.createElement('a');
       waBtn.id = 'floatingWhatsappBtn';
-      waBtn.href = 'https://wa.me/918121725892';
+      waBtn.href = 'https://wa.me/918374013232';
       waBtn.target = '_blank';
       waBtn.rel = 'noopener';
       waBtn.setAttribute('aria-label', 'Chat on WhatsApp');
@@ -687,7 +687,7 @@ const CartSystem = {
             </div>
             <div class="checkout-form-group">
               <label for="checkoutSenderPhone">Your Phone Number (Sender)</label>
-              <input type="tel" id="checkoutSenderPhone" placeholder="e.g. 918121725892">
+              <input type="tel" id="checkoutSenderPhone" placeholder="e.g. 918374013232">
             </div>
           </div>
 
@@ -1018,7 +1018,7 @@ const CartSystem = {
       message += `*Total Order Value:* ₹${Math.round(finalTotal)}\n`;
       message += `---------------------------------\n_Thank you for choosing Rare Cocoa™._ ✨`;
 
-      window.open(`https://api.whatsapp.com/send?phone=918121725892&text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://api.whatsapp.com/send?phone=918374013232&text=${encodeURIComponent(message)}`, '_blank');
       overlay.remove();
       this.showCheckoutSuccess();
     });
