@@ -506,6 +506,13 @@
           }
           throw err;
         })
+        .catch(function(err){
+          if (tabName !== 'products') {
+            console.warn('[RCProductsDB] Trying master "products" tab fallback...');
+            return fetchTab('products');
+          }
+          throw err;
+        })
         .then(function(products){
           renderProducts(products, container, tabsBannerHTML || '');
         })
