@@ -1,7 +1,7 @@
 // ── Maintenance Mode Toggle Flag ──────────────────────────────
 // Set to true to pause online ordering. Set to false for normal store operation.
-const RC_MAINTENANCE_MODE = true;
-if (typeof window !== 'undefined') window.RC_MAINTENANCE_MODE = true;
+const RC_MAINTENANCE_MODE = false;
+if (typeof window !== 'undefined') window.RC_MAINTENANCE_MODE = false;
 
 (function() {
   if (!RC_MAINTENANCE_MODE || window.location.search.indexOf('admin=true') !== -1) {
@@ -190,7 +190,7 @@ const CartSystem = {
     if (!document.getElementById('floatingWhatsappBtn')) {
       const waBtn = document.createElement('a');
       waBtn.id = 'floatingWhatsappBtn';
-      waBtn.href = 'https://wa.me/918374013232';
+      waBtn.href = 'https://wa.me/918121725892';
       waBtn.target = '_blank';
       waBtn.rel = 'noopener';
       waBtn.setAttribute('aria-label', 'Chat on WhatsApp');
@@ -270,7 +270,7 @@ const CartSystem = {
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', () => {
         if (this.items.length === 0) return;
-        if (this.getCartTotal() < 350) return;
+        if (this.getCartTotal() < 400) return;
         this.showCheckoutForm();
       });
     }
@@ -443,10 +443,10 @@ const CartSystem = {
         checkoutBtn.setAttribute('disabled', 'true');
         checkoutBtn.classList.add('disabled');
         checkoutBtn.textContent = 'Proceed to Checkout';
-      } else if (subtotal < 350) {
+      } else if (subtotal < 400) {
         checkoutBtn.setAttribute('disabled', 'true');
         checkoutBtn.classList.add('disabled');
-        checkoutBtn.textContent = `Min. Order ₹350 (Add ₹${350 - Math.round(subtotal)} more)`;
+        checkoutBtn.textContent = `Min. Order ₹400 (Add ₹${400 - Math.round(subtotal)} more)`;
       } else {
         checkoutBtn.removeAttribute('disabled');
         checkoutBtn.classList.remove('disabled');
@@ -482,7 +482,7 @@ const CartSystem = {
     const MSGS = {
       'Vijayawada': "Our luxury chocolates are extremely temperature-sensitive, which is why we deliver them in person within Vijayawada city limits (₹30 delivery fee). Please ensure you or someone else is available to receive them. (Note: If your delivery address is outside city limits, standard charges will apply).",
       'Andhra Pradesh, Chennai, Bangalore': "Our chocolates are temperature-sensitive, so we deliver across Andhra Pradesh, Chennai, and Bangalore via direct bus connectivity in insulated thermal packaging (₹200 delivery fee). Please ensure you are available at the transit point to collect your order.",
-      'Hyderabad': "Our luxury chocolates are extremely temperature-sensitive, which is why we personally deliver them to your door in Hyderabad (₹100 delivery fee). Please ensure you or someone else is available to receive them.",
+      'Hyderabad': "Our luxury chocolates are extremely temperature-sensitive, which is why we personally deliver them to your door in Hyderabad (₹200 delivery fee). Please ensure you or someone else is available to receive them.",
       'Other States': "As our signature chocolates are highly temperature-sensitive, we cannot ship chocolates, clusters, or dragées to other states. However, we can safely deliver slabs, hot chocolate, and butter via standard courier services (₹200 delivery fee). Please review your cart to make sure your selection only contains courier-friendly products."
     };
 
@@ -512,7 +512,7 @@ const CartSystem = {
               <span class="loc-icon">🏙️</span>
               <span class="loc-text">
                 <span class="location-name">Hyderabad</span>
-                <span class="location-sub">Personal Delivery · ₹100 Delivery</span>
+                <span class="location-sub">Personal Delivery · ₹200 Delivery</span>
               </span>
             </span>
           </label>
@@ -620,7 +620,7 @@ const CartSystem = {
   showDeliveryForm(location) {
     const needsMapLink = location === 'Vijayawada' || location === 'Hyderabad';
     const isHyderabad = location === 'Hyderabad';
-    const deliveryFee = location === 'Vijayawada' ? 30 : (location === 'Hyderabad' ? 100 : 200);
+    const deliveryFee = location === 'Vijayawada' ? 30 : 200;
     const subtotalVal = this.getCartTotal();
     const totalVal = subtotalVal + deliveryFee;
 
@@ -1008,7 +1008,7 @@ const CartSystem = {
           message += `  _Price: ₹${Math.round(item.price * item.quantity)}_\n\n`;
         });
       });
-      const deliveryFee = location === 'Vijayawada' ? 30 : (location === 'Hyderabad' ? 100 : 200);
+      const deliveryFee = location === 'Vijayawada' ? 30 : 200;
       const subtotalVal = this.getCartTotal();
       const finalTotal = subtotalVal + deliveryFee;
 
