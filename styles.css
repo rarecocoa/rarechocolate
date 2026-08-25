@@ -2922,6 +2922,11 @@ body.page-loading .image-placeholder .placeholder-text {
   }
 }
 
+#rc-maintenance-banner,
+#rc-hold-popup-overlay {
+  display: none !important;
+}
+
 
 
 

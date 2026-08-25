@@ -4,13 +4,18 @@ const RC_MAINTENANCE_MODE = false;
 if (typeof window !== 'undefined') window.RC_MAINTENANCE_MODE = false;
 
 (function() {
-  if (!RC_MAINTENANCE_MODE || window.location.search.indexOf('admin=true') !== -1) {
-    var s = document.createElement('style');
-    s.id = 'rc-admin-mode-style';
-    s.innerHTML = '#rc-maintenance-banner { display: none !important; }';
-    if (document.head) document.head.appendChild(s);
-    else document.addEventListener('DOMContentLoaded', function() { document.head.appendChild(s); });
-  }
+  var s = document.createElement('style');
+  s.id = 'rc-maintenance-hide-style';
+  s.innerHTML = '#rc-maintenance-banner, #rc-hold-popup-overlay { display: none !important; }';
+  if (document.head) document.head.appendChild(s);
+  else document.addEventListener('DOMContentLoaded', function() { document.head.appendChild(s); });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var b = document.getElementById('rc-maintenance-banner');
+    if (b) b.remove();
+    var p = document.getElementById('rc-hold-popup-overlay');
+    if (p) p.remove();
+  });
 })();
 
 const HYDERABAD_AREAS = [
@@ -61,9 +66,10 @@ const CartSystem = {
   },
 
   initHoldPopup: function() {
+    const existing = document.getElementById('rc-hold-popup-overlay');
+    if (existing) existing.remove();
     if (typeof RC_MAINTENANCE_MODE !== 'undefined' && !RC_MAINTENANCE_MODE) return;
     if (window.location.search.indexOf('admin=true') !== -1) return;
-    if (document.getElementById('rc-hold-popup-overlay')) return;
 
     if (!document.getElementById('rc-popup-styles')) {
       const st = document.createElement('style');
