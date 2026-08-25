@@ -721,8 +721,8 @@ const CartSystem = {
           </div>
           ${needsMapLink ? `
           <div class="checkout-form-group" style="margin-top: -10px; margin-bottom: 20px;">
-            <label for="checkoutMapsLink" style="font-weight: 600; color: var(--accent);">Paste your Google Maps Location Link</label>
-            <input type="url" id="checkoutMapsLink" required placeholder="e.g., https://maps.app.goo.gl/..." style="border-color: var(--accent-light);">
+            <label for="checkoutMapsLink" style="font-weight: 600; color: var(--accent);">Google Maps Location Link (Optional)</label>
+            <input type="url" id="checkoutMapsLink" placeholder="e.g., https://maps.app.goo.gl/... (Optional)" style="border-color: var(--accent-light);">
             <button type="button" class="maps-help-link-btn" id="mapsHelpBtn">How to find and copy your location link?</button>
           </div>
           ` : ''}
@@ -836,11 +836,10 @@ const CartSystem = {
       const areaName = getAreaName();
 
       const isPincodeValid = /^[0-9]{6}$/.test(pincode);
-      const isMapsValid = !needsMapLink || (mapsLink !== '');
       const isAreaValid = !isHyderabad || (areaName !== '');
       const isCityValid = (city !== '');
 
-      if (isNamePhoneValid && address && isCityValid && isPincodeValid && isMapsValid && isAreaValid) {
+      if (isNamePhoneValid && address && isCityValid && isPincodeValid && isAreaValid) {
         submitBtn.removeAttribute('disabled');
       } else {
         submitBtn.setAttribute('disabled', 'true');
@@ -973,7 +972,6 @@ const CartSystem = {
       }
       if (isHyderabad && !areaName) { alert('Please enter your Area Name.'); return; }
       if (!address || !city || !pincode) { alert('Please fill out all compulsory fields.'); return; }
-      if (needsMapLink && !mapsLink) { alert('Please paste your Google Maps Location Link.'); return; }
       if (!/^[0-9]{6}$/.test(pincode)) { alert('Please enter a valid 6-digit pincode.'); return; }
 
       let message = `*RARE COCOA™* 🍫\n_The Soul of Chocolate_\n=================================\n`;
