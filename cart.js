@@ -1024,7 +1024,13 @@ const CartSystem = {
       message += `*Total Order Value:* ₹${Math.round(finalTotal)}\n`;
       message += `---------------------------------\n_Thank you for choosing Rare Cocoa™._ ✨`;
 
-      window.open(`https://api.whatsapp.com/send?phone=918374013232&text=${encodeURIComponent(message)}`, '_blank');
+      const waUrl = `https://api.whatsapp.com/send?phone=918374013232&text=${encodeURIComponent(message)}`;
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = waUrl;
+      } else {
+        window.open(waUrl, '_blank');
+      }
       overlay.remove();
       this.showCheckoutSuccess();
     });
