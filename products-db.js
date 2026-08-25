@@ -13,6 +13,15 @@
       '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(tabName) + '&t=' + Date.now() + '&_cb=' + Math.random().toString(36).substring(7);
   }
 
+  // Purge any stale product localStorage cache
+  try {
+    for (var k in localStorage) {
+      if (k && k.indexOf('rc_products_') === 0 && k.indexOf('rc_products_v53_') === -1) {
+        localStorage.removeItem(k);
+      }
+    }
+  } catch(e) {}
+
   function parseCSV(text) {
     var rows = [], row = [], field = '', inQuote = false;
     for (var i = 0; i < text.length; i++) {
@@ -49,7 +58,7 @@
     });
   }
 
-  function cacheKey(sheetId, tabName) { return 'rc_products_v7_' + sheetId + '_' + tabName; }
+  function cacheKey(sheetId, tabName) { return 'rc_products_v53_' + sheetId + '_' + tabName; }
 
   function saveCache(key, data) {
     try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
@@ -158,6 +167,32 @@
           option2_values: "100g (₹300),250g (₹750),300g (₹900)",
           category: "snacks, hot-chocolate-ice-cream, slabs"
         });
+      }
+    }
+  }
+
+  function fixTabletProducts(products) {
+    if (!products || !products.length) return;
+    for (var i = 0; i < products.length; i++) {
+      var p = products[i];
+      if (!p || !p.name) continue;
+      var nameLower = (p.name || '').toLowerCase().trim();
+      var subcatLower = (p.subcategory || '').toLowerCase().trim();
+      var isMainTablet = subcatLower.indexOf('main flavors') !== -1 ||
+        ((p.category || '').toLowerCase().indexOf('tablet') !== -1 && nameLower.indexOf('trail') === -1 && nameLower.indexOf('macadamia') === -1 && nameLower.indexOf('pecan') === -1 && nameLower.indexOf('pine') === -1);
+
+      if (isMainTablet && nameLower !== 'hazelnut cranberry' && nameLower !== 'saffron pista rose tablet' && nameLower !== 'saffron pista rose') {
+        if (p.price_label && p.price_label.indexOf('180') !== -1) {
+          p.price_label = p.price_label.replace(/180/g, '200');
+        }
+        if (p.price === 180) {
+          p.price = 200;
+        }
+        for (var k = 1; k <= 4; k++) {
+          if (p['option' + k + '_values'] && p['option' + k + '_values'].indexOf('180') !== -1) {
+            p['option' + k + '_values'] = p['option' + k + '_values'].replace(/180/g, '200');
+          }
+        }
       }
     }
   }
@@ -493,6 +528,7 @@
             });
             injectPecanSpread(products, pageCategory);
             injectCashewCookie(products, pageCategory);
+            fixTabletProducts(products);
             fixIceCreamProducts(products, targetTab);
             if (!products.length) throw new Error('No active products found in ' + targetTab);
             return products;
@@ -516,6 +552,7 @@
           var cached = loadCache(key);
           if (cached && cached.length) {
             injectCashewCookie(cached, pageCategory);
+            fixTabletProducts(cached);
             fixIceCreamProducts(cached, tabName);
             renderProducts(cached, container, tabsBannerHTML || '');
           } else {

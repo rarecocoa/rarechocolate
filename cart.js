@@ -1070,15 +1070,16 @@ if (document.readyState === 'loading') {
 }
 
 
-// Register Service Worker for background pre-caching
+// Ensure any legacy service worker is unregistered and caches are purged
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => {
-        console.log('Service Worker registered successfully with scope:', reg.scope);
-      })
-      .catch(err => {
-        console.error('Service Worker registration failed:', err);
-      });
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    for (let reg of registrations) {
+      reg.unregister();
+    }
   });
+  if ('caches' in window) {
+    caches.keys().then(keys => {
+      keys.forEach(k => caches.delete(k));
+    });
+  }
 }

@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"></noscript>
-  <link rel="stylesheet" href="styles.css?v=v52">
-  <link rel="stylesheet" href="pages.css?v=v52">
+  <link rel="stylesheet" href="styles.css?v=v53">
+  <link rel="stylesheet" href="pages.css?v=v53">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="favicon.png">
@@ -186,6 +186,25 @@
       .blog-modal-title { font-size: 1.45rem; }
     }
   </style>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        for (var i = 0; i < regs.length; i++) { regs[i].unregister(); }
+      });
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          keys.forEach(function(k) { caches.delete(k); });
+        });
+      }
+    }
+    try {
+      for (var k in localStorage) {
+        if (k && k.indexOf('rc_products_') === 0 && k.indexOf('rc_products_v53_') === -1) {
+          localStorage.removeItem(k);
+        }
+      }
+    } catch(e) {}
+  </script>
 </head>
 <body class="blog-page">
 
@@ -284,7 +303,7 @@
     </div>
   </footer>
 
-  <script src="cart.js?v=v52"></script>
+  <script src="cart.js?v=v53"></script>
   <script>
     (function() {
       'use strict';
