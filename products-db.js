@@ -13,10 +13,10 @@
       '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(tabName) + '&t=' + Date.now() + '&_cb=' + Math.random().toString(36).substring(7);
   }
 
-  // Purge any stale product localStorage cache
+  // Purge any legacy product localStorage cache across all browsers
   try {
     for (var k in localStorage) {
-      if (k && k.indexOf('rc_products_') === 0 && k.indexOf('rc_products_v53_') === -1) {
+      if (k && (k.indexOf('rc_products_') === 0 || k.indexOf('rc_cache_') === 0)) {
         localStorage.removeItem(k);
       }
     }
@@ -58,21 +58,7 @@
     });
   }
 
-  function cacheKey(sheetId, tabName) { return 'rc_products_v53_' + sheetId + '_' + tabName; }
 
-  function saveCache(key, data) {
-    try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
-  }
-
-  function loadCache(key) {
-    try {
-      var raw = localStorage.getItem(key);
-      if (!raw) return null;
-      var parsed = JSON.parse(raw);
-      return parsed.data;
-    } catch(e) {}
-    return null;
-  }
 
   function esc(str) {
     return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -476,13 +462,16 @@
       }
       var container = document.getElementById(containerId);
       if (!container) return;
-      var key = cacheKey(sheetId, tabName + (pageCategory ? '_' + pageCategory : ''));
       showLoading(container);
 
       function fetchTab(targetTab) {
         return fetch(csvUrl(sheetId, targetTab), {
           cache: 'no-store',
-          headers: { 'pragma': 'no-cache', 'cache-control': 'no-cache' }
+          headers: {
+            'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
         })
           .then(function(res){
             if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -511,25 +500,17 @@
       fetchTab(tabName)
         .catch(function(err){
           if (tabName !== 'products') {
-            console.warn('[RCProductsDB] Tab "' + tabName + '" failed (' + err.message + '), falling back to "products" tab...');
+            console.warn('[RCProductsDB] Tab "' + tabName + '" failed (' + err.message + '), retrying with "products" tab...');
             return fetchTab('products');
           }
           throw err;
         })
         .then(function(products){
-          saveCache(key, products);
           renderProducts(products, container, tabsBannerHTML || '');
         })
         .catch(function(err){
-          console.warn('[RCProductsDB] Fetch failed:', err.message, '- trying offline cache...');
-          var cached = loadCache(key);
-          if (cached && cached.length) {
-            injectCashewCookie(cached, pageCategory);
-            fixIceCreamProducts(cached, tabName);
-            renderProducts(cached, container, tabsBannerHTML || '');
-          } else {
-            showError(container, 'Could not load products. Please refresh the page.');
-          }
+          console.error('[RCProductsDB] Live load failed:', err);
+          showError(container, 'Could not load products. Please refresh the page.');
         });
     }
   };
