@@ -499,9 +499,10 @@
 
       fetchTab(tabName)
         .catch(function(err){
-          if (tabName !== 'products') {
-            console.warn('[RCProductsDB] Tab "' + tabName + '" failed (' + err.message + '), retrying with "products" tab...');
-            return fetchTab('products');
+          var altTab = tabName === tabName.toLowerCase() ? (tabName.charAt(0).toUpperCase() + tabName.slice(1)) : tabName.toLowerCase();
+          if (altTab !== tabName) {
+            console.warn('[RCProductsDB] Tab "' + tabName + '" failed, trying "' + altTab + '"...');
+            return fetchTab(altTab);
           }
           throw err;
         })
