@@ -465,14 +465,7 @@
       showLoading(container);
 
       function fetchTab(targetTab) {
-        return fetch(csvUrl(sheetId, targetTab), {
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          }
-        })
+        return fetch(csvUrl(sheetId, targetTab))
           .then(function(res){
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.text();
