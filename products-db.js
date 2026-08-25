@@ -97,66 +97,6 @@
     }
   }
 
-  function injectPecanSpread(products, pageCategory) {
-    if (pageCategory === 'spreads' || !pageCategory) {
-      var hasPecanSpread = false;
-      for (var i = 0; i < products.length; i++) {
-        var p = products[i];
-        if (p.name && p.name.toLowerCase().indexOf('pecan') !== -1 && p.name.toLowerCase().indexOf('spread') !== -1) {
-          hasPecanSpread = true;
-          break;
-        }
-      }
-      if (!hasPecanSpread) {
-        products.push({
-          active: "TRUE",
-          name: "Pecan Spread",
-          description: "Rich artisanal pecan spread made with 100% pure cocoa butter and organic muscovado sugar",
-          subcategory: "Spreads",
-          price_label: "From ₹600",
-          image: "",
-          image2: "",
-          emoji: "🌰",
-          option1_label: "Choose Your Sweetener",
-          option1_values: "Muscovado Sugar",
-          option2_label: "Quantity",
-          option2_values: "100g (₹600),250g (₹1500),300g (₹1800)",
-          category: "spreads"
-        });
-      }
-    }
-  }
-
-  function injectCashewCookie(products, pageCategory) {
-    if (pageCategory === 'snacks') {
-      var hasCashewCookie = false;
-      for (var i = 0; i < products.length; i++) {
-        var p = products[i];
-        if (p.name && p.name.toLowerCase().indexOf('cashew') !== -1 && p.name.toLowerCase().indexOf('cookie') !== -1) {
-          hasCashewCookie = true;
-          break;
-        }
-      }
-      if (!hasCashewCookie) {
-        products.push({
-          active: "TRUE",
-          name: "Cashew Cookie",
-          description: "Crisp artisanal cookies loaded with roasted cashews and rich cocoa",
-          subcategory: "Cookies",
-          price_label: "From ₹300",
-          image: "assets/cashewcookie.avif",
-          image2: "",
-          emoji: "🍪",
-          option1_label: "Choose Your Sweetener",
-          option1_values: "Muscovado Sugar",
-          option2_label: "Quantity",
-          option2_values: "100g (₹300),250g (₹750),300g (₹900)",
-          category: "snacks, hot-chocolate-ice-cream, slabs"
-        });
-      }
-    }
-  }
-
   function fixIceCreamProducts(products, tabName) {
     if (tabName !== 'hot_chocolate_ice_cream') return;
     for (var i = 0; i < products.length; i++) {
@@ -482,8 +422,6 @@
               }
               return true;
             });
-            injectPecanSpread(products, pageCategory);
-            injectCashewCookie(products, pageCategory);
             fixIceCreamProducts(products, targetTab);
             if (!products.length) throw new Error('No active products found in ' + targetTab);
             return products;
