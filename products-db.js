@@ -348,7 +348,8 @@
       contentHTML += '</div></div>';
     });
 
-    container.innerHTML = '<div class="sub-tabs">' + tabsHTML + '</div>' + (tabsBanner || '') + contentHTML;
+    var cueHTML = subcats.length > 1 ? '<div class="sub-tabs-scroll-cue-wrap" style="text-align:center;width:100%;"><div class="sub-tabs-scroll-cue"><span class="glow-sparkle">✨</span> <span>Swipe / Tap Categories &rarr;</span> <span class="glow-sparkle">✨</span></div></div>' : '';
+    container.innerHTML = '<div class="sub-tabs">' + tabsHTML + '</div>' + cueHTML + (tabsBanner || '') + contentHTML;
 
     reinitSubTabs(container);
     initSubTabsAutoScroll(container);
