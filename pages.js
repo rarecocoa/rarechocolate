@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isCavities = (product.name || '').toLowerCase().includes('cavities');
     const defaultMinQty = isCavities ? 25 : 1;
     let modalQty = defaultMinQty;
-    const pctColors = { 50: '#6B3D28', 65: '#523220', 70: '#4A2E1B', 100: '#1A0D07' };
+    const pctColors = { 50: '#6B3D28', 65: '#523220', 70: '#4A2E1B', 75: '#3D2415', 85: '#29170D', 100: '#1A0D07' };
     let chocoWavesEl = null;
 
     function adjustCocoaOptions(cleanSelectedSweetener) {
@@ -351,69 +351,127 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!optionsContainer) return;
 
       const isCustomTablet = nameLower.includes('custom');
-      
       const isCoconutSugar = cleanSelectedSweetener.toLowerCase().includes('coconut sugar');
       const isMonk = cleanSelectedSweetener.toLowerCase().includes('monk');
 
-      // Get or create the 65% Dark pill
-      let pill65 = [...optionsContainer.querySelectorAll('.modal-option-pill')].find(p => p.textContent.includes('65%'));
-      if (isMonk && !pill65) {
-        pill65 = document.createElement('button');
-        pill65.className = 'modal-option-pill';
-        pill65.textContent = '65% Dark';
-        pill65.setAttribute('data-original', '65% Dark');
-        pill65.addEventListener('click', () => {
-          optionsContainer.querySelectorAll('.modal-option-pill').forEach(p => p.classList.remove('selected'));
-          pill65.classList.add('selected');
-          const customInput = optionsContainer.querySelector('.modal-cocoa-custom-input');
-          if (customInput) customInput.value = '';
-          
+      function getOrCreatePill(label, pct) {
+        let p = [...optionsContainer.querySelectorAll('.modal-option-pill')].find(btn => btn.textContent.trim().startsWith(label.split(' ')[0]));
+        if (!p) {
+          p = document.createElement('button');
+          p.className = 'modal-option-pill';
+          p.textContent = label;
+          p.setAttribute('data-original', label);
+          p.addEventListener('click', () => {
+            optionsContainer.querySelectorAll('.modal-option-pill').forEach(btn => btn.classList.remove('selected'));
+            p.classList.add('selected');
+            const ci = optionsContainer.querySelector('.modal-cocoa-custom-input');
+            if (ci) ci.value = '';
+            
+            if (chocoWavesEl) {
+              const pctColorVal = pctColors[pct] || '#4A2E1B';
+              chocoWavesEl.style.transform = `translateY(${100 - pct}%)`;
+              chocoWavesEl.style.background = pctColorVal;
+              chocoWavesEl.querySelectorAll('.wave').forEach(w => w.style.background = pctColorVal);
+            }
+            updateModalLivePrice();
+          });
+          const ci = optionsContainer.querySelector('.modal-cocoa-custom-input');
+          if (ci) {
+            optionsContainer.insertBefore(p, ci);
+          } else {
+            optionsContainer.appendChild(p);
+          }
+        }
+        return p;
+      }
+
+      // Ensure 65%, 75%, 85% exist for Monk
+      const pill65 = getOrCreatePill('65% Dark', 65);
+      const pill75 = getOrCreatePill('75% Dark', 75);
+      const pill85 = getOrCreatePill('85% Dark', 85);
+
+      // Get or create custom input
+      let customInput = optionsContainer.querySelector('.modal-cocoa-custom-input');
+      if (!customInput) {
+        customInput = document.createElement('input');
+        customInput.type = 'number';
+        customInput.className = 'modal-cocoa-custom-input';
+        customInput.placeholder = 'Custom %';
+        customInput.style.cssText = 'width:95px; padding:6px 10px; margin-left:4px; border-radius:8px; border:1.5px solid var(--border-light); background:var(--bg-primary); color:var(--text-primary); outline:none; font-family:var(--font-body); font-size:0.85rem;';
+        customInput.addEventListener('focus', () => customInput.style.borderColor = 'var(--accent)');
+        customInput.addEventListener('blur', () => {
+          customInput.style.borderColor = 'var(--border-light)';
+          let val = parseInt(customInput.value, 10);
+          const minVal = parseInt(customInput.min, 10) || 50;
+          const maxVal = parseInt(customInput.max, 10) || 100;
+          if (!isNaN(val) && val < minVal) customInput.value = minVal;
+          if (!isNaN(val) && val > maxVal) customInput.value = maxVal;
+        });
+        customInput.addEventListener('input', () => {
+          if (customInput.value !== '') {
+            optionsContainer.querySelectorAll('.modal-option-pill').forEach(p => p.classList.remove('selected'));
+          }
           if (chocoWavesEl) {
-            const pctColorVal = pctColors[65] || '#523220';
-            chocoWavesEl.style.transform = `translateY(${100 - 65}%)`;
-            chocoWavesEl.style.background = pctColorVal;
-            chocoWavesEl.querySelectorAll('.wave').forEach(w => w.style.background = pctColorVal);
+            const pct = parseInt(customInput.value, 10) || 70;
+            const color = pctColors[pct] || '#4A2E1B';
+            chocoWavesEl.style.transform = `translateY(${100 - pct}%)`;
+            chocoWavesEl.style.background = color;
+            chocoWavesEl.querySelectorAll('.wave').forEach(w => w.style.background = color);
           }
           updateModalLivePrice();
         });
-        const customInput = optionsContainer.querySelector('.modal-cocoa-custom-input');
-        if (customInput) {
-          optionsContainer.insertBefore(pill65, customInput);
-        } else {
-          optionsContainer.appendChild(pill65);
-        }
+        optionsContainer.appendChild(customInput);
       }
 
-      // Loop through all cocoa percentage pills:
-      // 50% Dark, 70% Dark, and 100% Dark MUST ALWAYS BE VISIBLE!
-      // 65% Dark is visible when Monk is chosen.
+      // Visibility Rules:
       const pills = optionsContainer.querySelectorAll('.modal-option-pill');
       pills.forEach(pill => {
         const txt = pill.textContent || '';
-        if (txt.includes('65%')) {
-          pill.style.display = isMonk ? '' : 'none';
+        if (isMonk) {
+          // Monk Sweetener: 65% Dark, 75% Dark, 85% Dark
+          if (txt.includes('65%') || txt.includes('75%') || txt.includes('85%')) {
+            pill.style.display = 'inline-flex';
+          } else {
+            pill.style.display = 'none';
+          }
+        } else if (isCoconutSugar) {
+          // Coconut Sugar: only 50% Dark
+          if (txt.includes('50%')) {
+            pill.style.display = 'inline-flex';
+          } else {
+            pill.style.display = 'none';
+          }
         } else {
-          pill.style.display = '';
+          // Muscovado Sugar: 50% Dark, 70% Dark, 100% Dark
+          if (txt.includes('50%') || txt.includes('70%') || txt.includes('100%')) {
+            pill.style.display = 'inline-flex';
+          } else {
+            pill.style.display = 'none';
+          }
         }
       });
 
-      // Handle custom input if custom tablet product
-      const customInput = optionsContainer.querySelector('.modal-cocoa-custom-input');
+      // Custom Input Visibility & Ranges:
       if (customInput) {
         if (isMonk) {
+          customInput.style.display = 'inline-block';
           customInput.min = 65;
-          const val = parseInt(customInput.value, 10);
-          if (!isNaN(val) && val < 65) {
-            customInput.value = 65;
-          }
-        } else {
+          customInput.max = 85;
+          customInput.placeholder = 'Custom % (65-85)';
+        } else if (isCustomTablet) {
+          customInput.style.display = 'inline-block';
           customInput.min = 50;
+          customInput.max = 100;
+          customInput.placeholder = 'Custom %';
+        } else {
+          customInput.style.display = 'none';
+          customInput.value = '';
         }
       }
 
       // Ensure a visible option is selected if the currently selected one is hidden
       const selectedPill = optionsContainer.querySelector('.modal-option-pill.selected');
-      const isCustomInputSelected = customInput && customInput.value !== '';
+      const isCustomInputSelected = customInput && customInput.value !== '' && customInput.style.display !== 'none';
       
       const updateVisualizer = (pct) => {
         if (chocoWavesEl) {
@@ -503,35 +561,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const lbl = g.querySelector('.modal-option-label')?.textContent || '';
         return lbl.includes('Sweetener');
       });
-      const selectedSweetenerPill = sweetenerGroup?.querySelector('.modal-option-pill.selected');
-      const selectedSweetenerVal = selectedSweetenerPill ? (selectedSweetenerPill.getAttribute('data-original') || selectedSweetenerPill.textContent) : '';
-      const currentSelectedSweetener = selectedSweetenerVal.split(' (₹')[0].trim().toLowerCase();
-      const isMonkSweet = currentSelectedSweetener.includes('monk');
-
-      // Check if 100% is selected in cocoa percentage
-      const cocoaGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
-        const lbl = g.querySelector('.modal-option-label')?.textContent || '';
-        return lbl.toLowerCase().includes('cocoa') || lbl.toLowerCase().includes('darkness') || lbl.toLowerCase().includes('percent');
-      });
-      const selectedCocoaPill = cocoaGroup?.querySelector('.modal-option-pill.selected');
-      const customCocoaInput = cocoaGroup?.querySelector('.modal-cocoa-custom-input');
-      const cocoaTxt = selectedCocoaPill ? (selectedCocoaPill.getAttribute('data-original') || selectedCocoaPill.textContent) : (customCocoaInput?.value ? customCocoaInput.value + '%' : '');
-      const is100Percent = cocoaTxt.includes('100%') || nameLower.includes('100%');
-
-      // If customer selected Muscovado or Coconut sugar while 100% Dark was active, switch cocoa percentage to 70% or 50%
-      if (!isMonkSweet && is100Percent && cocoaGroup && !nameLower.includes('100%')) {
-        const cocoaPills = cocoaGroup.querySelectorAll('.modal-option-pill');
-        const fallbackCocoa = [...cocoaPills].find(p => p.textContent.includes('70%')) || [...cocoaPills].find(p => p.textContent.includes('50%'));
-        if (fallbackCocoa) {
-          cocoaPills.forEach(p => p.classList.remove('selected'));
-          fallbackCocoa.classList.add('selected');
-        }
-      }
-
-      // Re-evaluate is100Percent after potential switch
-      const activeCocoaPill = cocoaGroup?.querySelector('.modal-option-pill.selected');
-      const activeCocoaTxt = activeCocoaPill ? (activeCocoaPill.getAttribute('data-original') || activeCocoaPill.textContent) : '';
-      const finalIs100 = activeCocoaTxt.includes('100%') || nameLower.includes('100%');
 
       if (sweetenerGroup) {
         const pills = sweetenerGroup.querySelectorAll('.modal-option-pill');
@@ -540,16 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const cleanName = originalVal.split(' (₹')[0].trim().toLowerCase();
           const isMuscovadoOnlySpread = nameLower.includes('pecan') || nameLower.includes('brazil') || nameLower.includes('macadamia');
 
-          if (finalIs100) {
-            // For 100% dark variant, ONLY Monk Sweetener is available! Muscovado & Coconut must be hidden!
-            if (!cleanName.includes('monk')) {
-              pill.style.display = 'none';
-              pill.classList.remove('selected');
-            } else {
-              pill.style.display = 'inline-flex';
-              pill.classList.add('selected');
-            }
-          } else if (isMuscovadoOnlySpread && !cleanName.includes('muscovado')) {
+          if (isMuscovadoOnlySpread && !cleanName.includes('muscovado')) {
             pill.style.display = 'none';
             if (pill.classList.contains('selected')) {
               pill.classList.remove('selected');
@@ -858,7 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
             product.name.toLowerCase().includes('custom') ||
             product.name.toLowerCase().includes('plain')
           );
-          if (isCocoa && isCustomProduct) {
+          if (isCocoa && isCustomProduct && !optionsContainer.querySelector('.modal-cocoa-custom-input')) {
             const customInput = document.createElement('input');
             customInput.type = 'number';
             customInput.min = 50;
