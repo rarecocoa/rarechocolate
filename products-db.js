@@ -10,7 +10,7 @@
 
   function csvUrl(sheetId, tabName) {
     return 'https://docs.google.com/spreadsheets/d/' + sheetId +
-      '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(tabName) + '&t=' + Date.now() + '&_cb=' + Math.random().toString(36).substring(7);
+      '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(tabName) + '&nocache=' + Date.now() + '_' + Math.random().toString(36).substring(2);
   }
 
   // Purge any legacy product localStorage cache across all browsers
@@ -396,14 +396,16 @@
       }
 
       var isPaused = false;
-      var speed = 0.65; // smooth right-to-left scrolling speed
+      var speed = 0.75; // smooth right-to-left scrolling speed
+      var currentScrollPos = subTabs.scrollLeft || 0;
 
       function step() {
         if (!isPaused && window.innerWidth <= 768 && subTabs) {
-          subTabs.scrollLeft += speed;
-          if (subTabs.scrollLeft >= origWidth) {
-            subTabs.scrollLeft -= origWidth;
+          currentScrollPos += speed;
+          if (currentScrollPos >= origWidth) {
+            currentScrollPos -= origWidth;
           }
+          subTabs.scrollLeft = Math.round(currentScrollPos);
         }
         subTabs._rcAutoScrollRAF = requestAnimationFrame(step);
       }
@@ -412,6 +414,7 @@
 
       function pause() {
         isPaused = true;
+        currentScrollPos = subTabs.scrollLeft;
         if (subTabs._rcResumeTimer) {
           clearTimeout(subTabs._rcResumeTimer);
           subTabs._rcResumeTimer = null;
@@ -419,10 +422,11 @@
       }
 
       function resume() {
+        currentScrollPos = subTabs.scrollLeft;
         if (subTabs._rcResumeTimer) clearTimeout(subTabs._rcResumeTimer);
         subTabs._rcResumeTimer = setTimeout(function() {
           isPaused = false;
-        }, 1800);
+        }, 1500);
       }
 
       if (!subTabs._rcListenersBound) {
@@ -431,6 +435,11 @@
         subTabs.addEventListener('touchmove', pause, { passive: true });
         subTabs.addEventListener('touchend', resume, { passive: true });
         subTabs.addEventListener('touchcancel', resume, { passive: true });
+        subTabs.addEventListener('scroll', function() {
+          if (isPaused) {
+            currentScrollPos = subTabs.scrollLeft;
+          }
+        }, { passive: true });
         subTabs.addEventListener('mousedown', pause);
         subTabs.addEventListener('mouseup', resume);
         subTabs.addEventListener('mouseleave', resume);
@@ -468,9 +477,11 @@
 
   if (typeof window !== 'undefined' && !window._rcAutoScrollResizeBound) {
     window._rcAutoScrollResizeBound = true;
-    window.addEventListener('resize', function() {
+    var handleAutoScrollResize = function() {
       initSubTabsAutoScroll(document.getElementById('rc-products-container') || document);
-    }, { passive: true });
+    };
+    window.addEventListener('resize', handleAutoScrollResize, { passive: true });
+    window.addEventListener('orientationchange', handleAutoScrollResize, { passive: true });
   }
 
   function reinitSubTabs(container) {
@@ -580,7 +591,7 @@
       showLoading(container);
 
       function fetchTab(targetTab) {
-        return fetch(csvUrl(sheetId, targetTab))
+        return fetch(csvUrl(sheetId, targetTab), { cache: 'no-store', headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' } })
           .then(function(res){
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.text();
