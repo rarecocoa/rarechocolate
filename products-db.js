@@ -442,7 +442,24 @@
           var target = tab.getAttribute('data-tab');
           if (target) {
             sessionStorage.setItem(savedTabKey, target);
-            window.location.reload();
+            // Switch tabs instantly
+            subTabs.querySelectorAll('.sub-tab').forEach(function(t) {
+              if (t.getAttribute('data-tab') === target) {
+                t.classList.add('active');
+              } else {
+                t.classList.remove('active');
+              }
+            });
+            var contents = container.querySelectorAll('.tab-content');
+            contents.forEach(function(tc) {
+              if (tc.getAttribute('data-tab-content') === target) {
+                tc.style.display = '';
+              } else {
+                tc.style.display = 'none';
+              }
+            });
+            reinitCarousels(container);
+            reinitReveal(container);
           }
         });
       }
@@ -458,12 +475,31 @@
 
   function reinitSubTabs(container) {
     var savedTabKey = 'activeTab_' + window.location.pathname;
-    var tabs = container.querySelectorAll('.sub-tab');
+    var subTabs = container.querySelector('.sub-tabs');
+    if (!subTabs) return;
+    var tabs = subTabs.querySelectorAll('.sub-tab');
     tabs.forEach(function(tab){
       tab.addEventListener('click', function(){
         var target = tab.getAttribute('data-tab');
+        if (!target) return;
         sessionStorage.setItem(savedTabKey, target);
-        window.location.reload();
+        subTabs.querySelectorAll('.sub-tab').forEach(function(t) {
+          if (t.getAttribute('data-tab') === target) {
+            t.classList.add('active');
+          } else {
+            t.classList.remove('active');
+          }
+        });
+        var contents = container.querySelectorAll('.tab-content');
+        contents.forEach(function(tc) {
+          if (tc.getAttribute('data-tab-content') === target) {
+            tc.style.display = '';
+          } else {
+            tc.style.display = 'none';
+          }
+        });
+        reinitCarousels(container);
+        reinitReveal(container);
       });
     });
   }

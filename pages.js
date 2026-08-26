@@ -69,9 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', (e) => {
     const card = e.target.closest('.product-grid-card[data-product]');
     if (!card) return;
-    if (e.target.closest('.card-carousel-btn')) return; // don't open modal on carousel click
-    const productData = JSON.parse(card.getAttribute('data-product'));
-    openModal(productData);
+    if (e.target.closest('.card-carousel-btn') || e.target.closest('.card-carousel-dots') || e.target.closest('.card-carousel-dot')) return;
+    try {
+      const raw = card.getAttribute('data-product');
+      if (!raw) return;
+      const productData = JSON.parse(raw);
+      openModal(productData);
+    } catch (err) {
+      console.error('[Product Modal] Failed to parse data-product:', err);
+    }
   });
 
 
