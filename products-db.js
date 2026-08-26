@@ -387,6 +387,29 @@
     }
   }
 
+  function getProductCategories(p) {
+    var rawCat = (p.category || '').trim();
+    var subcat = (p.subcategory || '').toLowerCase();
+    var name = (p.name || '').toLowerCase();
+
+    if (subcat.indexOf('flavor') !== -1 || subcat.indexOf('tablet') !== -1 || subcat.indexOf('limited') !== -1 || subcat.indexOf('trail') !== -1 || name.indexOf('tablet') !== -1) {
+      return ['tablets'];
+    }
+    if (subcat.indexOf('spread') !== -1 || subcat.indexOf('butter') !== -1 || name.indexOf('spread') !== -1 || name.indexOf('butter') !== -1) {
+      return ['spreads'];
+    }
+    if (subcat.indexOf('hot chocolate') !== -1 || subcat.indexOf('ice cream') !== -1 || name.indexOf('hot chocolate') !== -1 || name.indexOf('ice cream') !== -1) {
+      return ['hot-chocolate-ice-cream'];
+    }
+    if (subcat.indexOf('cluster') !== -1 || subcat.indexOf('drag') !== -1 || subcat.indexOf('cookie') !== -1 || subcat.indexOf('laddoo') !== -1 || subcat.indexOf('cavities') !== -1 || subcat.indexOf('popsicle') !== -1 || subcat.indexOf('tea') !== -1 || subcat.indexOf('cocoa powder') !== -1 || name.indexOf('cluster') !== -1 || name.indexOf('drag') !== -1 || name.indexOf('cookie') !== -1 || name.indexOf('laddoo') !== -1 || name.indexOf('cavities') !== -1 || name.indexOf('popsicle') !== -1 || name.indexOf('cocoa tea') !== -1 || name.indexOf('cocoa powder') !== -1) {
+      return ['snacks', 'slabs'];
+    }
+    if (rawCat) {
+      return rawCat.split(',').map(function(c){ return c.trim().toLowerCase(); });
+    }
+    return ['tablets'];
+  }
+
   function showError(container, msg) {
     container.innerHTML =
       '<div style="text-align:center;padding:60px 20px;color:var(--text-muted,#888);font-family:var(--font-body,sans-serif);">' +
@@ -416,9 +439,13 @@
             var products = all.filter(function(p){
               var isActive = (p.active || '').toUpperCase() === 'TRUE' && p.name;
               if (!isActive) return false;
-              if (pageCategory && p.category && targetTab === 'products') {
-                var cats = p.category.split(',').map(function(c){ return c.trim().toLowerCase(); });
-                return cats.indexOf(pageCategory.toLowerCase()) !== -1;
+              if (pageCategory) {
+                var pCats = getProductCategories(p);
+                var target = pageCategory.toLowerCase();
+                if (target === 'hot-chocolate-ice-cream' || target === 'hot_chocolate_ice_cream') {
+                  return pCats.indexOf('hot-chocolate-ice-cream') !== -1 || pCats.indexOf('hot_chocolate_ice_cream') !== -1;
+                }
+                return pCats.indexOf(target) !== -1;
               }
               return true;
             });
