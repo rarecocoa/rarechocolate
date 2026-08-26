@@ -384,29 +384,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Loop through all pills and control visibility
+      // Loop through all cocoa percentage pills:
+      // 50% Dark, 70% Dark, and 100% Dark MUST ALWAYS BE VISIBLE!
+      // 65% Dark is visible when Monk is chosen.
       const pills = optionsContainer.querySelectorAll('.modal-option-pill');
       pills.forEach(pill => {
         const txt = pill.textContent || '';
-        if (isMonk) {
-          if (txt.includes('65%') || txt.includes('100%')) {
-            pill.style.display = '';
-          } else {
-            pill.style.display = 'none';
-          }
-        } else if (isCoconutSugar) {
-          if (txt.includes('50%')) {
-            pill.style.display = '';
-          } else {
-            pill.style.display = 'none';
-          }
+        if (txt.includes('65%')) {
+          pill.style.display = isMonk ? '' : 'none';
         } else {
-          // Muscovado Sugar
-          if (txt.includes('65%') || txt.includes('100%')) {
-            pill.style.display = 'none';
-          } else {
-            pill.style.display = '';
-          }
+          pill.style.display = '';
         }
       });
 
@@ -511,7 +498,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Check if 100% is selected in cocoa percentage or product name
+      // Gather currently selected sweetener
+      const sweetenerGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+        const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+        return lbl.includes('Sweetener');
+      });
+      const selectedSweetenerPill = sweetenerGroup?.querySelector('.modal-option-pill.selected');
+      const selectedSweetenerVal = selectedSweetenerPill ? (selectedSweetenerPill.getAttribute('data-original') || selectedSweetenerPill.textContent) : '';
+      const currentSelectedSweetener = selectedSweetenerVal.split(' (₹')[0].trim().toLowerCase();
+      const isMonkSweet = currentSelectedSweetener.includes('monk');
+
+      // Check if 100% is selected in cocoa percentage
       const cocoaGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
         const lbl = g.querySelector('.modal-option-label')?.textContent || '';
         return lbl.toLowerCase().includes('cocoa') || lbl.toLowerCase().includes('darkness') || lbl.toLowerCase().includes('percent');
@@ -521,11 +518,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const cocoaTxt = selectedCocoaPill ? (selectedCocoaPill.getAttribute('data-original') || selectedCocoaPill.textContent) : (customCocoaInput?.value ? customCocoaInput.value + '%' : '');
       const is100Percent = cocoaTxt.includes('100%') || nameLower.includes('100%');
 
-      // Adjust cocoa options dynamically based on sweetener selection first
-      const sweetenerGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
-        const lbl = g.querySelector('.modal-option-label')?.textContent || '';
-        return lbl.includes('Sweetener');
-      });
+      // If customer selected Muscovado or Coconut sugar while 100% Dark was active, switch cocoa percentage to 70% or 50%
+      if (!isMonkSweet && is100Percent && cocoaGroup && !nameLower.includes('100%')) {
+        const cocoaPills = cocoaGroup.querySelectorAll('.modal-option-pill');
+        const fallbackCocoa = [...cocoaPills].find(p => p.textContent.includes('70%')) || [...cocoaPills].find(p => p.textContent.includes('50%'));
+        if (fallbackCocoa) {
+          cocoaPills.forEach(p => p.classList.remove('selected'));
+          fallbackCocoa.classList.add('selected');
+        }
+      }
+
+      // Re-evaluate is100Percent after potential switch
+      const activeCocoaPill = cocoaGroup?.querySelector('.modal-option-pill.selected');
+      const activeCocoaTxt = activeCocoaPill ? (activeCocoaPill.getAttribute('data-original') || activeCocoaPill.textContent) : '';
+      const finalIs100 = activeCocoaTxt.includes('100%') || nameLower.includes('100%');
+
       if (sweetenerGroup) {
         const pills = sweetenerGroup.querySelectorAll('.modal-option-pill');
         pills.forEach(pill => {
@@ -533,13 +540,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const cleanName = originalVal.split(' (₹')[0].trim().toLowerCase();
           const isMuscovadoOnlySpread = nameLower.includes('pecan') || nameLower.includes('brazil') || nameLower.includes('macadamia');
 
-          if (is100Percent) {
+          if (finalIs100) {
             // For 100% dark variant, ONLY Monk Sweetener is available! Muscovado & Coconut must be hidden!
             if (!cleanName.includes('monk')) {
               pill.style.display = 'none';
-              if (pill.classList.contains('selected')) {
-                pill.classList.remove('selected');
-              }
+              pill.classList.remove('selected');
             } else {
               pill.style.display = 'inline-flex';
               pill.classList.add('selected');
@@ -563,19 +568,19 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
 
-        let selectedSweetenerPill = sweetenerGroup.querySelector('.modal-option-pill.selected');
-        if (!selectedSweetenerPill || selectedSweetenerPill.style.display === 'none') {
+        let selectedSweetenerPillFinal = sweetenerGroup.querySelector('.modal-option-pill.selected');
+        if (!selectedSweetenerPillFinal || selectedSweetenerPillFinal.style.display === 'none') {
           const firstVisible = [...pills].find(p => p.style.display !== 'none');
           if (firstVisible) {
             pills.forEach(p => p.classList.remove('selected'));
             firstVisible.classList.add('selected');
-            selectedSweetenerPill = firstVisible;
+            selectedSweetenerPillFinal = firstVisible;
           }
         }
-        if (selectedSweetenerPill) {
-          const originalVal = selectedSweetenerPill.getAttribute('data-original') || selectedSweetenerPill.textContent;
-          const cleanSelectedSweetener = originalVal.split(' (₹')[0].trim();
-          adjustCocoaOptions(cleanSelectedSweetener);
+        if (selectedSweetenerPillFinal) {
+          const originalVal = selectedSweetenerPillFinal.getAttribute('data-original') || selectedSweetenerPillFinal.textContent;
+          const cleanSweetVal = originalVal.split(' (₹')[0].trim();
+          adjustCocoaOptions(cleanSweetVal);
         }
       }
       
