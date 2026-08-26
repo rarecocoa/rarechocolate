@@ -219,8 +219,6 @@
               parsedVals = ['100g', '200g', '250g'];
             } else if (rName.indexOf('cookie') !== -1) {
               parsedVals = ['100g (₹300)', '250g (₹750)', '300g (₹900)'];
-            } else {
-              continue;
             }
           }
         }
@@ -233,6 +231,23 @@
     }
 
     var rName = (row.name || '').toLowerCase().trim();
+
+    // Ensure Cavities has Plain, Almond, Cashew, Berry and Nuts add-ons
+    if (rName.indexOf('cavities') !== -1) {
+      var hasAddon = obj.options.some(function(opt) { return opt.label && opt.label.toLowerCase().indexOf('add-on') !== -1; });
+      if (!hasAddon) {
+        obj.options.push({
+          label: 'Choose Add-on',
+          values: ['Plain', 'Almond', 'Cashew', 'Berry and Nuts']
+        });
+      } else {
+        obj.options.forEach(function(opt) {
+          if (opt.label && opt.label.toLowerCase().indexOf('add-on') !== -1) {
+            opt.values = ['Plain', 'Almond', 'Cashew', 'Berry and Nuts'];
+          }
+        });
+      }
+    }
 
     // Temporary fix: Google CSV cache is stale for Custom Cluster Blend add-on list.
     // Remove this block once Google's CSV propagates the sheet update.

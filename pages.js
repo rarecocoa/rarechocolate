@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function adjustCocoaOptions(cleanSelectedSweetener) {
       const isTabletPage = window.location.pathname.toLowerCase().includes('tablets');
       const nameLower = (product.name || '').toLowerCase();
-      const isClusterDragPopsicle = nameLower.includes('cluster') || nameLower.includes('drag') || nameLower.includes('popsicle');
+      const isClusterDragPopsicle = nameLower.includes('cluster') || nameLower.includes('drag') || nameLower.includes('popsicle') || nameLower.includes('cavities');
       if (!isTabletPage && !isClusterDragPopsicle) return;
 
       const cocoaGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
@@ -772,8 +772,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const isSpreadsPage = window.location.pathname.toLowerCase().includes('spreads');
       const isCocoaOpt = (o) => o && o.label && o.label.toLowerCase().includes('cocoa') && o.label.toLowerCase().includes('percent');
       
-      const isClusterDragPopsicle = nameLower.includes('cluster') || nameLower.includes('drag') || nameLower.includes('popsicle');
+      const isClusterDragPopsicle = nameLower.includes('cluster') || nameLower.includes('drag') || nameLower.includes('popsicle') || nameLower.includes('cavities');
       
+      if (nameLower.includes('cavities')) {
+        const hasAddon = product.options.some(o => o.label && o.label.toLowerCase().includes('add-on'));
+        if (!hasAddon) {
+          product.options.push({
+            label: 'Choose Add-on',
+            values: ['Plain', 'Almond', 'Cashew', 'Berry and Nuts']
+          });
+        } else {
+          product.options.forEach(o => {
+            if (o.label && o.label.toLowerCase().includes('add-on')) {
+              o.values = ['Plain', 'Almond', 'Cashew', 'Berry and Nuts'];
+            }
+          });
+        }
+      }
+
       const needsCocoa = (isTabletPage || 
                           isClusterDragPopsicle || 
                           (isSpreadsPage && product.options.some(o => o.label && o.label.toLowerCase().includes('sweetener')))) 
@@ -797,6 +813,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       sortedOpts.forEach(optGroup => {
         const isAddon = optGroup.label.toLowerCase().includes('add-on');
+        const isCavities = (product.name || '').toLowerCase().includes('cavities');
+        const isSingleAddon = isAddon && isCavities;
 
         if (isCustomProduct && isAddon) {
           if (!waNoticeAdded) {
@@ -844,9 +862,9 @@ document.addEventListener('DOMContentLoaded', () => {
             pill.className = 'modal-option-pill';
             pill.textContent = val;
             pill.setAttribute('data-original', val);
-            if (idx === 0 && !isAddon) pill.classList.add('selected');
+            if (idx === 0 && (!isAddon || isSingleAddon)) pill.classList.add('selected');
             pill.addEventListener('click', () => {
-              if (isAddon) {
+              if (isAddon && !isSingleAddon) {
                 if (val.toLowerCase() === 'plain' || val.toLowerCase() === 'none') {
                   optionsContainer.querySelectorAll('.modal-option-pill').forEach(p => p.classList.remove('selected'));
                   pill.classList.add('selected');
