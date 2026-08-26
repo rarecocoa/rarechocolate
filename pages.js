@@ -6,24 +6,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 
-  // ── Sub-tabs Mobile Scroll Cue ──────────────────────────
-  const initSubTabsMobileCue = () => {
-    if (window.innerWidth > 768) return;
-    const subTabs = document.querySelector('.sub-tabs');
-    if (!subTabs) return;
-
-    if (document.getElementById('subTabsScrollCue')) return;
-
-    const cue = document.createElement('div');
-    cue.id = 'subTabsScrollCue';
-    cue.className = 'sub-tabs-scroll-cue';
-    cue.innerHTML = '<span class="glow-sparkle">✨</span> <span>Swipe / Tap Categories &rarr;</span> <span class="glow-sparkle">✨</span>';
-    
-    subTabs.parentNode.insertBefore(cue, subTabs.nextSibling);
-  };
-  initSubTabsMobileCue();
-  window.addEventListener('resize', initSubTabsMobileCue, { passive: true });
-
   // ── Navigation (shared) ───────────────────────────────────
   const nav = document.getElementById('nav');
 
