@@ -358,36 +358,35 @@
     if (window.innerWidth > 768) return;
 
     setTimeout(function() {
-      if (!subTabs || subTabs.scrollWidth <= subTabs.clientWidth + 15) return;
+      if (!subTabs) return;
+
+      var originalButtons = Array.prototype.slice.call(subTabs.querySelectorAll('.sub-tab:not(.cloned-tab)'));
+      if (originalButtons.length < 2) return;
+
+      var origWidth = 0;
+      originalButtons.forEach(function(btn) {
+        origWidth += btn.offsetWidth + 8;
+      });
+
+      if (origWidth <= subTabs.clientWidth + 10) return;
+
+      // Duplicate buttons for seamless continuous marquee loop
+      if (!subTabs.querySelector('.cloned-tab')) {
+        originalButtons.forEach(function(btn) {
+          var clone = btn.cloneNode(true);
+          clone.classList.add('cloned-tab');
+          subTabs.appendChild(clone);
+        });
+      }
 
       var isPaused = false;
-      var direction = 1;
-      var speed = 0.55;
+      var speed = 0.65; // smooth right-to-left scrolling speed
 
       function step() {
         if (!isPaused && window.innerWidth <= 768 && subTabs) {
-          var maxScroll = subTabs.scrollWidth - subTabs.clientWidth;
-          if (maxScroll > 10) {
-            if (direction === 1) {
-              subTabs.scrollLeft += speed;
-              if (subTabs.scrollLeft >= maxScroll - 1) {
-                isPaused = true;
-                subTabs._rcResumeTimer = setTimeout(function() {
-                  direction = -1;
-                  isPaused = false;
-                }, 1800);
-              }
-            } else {
-              subTabs.scrollLeft -= speed * 1.5;
-              if (subTabs.scrollLeft <= 1) {
-                subTabs.scrollLeft = 0;
-                isPaused = true;
-                subTabs._rcResumeTimer = setTimeout(function() {
-                  direction = 1;
-                  isPaused = false;
-                }, 1800);
-              }
-            }
+          subTabs.scrollLeft += speed;
+          if (subTabs.scrollLeft >= origWidth) {
+            subTabs.scrollLeft -= origWidth;
           }
         }
         subTabs._rcAutoScrollRAF = requestAnimationFrame(step);
@@ -407,7 +406,7 @@
         if (subTabs._rcResumeTimer) clearTimeout(subTabs._rcResumeTimer);
         subTabs._rcResumeTimer = setTimeout(function() {
           isPaused = false;
-        }, 2500);
+        }, 1800);
       }
 
       if (!subTabs._rcListenersBound) {
@@ -419,8 +418,19 @@
         subTabs.addEventListener('mousedown', pause);
         subTabs.addEventListener('mouseup', resume);
         subTabs.addEventListener('mouseleave', resume);
+
+        var savedTabKey = 'activeTab_' + window.location.pathname;
+        subTabs.addEventListener('click', function(e) {
+          var tab = e.target.closest('.sub-tab');
+          if (!tab) return;
+          var target = tab.getAttribute('data-tab');
+          if (target) {
+            sessionStorage.setItem(savedTabKey, target);
+            window.location.reload();
+          }
+        });
       }
-    }, 400);
+    }, 350);
   }
 
   if (typeof window !== 'undefined' && !window._rcAutoScrollResizeBound) {

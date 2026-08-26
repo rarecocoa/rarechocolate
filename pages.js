@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cue = document.createElement('div');
     cue.id = 'subTabsScrollCue';
     cue.className = 'sub-tabs-scroll-cue';
-    cue.innerHTML = 'Scroll categories &rarr;';
+    cue.innerHTML = '<span class="glow-sparkle">✨</span> <span>Swipe / Tap Categories &rarr;</span> <span class="glow-sparkle">✨</span>';
     
     subTabs.parentNode.insertBefore(cue, subTabs.nextSibling);
   };
