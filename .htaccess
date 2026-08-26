@@ -1,0 +1,32 @@
+# ==========================================================
+# RARE COCOA™ — Server Configuration (.htaccess)
+# Canonical HTTPS & Non-WWW Enforcer, Caching & Security
+# ==========================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://rarecocoa.com/$1 [R=301,L]
+
+  # Redirect www.rarecocoa.com to rarecocoa.com
+  RewriteCond %{HTTP_HOST} ^www\.rarecocoa\.com [NC]
+  RewriteRule ^(.*)$ https://rarecocoa.com/$1 [R=301,L]
+</IfModule>
+
+# Security & Search Verification Headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# MIME Types
+<IfModule mod_mime.c>
+  AddType image/avif .avif
+  AddType image/webp .webp
+  AddType application/xml .xml
+  AddType application/json .json
+</IfModule>
