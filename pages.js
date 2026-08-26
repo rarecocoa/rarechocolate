@@ -350,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const optionsContainer = cocoaGroup.querySelector('.modal-options');
       if (!optionsContainer) return;
 
-      const isCustomTablet = nameLower.includes('custom');
       const isCoconutSugar = cleanSelectedSweetener.toLowerCase().includes('coconut sugar');
       const isMonk = cleanSelectedSweetener.toLowerCase().includes('monk');
 
@@ -385,12 +384,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return p;
       }
 
-      // Ensure 65%, 75%, 85% exist for Monk
+      // Ensure 65%, 75%, 85%, and 100% exist
       const pill65 = getOrCreatePill('65% Dark', 65);
       const pill75 = getOrCreatePill('75% Dark', 75);
       const pill85 = getOrCreatePill('85% Dark', 85);
+      const pill100 = getOrCreatePill('100% Dark', 100);
 
-      // Get or create custom input
+      // Get or create custom input bar beside pills
       let customInput = optionsContainer.querySelector('.modal-cocoa-custom-input');
       if (!customInput) {
         customInput = document.createElement('input');
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
           customInput.style.borderColor = 'var(--border-light)';
           let val = parseInt(customInput.value, 10);
           const minVal = parseInt(customInput.min, 10) || 50;
-          const maxVal = parseInt(customInput.max, 10) || 100;
+          const maxVal = parseInt(customInput.max, 10) || 99;
           if (!isNaN(val) && val < minVal) customInput.value = minVal;
           if (!isNaN(val) && val > maxVal) customInput.value = maxVal;
         });
@@ -423,20 +423,20 @@ document.addEventListener('DOMContentLoaded', () => {
         optionsContainer.appendChild(customInput);
       }
 
-      // Visibility Rules:
+      // Visibility Rules for Pills:
       const pills = optionsContainer.querySelectorAll('.modal-option-pill');
       pills.forEach(pill => {
         const txt = pill.textContent || '';
         if (isMonk) {
-          // Monk Sweetener: 65% Dark, 75% Dark, 85% Dark
-          if (txt.includes('65%') || txt.includes('75%') || txt.includes('85%')) {
+          // Monk Sweetener: 65% Dark, 75% Dark, 85% Dark, 100% Dark
+          if (txt.includes('65%') || txt.includes('75%') || txt.includes('85%') || txt.includes('100%')) {
             pill.style.display = 'inline-flex';
           } else {
             pill.style.display = 'none';
           }
         } else if (isCoconutSugar) {
-          // Coconut Sugar: only 50% Dark
-          if (txt.includes('50%')) {
+          // Coconut Sugar: 50% Dark, 100% Dark
+          if (txt.includes('50%') || txt.includes('100%')) {
             pill.style.display = 'inline-flex';
           } else {
             pill.style.display = 'none';
@@ -451,21 +451,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Custom Input Visibility & Ranges:
+      // Custom Input Bar is ALWAYS displayed beside pills on tablets and clusters:
       if (customInput) {
+        customInput.style.display = 'inline-block';
         if (isMonk) {
-          customInput.style.display = 'inline-block';
           customInput.min = 65;
           customInput.max = 85;
           customInput.placeholder = 'Custom % (65-85)';
-        } else if (isCustomTablet) {
-          customInput.style.display = 'inline-block';
-          customInput.min = 50;
-          customInput.max = 100;
-          customInput.placeholder = 'Custom %';
         } else {
-          customInput.style.display = 'none';
-          customInput.value = '';
+          customInput.min = 50;
+          customInput.max = 99;
+          customInput.placeholder = 'Custom % (50-99)';
         }
       }
 
@@ -556,6 +552,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      // Check if 100% is selected in cocoa percentage
+      const cocoaGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+        const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+        return lbl.toLowerCase().includes('cocoa') || lbl.toLowerCase().includes('darkness') || lbl.toLowerCase().includes('percent');
+      });
+      const selectedCocoaPill = cocoaGroup?.querySelector('.modal-option-pill.selected');
+      const customCocoaInput = cocoaGroup?.querySelector('.modal-cocoa-custom-input');
+      const cocoaTxt = selectedCocoaPill ? (selectedCocoaPill.getAttribute('data-original') || selectedCocoaPill.textContent) : (customCocoaInput?.value ? customCocoaInput.value + '%' : '');
+      const is100Percent = cocoaTxt.includes('100%') || customCocoaInput?.value === '100' || nameLower.includes('100%');
+
       // Gather currently selected sweetener
       const sweetenerGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
         const lbl = g.querySelector('.modal-option-label')?.textContent || '';
@@ -569,7 +575,16 @@ document.addEventListener('DOMContentLoaded', () => {
           const cleanName = originalVal.split(' (₹')[0].trim().toLowerCase();
           const isMuscovadoOnlySpread = nameLower.includes('pecan') || nameLower.includes('brazil') || nameLower.includes('macadamia');
 
-          if (isMuscovadoOnlySpread && !cleanName.includes('muscovado')) {
+          if (is100Percent) {
+            // When 100% Dark is selected: REMOVE sugars completely! ONLY Monk Sweetener is visible!
+            if (!cleanName.includes('monk')) {
+              pill.style.display = 'none';
+              pill.classList.remove('selected');
+            } else {
+              pill.style.display = 'inline-flex';
+              pill.classList.add('selected');
+            }
+          } else if (isMuscovadoOnlySpread && !cleanName.includes('muscovado')) {
             pill.style.display = 'none';
             if (pill.classList.contains('selected')) {
               pill.classList.remove('selected');
