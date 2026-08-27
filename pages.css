@@ -1902,3 +1902,11 @@ body.page-loading .product-grid-img span {
   }
 }
 
+/* Prevent iOS Safari Auto-Zoom on Input Focus */
+@media screen and (max-width: 768px) {
+  input, select, textarea,
+  .custom-cocoa-input {
+    font-size: 16px !important;
+  }
+}
+
