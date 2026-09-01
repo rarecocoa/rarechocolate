@@ -285,11 +285,37 @@ document.addEventListener('DOMContentLoaded', () => {
     return null;
   }
 
-  function RC_getTabletPrice(productName, basePrice, sweetenerStr, addons) {
+  function RC_getTabletPrice(productName, basePrice, sweetenerStr, addons, product) {
     const sweetClean = (sweetenerStr || '').split(' (₹')[0].trim();
-    const isMonk = sweetClean.includes('Monk Fruit') || sweetClean.includes('Monk Sweetener') || sweetClean.toLowerCase().includes('monk');
-    const isCoconut = sweetClean.includes('Coconut Sugar') || sweetClean.toLowerCase().includes('coconut');
+    const sweetLower = sweetClean.toLowerCase();
+    const isMonk = sweetClean.includes('Monk Fruit') || sweetClean.includes('Monk Sweetener') || sweetLower.includes('monk');
+    const isCoconut = sweetClean.includes('Coconut Sugar') || sweetLower.includes('coconut');
 
+    // 1. Check if product object has explicit sweetener_prices from Google Sheet
+    if (product && product.sweetener_prices) {
+      for (const [k, p] of Object.entries(product.sweetener_prices)) {
+        if (sweetLower.includes(k) || k.includes(sweetLower)) {
+          return p;
+        }
+      }
+    }
+
+    const base = basePrice || 200;
+    const pName = (productName || (product && product.name) || '').toLowerCase();
+
+    // 2. Specific luxury tablet pricing fallbacks if sheet doesn't specify
+    if (pName.includes('saffron') || base === 300) {
+      if (isMonk) return 400;
+      if (isCoconut) return 350;
+      return 300;
+    }
+    if (pName.includes('macadamia') || pName.includes('pecan') || pName.includes('pine') || base === 450) {
+      if (isMonk) return 550;
+      if (isCoconut) return 500;
+      return 450;
+    }
+
+    // 3. Standard tablet pricing (base 200/215)
     if (isMonk) return 350;
     if (isCoconut) return 250;
 
@@ -300,9 +326,9 @@ document.addEventListener('DOMContentLoaded', () => {
       addonList = addons.split(',').map(a => a.trim().toLowerCase()).filter(Boolean);
     }
 
-    let maxPrice = basePrice || 200;
+    let maxPrice = base;
     addonList.forEach(addon => {
-      let itemPrice = basePrice || 200;
+      let itemPrice = base;
       if (addon.includes('hazelnut')) itemPrice = 215;
       if (itemPrice > maxPrice) maxPrice = itemPrice;
     });
@@ -671,7 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (sweetName.includes('Monk Fruit')) optPrice = 45;
             else optPrice = 25;
           } else if (nameLower.includes('custom tablet blend') || nameLower.includes('tablet') || window.location.pathname.toLowerCase().includes('tablets')) {
-            optPrice = RC_getTabletPrice(product.name, product.price, sweetName, selectedAddons);
+            optPrice = RC_getTabletPrice(product.name, product.price, sweetName, selectedAddons, product);
           }
 
           if (optPrice !== null) {
@@ -702,7 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (cleanSelectedSweetener.includes('Monk Fruit')) finalPrice = 45;
         else finalPrice = 25;
       } else if (nameLower.includes('custom tablet blend') || nameLower.includes('tablet') || window.location.pathname.toLowerCase().includes('tablets')) {
-        finalPrice = RC_getTabletPrice(product.name, product.price, cleanSelectedSweetener, addonVal);
+        finalPrice = RC_getTabletPrice(product.name, product.price, cleanSelectedSweetener, addonVal, product);
       } else {
         // Fallback: check if any selected option has a price format in parentheses
         Object.entries(selOpts).forEach(([optLabel, val]) => {
@@ -1141,7 +1167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             itemPrice = 25;
           }
         } else if (nameLower.includes('custom tablet blend') || nameLower.includes('tablet') || window.location.pathname.toLowerCase().includes('tablets')) {
-          itemPrice = RC_getTabletPrice(product.name, product.price, sweetener, addonVal);
+          itemPrice = RC_getTabletPrice(product.name, product.price, sweetener, addonVal, product);
         }
 
         // Gold glow flash then close

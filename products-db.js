@@ -203,6 +203,13 @@
         var rName = (row.name || '').toLowerCase();
 
         if (lblLower.indexOf('sweetener') !== -1) {
+          if (!obj.sweetener_prices) obj.sweetener_prices = {};
+          parsedVals.forEach(function(v) {
+            var m = v.match(/(.+?)\s*\(\s*₹\s*(\d+)\s*\)/);
+            if (m) {
+              obj.sweetener_prices[m[1].trim().toLowerCase()] = parseFloat(m[2]);
+            }
+          });
           parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(\+?₹\d+(?:\/g)?\)/g, '').trim(); });
         }
 
