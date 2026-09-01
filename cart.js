@@ -196,7 +196,7 @@ const CartSystem = {
     if (!document.getElementById('floatingWhatsappBtn')) {
       const waBtn = document.createElement('a');
       waBtn.id = 'floatingWhatsappBtn';
-      waBtn.href = 'https://wa.me/918121725892';
+      waBtn.href = 'https://wa.me/919676114516';
       waBtn.target = '_blank';
       waBtn.rel = 'noopener';
       waBtn.setAttribute('aria-label', 'Chat on WhatsApp');
