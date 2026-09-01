@@ -1,6 +1,6 @@
 # ==========================================================
 # RARE COCOA™ — Server Configuration (.htaccess)
-# Canonical HTTPS & Non-WWW Enforcer, Caching & Security
+# Canonical HTTPS, Search Engine Favicon Access & Security
 # ==========================================================
 
 <IfModule mod_rewrite.c>
@@ -21,12 +21,21 @@
   Header set X-Frame-Options "SAMEORIGIN"
   Header set X-XSS-Protection "1; mode=block"
   Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # Allow Google Favicon Bot & Web Crawlers to access image & icon assets
+  <FilesMatch "\.(ico|png|jpg|jpeg|webp|avif|svg|webmanifest)$">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
 </IfModule>
 
 # MIME Types
 <IfModule mod_mime.c>
+  AddType image/x-icon .ico
+  AddType image/png .png
   AddType image/avif .avif
   AddType image/webp .webp
   AddType application/xml .xml
   AddType application/json .json
+  AddType application/manifest+json .webmanifest
 </IfModule>
