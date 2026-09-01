@@ -486,8 +486,8 @@ const CartSystem = {
 
   showCheckoutForm() {
     const MSGS = {
-      'Vijayawada': "Our luxury chocolates are extremely temperature-sensitive, which is why we deliver them in person within Vijayawada city limits (₹30 delivery fee). Please ensure you or someone else is available to receive them. (Note: If your delivery address is outside city limits, standard charges will apply).",
-      'Andhra Pradesh, Chennai, Bangalore': "Our chocolates are temperature-sensitive, so we deliver across Andhra Pradesh, Chennai, and Bangalore via direct bus connectivity in insulated thermal packaging (₹200 delivery fee). Please ensure you are available at the transit point to collect your order.",
+      'Vijayawada (only)': "Our luxury chocolates are extremely temperature-sensitive, which is why we deliver them in person within Vijayawada city limits (₹30 delivery fee). Please ensure you or someone else is available to receive them. (Note: If your delivery address is outside city limits, standard charges will apply).",
+      'Andhra - Telangana': "Our chocolates are temperature-sensitive, so we deliver across Andhra and Telangana via direct bus connectivity in insulated thermal packaging (₹200 delivery fee). Please ensure you are available at the transit point to collect your order.",
       'Hyderabad': "Our luxury chocolates are extremely temperature-sensitive, which is why we personally deliver them to your door in Hyderabad (₹200 delivery fee). Please ensure you or someone else is available to receive them.",
       'Other States': "As our signature chocolates are highly temperature-sensitive, we cannot ship chocolates, clusters, or dragées to other states. However, we can safely deliver slabs, hot chocolate, and butter via standard courier services (₹200 delivery fee). Please review your cart to make sure your selection only contains courier-friendly products."
     };
@@ -503,11 +503,11 @@ const CartSystem = {
         <p>Select your delivery region to calculate exact delivery charges</p>
         <div class="location-options">
           <label class="location-tile">
-            <input type="radio" name="deliveryLocation" value="Vijayawada">
+            <input type="radio" name="deliveryLocation" value="Vijayawada (only)">
             <span class="location-tile-content">
               <span class="loc-icon">📍</span>
               <span class="loc-text">
-                <span class="location-name">Vijayawada</span>
+                <span class="location-name">Vijayawada (only)</span>
                 <span class="location-sub">City Limits · ₹30 Delivery</span>
               </span>
             </span>
@@ -523,11 +523,11 @@ const CartSystem = {
             </span>
           </label>
           <label class="location-tile">
-            <input type="radio" name="deliveryLocation" value="Andhra Pradesh, Chennai, Bangalore">
+            <input type="radio" name="deliveryLocation" value="Andhra - Telangana">
             <span class="location-tile-content">
               <span class="loc-icon">🚌</span>
               <span class="loc-text">
-                <span class="location-name">Andhra Pradesh · Chennai · Bangalore</span>
+                <span class="location-name">Andhra - Telangana</span>
                 <span class="location-sub">Direct Bus Connectivity · ₹200 Delivery</span>
               </span>
             </span>
@@ -624,9 +624,10 @@ const CartSystem = {
   },
 
   showDeliveryForm(location) {
-    const needsMapLink = location === 'Vijayawada' || location === 'Hyderabad';
+    const isVijayawada = location && location.includes('Vijayawada');
+    const needsMapLink = isVijayawada || location === 'Hyderabad';
     const isHyderabad = location === 'Hyderabad';
-    const deliveryFee = location === 'Vijayawada' ? 30 : 200;
+    const deliveryFee = isVijayawada ? 30 : 200;
     const subtotalVal = this.getCartTotal();
     const totalVal = subtotalVal + deliveryFee;
 
@@ -648,14 +649,14 @@ const CartSystem = {
             <strong style="color: #1A0E08;">₹${Math.round(subtotalVal)}</strong>
           </div>
           <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 0.85rem; color: #555;">
-            <span>Delivery Fee (${location === 'Vijayawada' ? 'City Limits' : location === 'Hyderabad' ? 'Personal' : 'Standard'}):</span>
+            <span>Delivery Fee (${isVijayawada ? 'City Limits' : location === 'Hyderabad' ? 'Personal' : 'Standard'}):</span>
             <strong style="color: #1A0E08;">₹${deliveryFee}</strong>
           </div>
           <div style="display:flex; justify-content:space-between; padding-top: 8px; border-top: 1px dashed rgba(26,14,8,0.15); font-size: 0.95rem; font-weight: 700; color: #1A0E08;">
             <span>Total Payable:</span>
             <span>₹${Math.round(totalVal)}</span>
           </div>
-          ${location === 'Vijayawada' ? `<p style="font-size: 0.72rem; color: #777; margin: 8px 0 0 0; line-height: 1.3;">*Note: ₹30 delivery applies within Vijayawada city limits. If outside city limits, standard charges will apply.</p>` : ''}
+          ${isVijayawada ? `<p style="font-size: 0.72rem; color: #777; margin: 8px 0 0 0; line-height: 1.3;">*Note: ₹30 delivery applies within Vijayawada city limits. If outside city limits, standard charges will apply.</p>` : ''}
         </div>
 
         <form id="checkoutDetailsForm">
@@ -1012,13 +1013,14 @@ const CartSystem = {
           message += `  _Price: ₹${Math.round(item.price * item.quantity)}_\n\n`;
         });
       });
-      const deliveryFee = location === 'Vijayawada' ? 30 : 200;
+      const isVijayawada = location && location.includes('Vijayawada');
+      const deliveryFee = isVijayawada ? 30 : 200;
       const subtotalVal = this.getCartTotal();
       const finalTotal = subtotalVal + deliveryFee;
 
       message += `---------------------------------\n`;
       message += `*Subtotal:* ₹${Math.round(subtotalVal)}\n`;
-      message += `*Delivery Fee (${location === 'Vijayawada' ? 'Vijayawada City Limits' : location}):* ₹${deliveryFee}\n`;
+      message += `*Delivery Fee (${isVijayawada ? 'Vijayawada City Limits' : location}):* ₹${deliveryFee}\n`;
       message += `*Total Order Value:* ₹${Math.round(finalTotal)}\n`;
       message += `---------------------------------\n_Thank you for choosing Rare Cocoa™._ ✨`;
 
