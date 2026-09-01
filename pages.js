@@ -590,13 +590,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const isMuscovadoOnlySpread = nameLower.includes('pecan') || nameLower.includes('brazil') || nameLower.includes('macadamia');
 
           if (is100Percent) {
-            // When 100% Dark is selected: REMOVE sugars completely! ONLY Monk Sweetener is visible!
+            // When 100% Dark is selected: hide sugars, keep Monk Sweetener available (without auto-selecting)
             if (!cleanName.includes('monk')) {
               pill.style.display = 'none';
               pill.classList.remove('selected');
             } else {
               pill.style.display = 'inline-flex';
-              pill.classList.add('selected');
             }
           } else if (isMuscovadoOnlySpread && !cleanName.includes('muscovado')) {
             pill.style.display = 'none';
@@ -619,11 +618,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let selectedSweetenerPillFinal = sweetenerGroup.querySelector('.modal-option-pill.selected');
         if (!selectedSweetenerPillFinal || selectedSweetenerPillFinal.style.display === 'none') {
-          const firstVisible = [...pills].find(p => p.style.display !== 'none');
-          if (firstVisible) {
-            pills.forEach(p => p.classList.remove('selected'));
-            firstVisible.classList.add('selected');
-            selectedSweetenerPillFinal = firstVisible;
+          if (!is100Percent) {
+            const firstVisible = [...pills].find(p => p.style.display !== 'none');
+            if (firstVisible) {
+              pills.forEach(p => p.classList.remove('selected'));
+              firstVisible.classList.add('selected');
+              selectedSweetenerPillFinal = firstVisible;
+            }
           }
         }
         if (selectedSweetenerPillFinal) {
@@ -878,7 +879,25 @@ document.addEventListener('DOMContentLoaded', () => {
             pill.setAttribute('data-original', val);
             if (idx === 0 && (!isAddon || isSingleAddon)) pill.classList.add('selected');
             pill.addEventListener('click', () => {
-              if (isAddon && !isSingleAddon) {
+              const isSweetenerGroup = optGroup.label.toLowerCase().includes('sweetener');
+              const cocoaGrp = [...modal.querySelectorAll('.modal-option-group')].find(g => {
+                const lbl = g.querySelector('.modal-option-label')?.textContent || '';
+                return lbl.toLowerCase().includes('cocoa') || lbl.toLowerCase().includes('darkness') || lbl.toLowerCase().includes('percent');
+              });
+              const selCocoaPill = cocoaGrp?.querySelector('.modal-option-pill.selected');
+              const custCocoaInp = cocoaGrp?.querySelector('.modal-cocoa-custom-input');
+              const cocoaTxt = selCocoaPill ? (selCocoaPill.getAttribute('data-original') || selCocoaPill.textContent) : (custCocoaInp?.value ? custCocoaInp.value + '%' : '');
+              const is100Now = cocoaTxt.includes('100%') || custCocoaInp?.value === '100' || (product.name || '').toLowerCase().includes('100%');
+
+              if (isSweetenerGroup && is100Now) {
+                // In 100% Dark mode, allow clicking Monk Sweetener to select or deselect
+                if (pill.classList.contains('selected')) {
+                  pill.classList.remove('selected');
+                } else {
+                  optionsContainer.querySelectorAll('.modal-option-pill').forEach(p => p.classList.remove('selected'));
+                  pill.classList.add('selected');
+                }
+              } else if (isAddon && !isSingleAddon) {
                 if (val.toLowerCase() === 'plain' || val.toLowerCase() === 'none') {
                   optionsContainer.querySelectorAll('.modal-option-pill').forEach(p => p.classList.remove('selected'));
                   pill.classList.add('selected');
@@ -1098,6 +1117,8 @@ document.addEventListener('DOMContentLoaded', () => {
               selectedOptions[optLabel] = selectedPills.join(', ');
             } else if (inputVal !== undefined && inputVal !== '') {
               selectedOptions[optLabel] = inputVal;
+            } else if (optLabel.toLowerCase().includes('sweetener')) {
+              selectedOptions[optLabel] = 'None (100% Pure Cocoa)';
             }
           }
         });
