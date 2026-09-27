@@ -16,3 +16,9 @@
 - ALWAYS run a python test suite before completing a turn to verify:
   1. The requested product rules match 100%.
   2. No surrounding products in the store were altered.
+
+## 5. System Architecture & Workflow Boundaries (CRITICAL MEMORY)
+- **Frontend Site:** Custom-coded Vanilla HTML/CSS/JS e-commerce site with zero 3rd-party store bloat.
+- **Checkout Flow:** Customer places order in cart -> redirected to WhatsApp (+91 83740 13232) with a pre-filled structured order text.
+- **Automation Backend:** Webhook that catches the inbound WhatsApp message and dispatches automated replies (order acknowledgment, scenario/route notices, and payment instructions).
+- **Project Scope Boundary:** DO NOT mention or conflate unrelated tools/projects (such as the waybill generator) with this store and automation workflow.

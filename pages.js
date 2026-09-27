@@ -637,7 +637,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Gather currently selected options
       const selOpts = {};
       modal.querySelectorAll('.modal-option-group').forEach(g => {
+        if (g.classList.contains('custom-wa-notice-group')) return;
         const lbl = g.querySelector('.modal-option-label')?.textContent;
+        if (!lbl) return;
         const customCocoaInput = g.querySelector('.modal-cocoa-custom-input');
         let sel;
         if (customCocoaInput && customCocoaInput.value !== '') {
@@ -728,6 +730,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cleanSelectedSweetener.includes('Coconut Sugar')) finalPrice = 35;
         else if (cleanSelectedSweetener.includes('Monk Fruit')) finalPrice = 45;
         else finalPrice = 25;
+      } else if (nameLower.includes('trail pack')) {
+        finalPrice = Number(product.price) || 540;
       } else if (nameLower.includes('custom tablet blend') || nameLower.includes('tablet') || window.location.pathname.toLowerCase().includes('tablets')) {
         finalPrice = RC_getTabletPrice(product.name, product.price, cleanSelectedSweetener, addonVal, product);
       } else {
@@ -1097,7 +1101,10 @@ document.addEventListener('DOMContentLoaded', () => {
       newAddBtn.addEventListener('click', () => {
         const selectedOptions = {};
         modal.querySelectorAll('.modal-option-group').forEach(group => {
-          const optLabel = group.querySelector('.modal-option-label').textContent;
+          if (group.classList.contains('custom-wa-notice-group')) return;
+          const labelEl = group.querySelector('.modal-option-label');
+          if (!labelEl) return;
+          const optLabel = labelEl.textContent;
           const customCocoaInput = group.querySelector('.modal-cocoa-custom-input');
           if (customCocoaInput && customCocoaInput.value !== '') {
             const val = parseInt(customCocoaInput.value, 10);
@@ -1187,6 +1194,8 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             itemPrice = 25;
           }
+        } else if (nameLower.includes('trail pack')) {
+          itemPrice = Number(product.price) || 540;
         } else if (nameLower.includes('custom tablet blend') || nameLower.includes('tablet') || window.location.pathname.toLowerCase().includes('tablets')) {
           itemPrice = RC_getTabletPrice(product.name, product.price, sweetener, addonVal, product);
         }
