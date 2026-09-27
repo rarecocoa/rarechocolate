@@ -1,2 +1,5 @@
 .vercel
 .env*.local
+graphify-out/
+.agent/
+.agents/memory.json
