@@ -1,0 +1,56 @@
+{
+  "project": "rarechocolate",
+  "domain": "rarecocoa.com",
+  "last_updated": "2026-09-27T22:00:00+05:30",
+  "architecture": {
+    "type": "Static Vanilla HTML/CSS/JS E-Commerce",
+    "deployment": {
+      "host": "Hostinger",
+      "git_repo": "rarecocoa/rarechocolate",
+      "deploy_branch": "master",
+      "auto_deployment": true,
+      "cache_invalidation": "hostinger-hosting MCP hosting_clearWebsiteCacheV1 or query version bump (?v=vXX)"
+    },
+    "catalog_engine": {
+      "source": "Google Sheets live CSV/JSON",
+      "sheet_id": "1rZu7brDiJkQMpblZ3owkhRBCu31U7vCzHvY6QcO6ZQc",
+      "db_script": "products-db.js",
+      "pages_script": "pages.js",
+      "cart_script": "cart.js"
+    },
+    "checkout_workflow": {
+      "type": "WhatsApp Direct Checkout",
+      "phone": "+91 83740 13232",
+      "floating_wa_phone": "+91 96761 14516"
+    }
+  },
+  "invariants": [
+    {
+      "name": "Custom Trail Pack",
+      "category": "tablets",
+      "price": 540,
+      "options": "Choose Cocoa Percentage (50%, 70%, 100%), Select Flavor 1 through 6",
+      "rules": "Trail Packs have flat ₹540 pricing; MUST NEVER fall into the single-tablet sweetener formula. Must skip custom-wa-notice-group in modal loops."
+    },
+    {
+      "name": "Custom WhatsApp Notice Banner",
+      "class": "modal-option-group custom-wa-notice-group",
+      "rules": "Banner in custom product modals does NOT have .modal-option-label. Any loop over .modal-option-group MUST check if (group.classList.contains('custom-wa-notice-group')) return; and check if (!labelEl) return; to avoid null pointer exceptions."
+    },
+    {
+      "name": "100% Dark Tablets Monk Sweetener",
+      "rules": "In 100% Dark mode, Monk Sweetener can be toggled on or off without forcing auto-select, keeping base tablet price."
+    },
+    {
+      "name": "Cavities Pricing",
+      "rules": "Cavities pricing is dynamic based on sweetener: standard ₹25, Coconut Sugar ₹35, Monk Fruit ₹45."
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-09-27",
+      "issue": "Custom Trail Pack add to cart crashed due to null .modal-option-label on custom-wa-notice-group",
+      "resolution": "Added defensive checks in pages.js and assigned dedicated trail pack flat pricing (₹540). Bumped version to v81."
+    }
+  ]
+}
