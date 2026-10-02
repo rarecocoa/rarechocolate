@@ -346,6 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isCavities = (product.name || '').toLowerCase().includes('cavities');
     const defaultMinQty = isCavities ? 25 : 1;
     let modalQty = defaultMinQty;
+    let liveModalCalculatedPrice = null;
     const pctColors = { 50: '#6B3D28', 65: '#523220', 70: '#4A2E1B', 75: '#3D2415', 85: '#29170D', 100: '#1A0D07' };
     let chocoWavesEl = null;
 
@@ -753,6 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
           modalAddBtn.style.opacity = '1';
           modalAddBtn.style.cursor = 'pointer';
           if (finalPrice !== undefined && finalPrice !== null) {
+            liveModalCalculatedPrice = finalPrice;
             modalAddBtn.textContent = `Add to Selection — ₹${finalPrice}`;
           } else {
             modalAddBtn.textContent = 'Add to Selection';
@@ -1200,6 +1202,11 @@ document.addEventListener('DOMContentLoaded', () => {
           itemPrice = RC_getTabletPrice(product.name, product.price, sweetener, addonVal, product);
         }
 
+        // Lock to the exact live price displayed on the modal button if valid
+        if (liveModalCalculatedPrice !== null && !isNaN(liveModalCalculatedPrice) && liveModalCalculatedPrice > 0) {
+          itemPrice = liveModalCalculatedPrice;
+        }
+
         // Gold glow flash then close
         newAddBtn.classList.add('btn-gold-glow');
         newAddBtn.textContent = '✓ Added!';
@@ -1208,6 +1215,7 @@ document.addEventListener('DOMContentLoaded', () => {
             CartSystem.addItem({
               name: product.name,
               subtitle: product.subtitle || '',
+              category: product.category || '',
               icon: product.icon || '🍫',
               price: itemPrice,
               options: selectedOptions,

@@ -166,9 +166,37 @@
     if (img1 && img1.trim()) icons.push(img1.trim());
     if (img2 && img2.trim()) icons.push(img2.trim());
 
+    function resolveCategory(r) {
+      var sub = (r.subcategory || '').toLowerCase();
+      var n = (r.name || '').toLowerCase();
+      if (sub.indexOf('tablet') !== -1 || sub.indexOf('flavor') !== -1 || sub.indexOf('limited') !== -1 || sub.indexOf('trail') !== -1 || n.indexOf('tablet') !== -1) {
+        return 'Handcrafted Tablets';
+      }
+      if (sub.indexOf('cluster') !== -1 || n.indexOf('cluster') !== -1) {
+        return 'Clusters & Bites';
+      }
+      if (sub.indexOf('drag') !== -1 || n.indexOf('drag') !== -1) {
+        return 'Chocolate Drags';
+      }
+      if (sub.indexOf('spread') !== -1 || sub.indexOf('butter') !== -1 || n.indexOf('spread') !== -1 || n.indexOf('butter') !== -1) {
+        return 'Artisanal Spreads & Butters';
+      }
+      if (sub.indexOf('cookie') !== -1 || n.indexOf('cookie') !== -1) {
+        return 'Artisan Cookies';
+      }
+      if (sub.indexOf('cavities') !== -1 || sub.indexOf('laddoo') !== -1 || n.indexOf('cavities') !== -1 || n.indexOf('laddoo') !== -1) {
+        return 'Cavities & Laddoos';
+      }
+      if (sub.indexOf('popsicle') !== -1 || sub.indexOf('tea') !== -1 || n.indexOf('popsicle') !== -1 || n.indexOf('tea') !== -1) {
+        return 'Popsicles & Cocoa Tea';
+      }
+      return r.subcategory || r.category || 'Handcrafted Collection';
+    }
+
     var obj = {
       name: row.name || '',
       subtitle: row.description || '',
+      category: resolveCategory(row),
       icon: icons.length === 1 ? icons[0] : (icons.length > 1 ? icons : (row.emoji || '🍫')),
       options: []
     };

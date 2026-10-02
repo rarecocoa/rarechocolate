@@ -1002,9 +1002,15 @@ const CartSystem = {
           let optionsStr = '';
           if (item.options && Object.keys(item.options).length > 0) {
             optionsStr = Object.entries(item.options).map(([k, v]) => {
-              let cleanedKey = k.replace(/^(Choose|Enter)\s+(your\s+)?/i, '');
+              let cleanedKey = k.replace(/^(Choose|Enter)\s+(your\s+)?/i, '').trim();
+              cleanedKey = cleanedKey.replace(/:$/, '').trim();
               cleanedKey = cleanedKey.charAt(0).toUpperCase() + cleanedKey.slice(1);
-              const cleanedVal = v.replace(/\s*\(?[₹$]\s*\d+\)?/g, '');
+              let cleanedVal = String(v || '').replace(/\s*\(?[₹$]\s*[\d.]+(?:\/[a-zA-Z]+)?\)?/g, '').trim();
+              if (cleanedKey.toLowerCase().includes('sweetener')) {
+                cleanedVal = cleanedVal.replace(/Sweetener$/i, 'Sugar').replace(/Sugar Sugar/i, 'Sugar').trim();
+                if (cleanedVal.toLowerCase().includes('monk')) cleanedVal = 'Monk Fruit';
+              }
+              cleanedVal = cleanedVal.replace(/(\d+%)Dark/i, '$1 Dark');
               return `    _• ${cleanedKey}: ${cleanedVal}_`;
             }).join('\n');
           }
