@@ -195,11 +195,29 @@ document.addEventListener('DOMContentLoaded', () => {
   window.initCardCarousels = initCardCarousels;
 
   // ── Pricing Engine Helpers ─────────────────────────────────
-  function RC_getDynamicRate(productName, sweetenerStr, addons) {
+  function RC_getDynamicRate(productName, sweetenerStr, addons, product) {
     const nameLower = (productName || '').toLowerCase().trim();
     const sweetClean = (sweetenerStr || '').split(' (₹')[0].split(' (+₹')[0].replace(/\s*\(\+₹\d+\/g\)/, '').trim();
-    const isMonk = sweetClean.includes('Monk Fruit') || sweetClean.includes('Monk Sweetener') || sweetClean.toLowerCase().includes('monk');
-    const isCoconut = sweetClean.includes('Coconut Sugar') || sweetClean.toLowerCase().includes('coconut');
+    const sweetLower = sweetClean.toLowerCase();
+
+    // 1. Direct rate from Google Sheet (Sheet is Master)
+    if (product && product.sweetener_rates) {
+      for (const [k, r] of Object.entries(product.sweetener_rates)) {
+        if (sweetLower.includes(k) || k.includes(sweetLower)) {
+          return r;
+        }
+      }
+      // Pure Cocoa (100% Dark) base rate from sheet (Muscovado or lowest rate)
+      if (sweetLower.includes('pure cocoa') || sweetLower === 'none') {
+        const musc = product.sweetener_rates['muscovado sugar'] || product.sweetener_rates['muscovado'];
+        if (musc !== undefined) return musc;
+        const allRates = Object.values(product.sweetener_rates);
+        if (allRates.length > 0) return Math.min(...allRates);
+      }
+    }
+
+    const isMonk = sweetClean.includes('Monk Fruit') || sweetClean.includes('Monk Sweetener') || sweetLower.includes('monk');
+    const isCoconut = sweetClean.includes('Coconut Sugar') || sweetLower.includes('coconut');
 
     let addonList = [];
     if (Array.isArray(addons)) {
@@ -297,6 +315,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sweetLower.includes(k) || k.includes(sweetLower)) {
           return p;
         }
+      }
+      // Pure Cocoa (100% Dark) base price from sheet
+      if (sweetLower.includes('pure cocoa') || sweetLower === 'none') {
+        const musc = product.sweetener_prices['muscovado sugar'] || product.sweetener_prices['muscovado'];
+        if (musc !== undefined) return musc;
+        const allPrices = Object.values(product.sweetener_prices);
+        if (allPrices.length > 0) return Math.min(...allPrices);
       }
     }
 
@@ -723,7 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customRate = parseFloat(rateMatch[1]);
           }
 
-          const dynamicRate = (customRate !== null) ? customRate : RC_getDynamicRate(product.name, sweetName, selectedAddons);
+          const dynamicRate = (customRate !== null) ? customRate : RC_getDynamicRate(product.name, sweetName, selectedAddons, product);
 
           if (dynamicRate !== null) {
             if (grams > 0) optPrice = grams * dynamicRate;
@@ -748,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const cleanSelectedSweetener = selectedSweetener.split(' (₹')[0].trim();
       const addonVal = selOpts['Choose Add-on'] || '';
 
-      const dynamicRate = RC_getDynamicRate(product.name, cleanSelectedSweetener, addonVal);
+      const dynamicRate = RC_getDynamicRate(product.name, cleanSelectedSweetener, addonVal, product);
       if (dynamicRate !== null) {
         const qtyOpt = selOpts['Weight'] || selOpts['Choose Weight'] || selOpts['Quantity'] || '';
         let grams = 0;
@@ -1193,7 +1218,7 @@ document.addEventListener('DOMContentLoaded', () => {
           customRate = parseFloat(rateMatch[1]);
         }
 
-        const dynamicRate = (customRate !== null) ? customRate : RC_getDynamicRate(product.name, sweetener, addonVal);
+        const dynamicRate = (customRate !== null) ? customRate : RC_getDynamicRate(product.name, sweetener, addonVal, product);
         if (dynamicRate !== null) {
           const qtyOpt = selectedOptions['Weight'] || selectedOptions['Choose Weight'] || selectedOptions['Quantity'] || '';
           let grams = 0;

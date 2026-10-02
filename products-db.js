@@ -240,10 +240,15 @@
 
         if (lblLower.indexOf('sweetener') !== -1) {
           if (!obj.sweetener_prices) obj.sweetener_prices = {};
+          if (!obj.sweetener_rates) obj.sweetener_rates = {};
           parsedVals.forEach(function(v) {
-            var m = v.match(/(.+?)\s*\(\s*₹\s*(\d+)\s*\)/);
-            if (m) {
-              obj.sweetener_prices[m[1].trim().toLowerCase()] = parseFloat(m[2]);
+            var mRate = v.match(/(.+?)\s*\(\s*₹\s*([\d.]+)\/g\s*\)/i);
+            if (mRate) {
+              obj.sweetener_rates[mRate[1].trim().toLowerCase()] = parseFloat(mRate[2]);
+            }
+            var mPrice = v.match(/(.+?)\s*\(\s*₹\s*([\d.]+)\s*\)/);
+            if (mPrice) {
+              obj.sweetener_prices[mPrice[1].trim().toLowerCase()] = parseFloat(mPrice[2]);
             }
           });
           parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(\+?₹[\d.]+(?:\/g)?\)/g, '').trim(); });
@@ -275,6 +280,24 @@
           label: lbl,
           values: parsedVals
         });
+      }
+    }
+
+    // Derive per-gram sweetener rates from sheet prices if not explicitly given as /g
+    if (obj.sweetener_prices && (!obj.sweetener_rates || Object.keys(obj.sweetener_rates).length === 0)) {
+      var weightOpt = obj.options.find(function(o){ return o.label && (o.label.toLowerCase().indexOf('weight') !== -1 || o.label.toLowerCase().indexOf('quantity') !== -1); });
+      if (weightOpt && weightOpt.values && weightOpt.values.length > 0) {
+        var firstVal = weightOpt.values[0];
+        var mGrams = firstVal.match(/(\d+)g/);
+        if (mGrams) {
+          var baseGrams = parseInt(mGrams[1], 10);
+          if (baseGrams > 0) {
+            if (!obj.sweetener_rates) obj.sweetener_rates = {};
+            for (var sw in obj.sweetener_prices) {
+              obj.sweetener_rates[sw] = obj.sweetener_prices[sw] / baseGrams;
+            }
+          }
+        }
       }
     }
 
