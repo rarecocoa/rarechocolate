@@ -246,12 +246,12 @@
             if (mRate) {
               obj.sweetener_rates[mRate[1].trim().toLowerCase()] = parseFloat(mRate[2]);
             }
-            var mPrice = v.match(/(.+?)\s*\(\s*₹\s*([\d.]+)\s*\)/);
+            var mPrice = v.match(/(.+?)\s*\(\s*₹\s*([\d.]+)(?:\/[a-zA-Z]+)?\s*\)/);
             if (mPrice) {
               obj.sweetener_prices[mPrice[1].trim().toLowerCase()] = parseFloat(mPrice[2]);
             }
           });
-          parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(\+?₹[\d.]+(?:\/g)?\)/g, '').trim(); });
+          parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(\+?₹[\d.]+(?:\/[a-zA-Z]+)?\)/g, '').trim(); });
         }
 
         // Clean static price tags from Weight/Quantity pills when product has sweetener pricing

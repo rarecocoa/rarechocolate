@@ -752,6 +752,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if (dynamicRate !== null) {
             if (grams > 0) optPrice = grams * dynamicRate;
+          } else if (product && product.sweetener_prices && Object.keys(product.sweetener_prices).length > 0) {
+            const swLower = sweetName.toLowerCase();
+            for (const [k, p] of Object.entries(product.sweetener_prices)) {
+              if (swLower.includes(k) || k.includes(swLower)) {
+                optPrice = p;
+                break;
+              }
+            }
           } else if (nameLower.includes('cavities')) {
             if (sweetName.includes('Coconut Sugar')) optPrice = 35;
             else if (sweetName.includes('Monk Fruit')) optPrice = 45;
@@ -783,6 +791,20 @@ document.addEventListener('DOMContentLoaded', () => {
           if (m) grams = parseInt(m[1], 10);
         }
         if (grams > 0) finalPrice = grams * dynamicRate;
+      } else if (product && product.sweetener_prices && Object.keys(product.sweetener_prices).length > 0) {
+        const swLower = cleanSelectedSweetener.toLowerCase();
+        let matched = false;
+        for (const [k, p] of Object.entries(product.sweetener_prices)) {
+          if (swLower.includes(k) || k.includes(swLower)) {
+            finalPrice = p;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched && (cleanSelectedSweetener.includes('Pure Cocoa') || cleanSelectedSweetener.includes('None'))) {
+          const musc = product.sweetener_prices['muscovado sugar'] || product.sweetener_prices['muscovado'];
+          if (musc !== undefined) finalPrice = musc;
+        }
       } else if (nameLower.includes('cavities')) {
         if (cleanSelectedSweetener.includes('Coconut Sugar')) finalPrice = 35;
         else if (cleanSelectedSweetener.includes('Monk Fruit')) finalPrice = 45;
@@ -1232,6 +1254,20 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           if (grams > 0) {
             itemPrice = grams * dynamicRate;
+          }
+        } else if (product && product.sweetener_prices && Object.keys(product.sweetener_prices).length > 0) {
+          const swLower = sweetener.toLowerCase();
+          let matched = false;
+          for (const [k, p] of Object.entries(product.sweetener_prices)) {
+            if (swLower.includes(k) || k.includes(swLower)) {
+              itemPrice = p;
+              matched = true;
+              break;
+            }
+          }
+          if (!matched && (sweetener.includes('Pure Cocoa') || sweetener.includes('None'))) {
+            const musc = product.sweetener_prices['muscovado sugar'] || product.sweetener_prices['muscovado'];
+            if (musc !== undefined) itemPrice = musc;
           }
         } else if (nameLower.includes('cavities')) {
           if (sweetener.includes('Coconut Sugar')) {
