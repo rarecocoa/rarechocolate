@@ -573,9 +573,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return lbl.toLowerCase().includes('cocoa') || lbl.toLowerCase().includes('darkness') || lbl.toLowerCase().includes('percent');
       });
       const selectedCocoaPill = cocoaGroup?.querySelector('.modal-option-pill.selected');
-      const customCocoaInput = cocoaGroup?.querySelector('.modal-cocoa-custom-input');
+      const customCocoaInput = cocoaGroup?.querySelector('.modal-cocoa-custom-input, .modal-option-input');
       const cocoaTxt = selectedCocoaPill ? (selectedCocoaPill.getAttribute('data-original') || selectedCocoaPill.textContent) : (customCocoaInput?.value ? customCocoaInput.value + '%' : '');
-      const is100Percent = cocoaTxt.includes('100%') || customCocoaInput?.value === '100' || nameLower.includes('100%');
+      const is100Percent = cocoaTxt.includes('100%') || customCocoaInput?.value === '100' || customCocoaInput?.value === '100%' || nameLower.includes('100%');
 
       // Gather currently selected sweetener
       const sweetenerGroup = [...modal.querySelectorAll('.modal-option-group')].find(g => {
@@ -584,52 +584,79 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (sweetenerGroup) {
-        const pills = sweetenerGroup.querySelectorAll('.modal-option-pill');
-        pills.forEach(pill => {
-          const originalVal = pill.getAttribute('data-original') || pill.textContent;
-          const cleanName = originalVal.split(' (₹')[0].trim().toLowerCase();
-          const isMuscovadoOnlySpread = nameLower.includes('pecan') || nameLower.includes('brazil') || nameLower.includes('macadamia');
+        // Ensure pure cocoa pill exists in sweetener group for 100% Dark mode
+        let pureCocoaPill = sweetenerGroup.querySelector('.modal-option-pill-pure-cocoa');
+        if (!pureCocoaPill) {
+          pureCocoaPill = document.createElement('button');
+          pureCocoaPill.className = 'modal-option-pill modal-option-pill-pure-cocoa';
+          pureCocoaPill.textContent = 'None (100% Pure Cocoa)';
+          pureCocoaPill.setAttribute('data-original', 'None (100% Pure Cocoa)');
+          pureCocoaPill.style.display = 'none';
+          const optsCont = sweetenerGroup.querySelector('.modal-options');
+          if (optsCont) optsCont.appendChild(pureCocoaPill);
+        }
 
-          if (is100Percent) {
-            // When 100% Dark is selected: hide sugars, keep Monk Sweetener available (without auto-selecting)
-            if (!cleanName.includes('monk')) {
+        const pills = sweetenerGroup.querySelectorAll('.modal-option-pill');
+        const isMuscovadoOnlySpread = nameLower.includes('pecan') || nameLower.includes('brazil') || nameLower.includes('macadamia');
+
+        if (is100Percent) {
+          // When 100% Dark is selected: 100% pure cocoa has NO sweetener
+          // Store previously selected sweetener so it restores when switching back
+          const curSelected = sweetenerGroup.querySelector('.modal-option-pill.selected:not(.modal-option-pill-pure-cocoa)');
+          if (curSelected) {
+            sweetenerGroup.dataset.previousSweetener = curSelected.getAttribute('data-original') || curSelected.textContent;
+          }
+
+          pills.forEach(pill => {
+            if (pill !== pureCocoaPill) {
+              pill.style.display = 'none';
+              pill.classList.remove('selected');
+            }
+          });
+          pureCocoaPill.style.display = 'inline-flex';
+          pureCocoaPill.classList.add('selected');
+        } else {
+          pureCocoaPill.style.display = 'none';
+          pureCocoaPill.classList.remove('selected');
+
+          pills.forEach(pill => {
+            if (pill === pureCocoaPill) return;
+            const originalVal = pill.getAttribute('data-original') || pill.textContent;
+            const cleanName = originalVal.split(' (₹')[0].trim().toLowerCase();
+
+            if (isMuscovadoOnlySpread && !cleanName.includes('muscovado')) {
+              pill.style.display = 'none';
+              pill.classList.remove('selected');
+            } else if (isHazelnutActive && cleanName.includes('coconut sugar')) {
               pill.style.display = 'none';
               pill.classList.remove('selected');
             } else {
               pill.style.display = 'inline-flex';
             }
-          } else if (isMuscovadoOnlySpread && !cleanName.includes('muscovado')) {
-            pill.style.display = 'none';
-            if (pill.classList.contains('selected')) {
-              pill.classList.remove('selected');
-              const muscovadoPill = [...pills].find(p => p.textContent.toLowerCase().includes('muscovado'));
-              if (muscovadoPill) muscovadoPill.classList.add('selected');
-            }
-          } else if (isHazelnutActive && cleanName.includes('coconut sugar')) {
-            pill.style.display = 'none';
-            if (pill.classList.contains('selected')) {
-              pill.classList.remove('selected');
-              const muscovadoPill = [...pills].find(p => p.textContent.toLowerCase().includes('muscovado'));
-              if (muscovadoPill) muscovadoPill.classList.add('selected');
-            }
-          } else {
-            pill.style.display = 'inline-flex';
-          }
-        });
+          });
 
-        let selectedSweetenerPillFinal = sweetenerGroup.querySelector('.modal-option-pill.selected');
-        if (!selectedSweetenerPillFinal || selectedSweetenerPillFinal.style.display === 'none') {
-          if (!is100Percent) {
-            const firstVisible = [...pills].find(p => p.style.display !== 'none');
-            if (firstVisible) {
+          // Ensure a valid visible sweetener pill is selected
+          let selectedSweetenerPillFinal = sweetenerGroup.querySelector('.modal-option-pill.selected:not(.modal-option-pill-pure-cocoa)');
+          if (!selectedSweetenerPillFinal || selectedSweetenerPillFinal.style.display === 'none') {
+            const prevName = (sweetenerGroup.dataset.previousSweetener || '').toLowerCase();
+            let matchedPill = null;
+            if (prevName) {
+              matchedPill = [...pills].find(p => p !== pureCocoaPill && p.style.display !== 'none' && p.textContent.toLowerCase().includes(prevName.split(' ')[0]));
+            }
+            if (!matchedPill) {
+              matchedPill = [...pills].find(p => p !== pureCocoaPill && p.style.display !== 'none');
+            }
+            if (matchedPill) {
               pills.forEach(p => p.classList.remove('selected'));
-              firstVisible.classList.add('selected');
-              selectedSweetenerPillFinal = firstVisible;
+              matchedPill.classList.add('selected');
+              selectedSweetenerPillFinal = matchedPill;
             }
           }
         }
-        if (selectedSweetenerPillFinal) {
-          const originalVal = selectedSweetenerPillFinal.getAttribute('data-original') || selectedSweetenerPillFinal.textContent;
+
+        let activeSweetPill = sweetenerGroup.querySelector('.modal-option-pill.selected');
+        if (activeSweetPill) {
+          const originalVal = activeSweetPill.getAttribute('data-original') || activeSweetPill.textContent;
           const cleanSweetVal = originalVal.split(' (₹')[0].trim();
           adjustCocoaOptions(cleanSweetVal);
         }
@@ -679,6 +706,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const pills = sweetenerGroup.querySelectorAll('.modal-option-pill');
         pills.forEach(pill => {
+          if (pill.classList.contains('modal-option-pill-pure-cocoa')) {
+            pill.textContent = 'None (100% Pure Cocoa)';
+            return;
+          }
           const originalVal = pill.getAttribute('data-original') || pill.textContent;
           let sweetName = originalVal.split(' (₹')[0].trim();
           sweetName = sweetName.split(' (+₹')[0].trim();
@@ -878,32 +909,21 @@ document.addEventListener('DOMContentLoaded', () => {
         optionsContainer.className = 'modal-options';
 
         if (optGroup.values) {
+          const hasSweetenerGroup = sortedOpts.some(g => g.label && g.label.toLowerCase().includes('sweetener'));
+          const isWeightOrQty = optGroup.label.toLowerCase().includes('weight') || optGroup.label.toLowerCase().includes('quantity');
+
           optGroup.values.forEach((val, idx) => {
+            let displayVal = val;
+            if (hasSweetenerGroup && isWeightOrQty) {
+              displayVal = displayVal.replace(/\s*\(₹\s*[\d,.]+(?:\/[a-zA-Z]+)?\)/g, '').trim();
+            }
             const pill = document.createElement('button');
             pill.className = 'modal-option-pill';
-            pill.textContent = val;
-            pill.setAttribute('data-original', val);
+            pill.textContent = displayVal;
+            pill.setAttribute('data-original', displayVal);
             if (idx === 0 && (!isAddon || isSingleAddon)) pill.classList.add('selected');
             pill.addEventListener('click', () => {
-              const isSweetenerGroup = optGroup.label.toLowerCase().includes('sweetener');
-              const cocoaGrp = [...modal.querySelectorAll('.modal-option-group')].find(g => {
-                const lbl = g.querySelector('.modal-option-label')?.textContent || '';
-                return lbl.toLowerCase().includes('cocoa') || lbl.toLowerCase().includes('darkness') || lbl.toLowerCase().includes('percent');
-              });
-              const selCocoaPill = cocoaGrp?.querySelector('.modal-option-pill.selected');
-              const custCocoaInp = cocoaGrp?.querySelector('.modal-cocoa-custom-input');
-              const cocoaTxt = selCocoaPill ? (selCocoaPill.getAttribute('data-original') || selCocoaPill.textContent) : (custCocoaInp?.value ? custCocoaInp.value + '%' : '');
-              const is100Now = cocoaTxt.includes('100%') || custCocoaInp?.value === '100' || (product.name || '').toLowerCase().includes('100%');
-
-              if (isSweetenerGroup && is100Now) {
-                // In 100% Dark mode, allow clicking Monk Sweetener to select or deselect
-                if (pill.classList.contains('selected')) {
-                  pill.classList.remove('selected');
-                } else {
-                  optionsContainer.querySelectorAll('.modal-option-pill').forEach(p => p.classList.remove('selected'));
-                  pill.classList.add('selected');
-                }
-              } else if (isAddon && !isSingleAddon) {
+              if (isAddon && !isSingleAddon) {
                 if (val.toLowerCase() === 'plain' || val.toLowerCase() === 'none') {
                   optionsContainer.querySelectorAll('.modal-option-pill').forEach(p => p.classList.remove('selected'));
                   pill.classList.add('selected');

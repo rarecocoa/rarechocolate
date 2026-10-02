@@ -222,6 +222,14 @@
       }
     }
 
+    var hasSweetenerInRow = false;
+    for (var k = 1; k <= 4; k++) {
+      if ((row['option' + k + '_label'] || '').toLowerCase().indexOf('sweetener') !== -1) {
+        hasSweetenerInRow = true;
+        break;
+      }
+    }
+
     for (var i = 1; i <= 4; i++) {
       var lbl = row['option' + i + '_label'] || '';
       var vals = row['option' + i + '_values'] || '';
@@ -241,6 +249,11 @@
           parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(\+?₹[\d.]+(?:\/g)?\)/g, '').trim(); });
         }
 
+        // Clean static price tags from Weight/Quantity pills when product has sweetener pricing
+        if (hasSweetenerInRow && (lblLower.indexOf('weight') !== -1 || lblLower.indexOf('quantity') !== -1)) {
+          parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(₹\s*[\d,.]+(?:\/[a-zA-Z]+)?\)/g, '').trim(); });
+        }
+
         // Fix accidental sweetener copies in Google Sheet columns
         if (vals.indexOf('Sugar') !== -1 || vals.indexOf('Muscovado') !== -1) {
           if (lblLower.indexOf('add-on') !== -1) {
@@ -253,7 +266,7 @@
             if (rName.indexOf('drags') !== -1) {
               parsedVals = ['100g', '200g', '250g'];
             } else if (rName.indexOf('cookie') !== -1) {
-              parsedVals = ['100g (₹300)', '250g (₹750)', '300g (₹900)'];
+              parsedVals = ['100g', '250g', '300g'];
             }
           }
         }
@@ -276,7 +289,7 @@
       if (!hasQty) {
         obj.options.push({
           label: 'Quantity',
-          values: ['100g (₹300)', '250g (₹750)', '300g (₹900)']
+          values: ['100g', '250g', '300g']
         });
       }
     }
