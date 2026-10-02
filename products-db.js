@@ -238,7 +238,7 @@
               obj.sweetener_prices[m[1].trim().toLowerCase()] = parseFloat(m[2]);
             }
           });
-          parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(\+?₹\d+(?:\/g)?\)/g, '').trim(); });
+          parsedVals = parsedVals.map(function(v){ return v.replace(/\s*\(\+?₹[\d.]+(?:\/g)?\)/g, '').trim(); });
         }
 
         // Fix accidental sweetener copies in Google Sheet columns
@@ -266,6 +266,20 @@
     }
 
     var rName = (row.name || '').toLowerCase().trim();
+
+    // Ensure all Cookies have standard weight quantities if missing from sheet
+    if (rName.indexOf('cookie') !== -1) {
+      var hasQty = obj.options.some(function(opt) {
+        var l = (opt.label || '').toLowerCase();
+        return l.indexOf('quantity') !== -1 || l.indexOf('weight') !== -1;
+      });
+      if (!hasQty) {
+        obj.options.push({
+          label: 'Quantity',
+          values: ['100g (₹300)', '250g (₹750)', '300g (₹900)']
+        });
+      }
+    }
 
     // Ensure Cavities has Plain, Almond, Cashew, Berry and Nuts add-ons
     if (rName.indexOf('cavities') !== -1) {

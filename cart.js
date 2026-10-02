@@ -307,7 +307,7 @@ const CartSystem = {
     const optionsKey = product.options 
       ? Object.entries(product.options).sort().map(([k, v]) => `${k}:${v}`).join('|')
       : '';
-    const itemId = `${product.name}-${optionsKey}`.replace(/\s+/g, '-').toLowerCase();
+    const itemId = `${product.name}-${optionsKey}`.replace(/['"\\]/g, '').replace(/\s+/g, '-').toLowerCase();
 
     const existingIndex = this.items.findIndex(item => item.id === itemId);
 
@@ -319,7 +319,7 @@ const CartSystem = {
         id: itemId,
         name: product.name,
         subtitle: product.subtitle || '',
-        icon: product.icon || '🍫',
+        icon: Array.isArray(product.icon) ? product.icon[0] : (product.icon || '🍫'),
         price: product.price || 15.00,
         options: product.options || {},
         quantity: initialQty,
@@ -397,19 +397,30 @@ const CartSystem = {
       container.innerHTML = this.items.map(item => {
         // Format options list
         const optionsHtml = Object.entries(item.options || {})
-          .map(([key, value]) => `
-            <div class="cart-item-option-row">
-              <span class="option-name">${key}:</span>
-              <span class="option-val">${value}</span>
-            </div>
-          `).join('');
+          .map(([key, value]) => {
+            let cleanKey = key.replace(/^(Choose|Enter)\s+(your\s+)?/i, '').trim().replace(/:$/, '');
+            let cleanVal = String(value || '').replace(/\s*\(?[₹$]\s*[\d.]+(?:\/[a-zA-Z]+)?\)?/g, '').trim();
+            if (cleanKey.toLowerCase().includes('sweetener')) {
+              cleanVal = cleanVal.replace(/Sweetener$/i, 'Sugar').replace(/Sugar Sugar/i, 'Sugar').trim();
+              if (cleanVal.toLowerCase().includes('monk')) cleanVal = 'Monk Fruit';
+            }
+            cleanVal = cleanVal.replace(/(\d+%)Dark/i, '$1 Dark');
+            return `
+              <div class="cart-item-option-row">
+                <span class="option-name">${cleanKey}:</span>
+                <span class="option-val">${cleanVal}</span>
+              </div>
+            `;
+          }).join('');
+
+        const iconSrc = Array.isArray(item.icon) ? item.icon[0] : item.icon;
 
         return `
           <div class="cart-item" data-id="${item.id}">
             <div class="cart-item-icon">
-              ${item.icon && /\.(png|jpe?g|svg|webp|avif)(\?.*)?$/i.test(item.icon) 
-                ? `<img src="${item.icon}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">` 
-                : item.icon}
+              ${iconSrc && /\.(png|jpe?g|svg|webp|avif)(\?.*)?$/i.test(iconSrc) 
+                ? `<img src="${iconSrc}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">` 
+                : (iconSrc || '🍫')}
             </div>
             <div class="cart-item-details">
               <div class="cart-item-header">
@@ -1035,7 +1046,10 @@ const CartSystem = {
       if (isMobile) {
         window.location.href = waUrl;
       } else {
-        window.open(waUrl, '_blank');
+        const newWin = window.open(waUrl, '_blank');
+        if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+          window.location.href = waUrl;
+        }
       }
       overlay.remove();
       this.showCheckoutSuccess();

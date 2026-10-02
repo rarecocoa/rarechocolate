@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Specific luxury tablet pricing fallbacks if sheet doesn't specify
     if (pName.includes('saffron') || base === 300) {
-      if (isMonk) return 400;
+      if (isMonk) return 450;
       if (isCoconut) return 350;
       return 300;
     }
@@ -1216,7 +1216,7 @@ document.addEventListener('DOMContentLoaded', () => {
               name: product.name,
               subtitle: product.subtitle || '',
               category: product.category || '',
-              icon: product.icon || '🍫',
+              icon: Array.isArray(product.icon) ? product.icon[0] : (product.icon || '🍫'),
               price: itemPrice,
               options: selectedOptions,
               minQty: defaultMinQty
