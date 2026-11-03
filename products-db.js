@@ -124,7 +124,7 @@
     }
   }
 
-  function buildImageHTML(row) {
+  function buildImageHTML(row, isEager) {
     overrideCookieImages(row);
     var img1 = row.image || '';
     var img2 = row.image2 || '';
@@ -134,6 +134,8 @@
     if (img1 && img1.indexOf('?') === -1) img1 += version;
     if (img2 && img2.indexOf('?') === -1) img2 += version;
 
+    var loadingAttr = isEager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
+
     if (!img1 && !img2) {
       var emoji = esc(row.emoji || '🍫');
       return '<div class="img-gradient" style="background:linear-gradient(135deg,#3e2723 0%,#5d4037 50%,#1b0000 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span style="font-size:3rem;">' + emoji + '</span></div>';
@@ -142,7 +144,7 @@
     if (img1 && img2) {
       return '<div class="card-carousel">' +
         '<div class="card-carousel-track">' +
-          '<div class="card-carousel-slide"><img src="' + esc(img1) + '" alt="' + altText + '" loading="lazy"></div>' +
+          '<div class="card-carousel-slide"><img src="' + esc(img1) + '" alt="' + altText + '" ' + loadingAttr + '></div>' +
           '<div class="card-carousel-slide"><img src="' + esc(img2) + '" alt="' + altText + ' 2" loading="lazy"></div>' +
         '</div>' +
         '<button class="card-carousel-btn prev" aria-label="Previous">&#8249;</button>' +
@@ -151,7 +153,7 @@
       '</div>';
     }
 
-    return '<img src="' + esc(img1) + '" alt="' + altText + '" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" loading="lazy">';
+    return '<img src="' + esc(img1) + '" alt="' + altText + '" class="img-gradient" style="width:100%;height:100%;object-fit:cover;" ' + loadingAttr + '>';
   }
 
   function buildDataProduct(row) {
@@ -347,7 +349,8 @@
     return JSON.stringify(obj).replace(/'/g, '&#39;');
   }
 
-  function buildCardHTML(row) {
+  function buildCardHTML(row, cardIndex) {
+    var isEager = typeof cardIndex === 'number' && cardIndex < 6;
     var name = esc(row.name || 'Product');
     var desc = esc(row.description || '');
     var price = esc(row.price_label || '');
@@ -356,7 +359,7 @@
 
     if (isLaunching) {
       return '<div class="product-grid-card reveal" style="cursor: default;">' +
-        '<div class="product-grid-img">' + buildImageHTML(row) + '</div>' +
+        '<div class="product-grid-img">' + buildImageHTML(row, isEager) + '</div>' +
         '<div class="product-grid-body">' +
           '<h3 class="product-grid-name">' + name + '</h3>' +
           '<p class="product-grid-desc">' + desc + '</p>' +
@@ -380,7 +383,7 @@
     var ctaLabel = hasOptions ? 'Choose Options' : 'Add to Bag';
 
     return '<div class="product-grid-card reveal" data-product=\'' + buildDataProduct(row) + '\'>' +
-      '<div class="product-grid-img">' + buildImageHTML(row) + '</div>' +
+      '<div class="product-grid-img">' + buildImageHTML(row, isEager) + '</div>' +
       '<div class="product-grid-body">' +
         '<h3 class="product-grid-name">' + name + '</h3>' +
         '<p class="product-grid-desc">' + desc + '</p>' +
@@ -429,7 +432,7 @@
       var display = isActive ? '' : ' style="display:none;"';
       contentHTML += '<div class="tab-content" data-tab-content="' + slug + '"' + display + '>';
       contentHTML += '<div class="products-grid">';
-      groups[sc].forEach(function(p){ contentHTML += buildCardHTML(p); });
+      groups[sc].forEach(function(p, pIdx){ contentHTML += buildCardHTML(p, pIdx); });
       contentHTML += '</div></div>';
     });
 
@@ -676,8 +679,13 @@
       showLoading(container);
 
       function fetchTab(targetTab) {
-        return fetch(csvUrl(sheetId, targetTab), { cache: 'no-store', headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' } })
+        var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        var timeoutId = controller ? setTimeout(function() { controller.abort(); }, 4000) : null;
+        var fetchOpts = controller ? { signal: controller.signal } : {};
+
+        return fetch(csvUrl(sheetId, targetTab), fetchOpts)
           .then(function(res){
+            if (timeoutId) clearTimeout(timeoutId);
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.text();
           })
@@ -700,6 +708,42 @@
             fixIceCreamProducts(products, targetTab);
             if (!products.length) throw new Error('No active products found in ' + targetTab);
             return products;
+          })
+          .catch(function(err){
+            if (timeoutId) clearTimeout(timeoutId);
+            throw err;
+          });
+      }
+
+      function fetchFallback(targetTab) {
+        return fetch('products-fallback.json?v=v87')
+          .then(function(res){
+            if (!res.ok) throw new Error('Fallback HTTP ' + res.status);
+            return res.json();
+          })
+          .then(function(catalog){
+            var tabKey = targetTab;
+            for (var k in catalog) {
+              if (k.toLowerCase() === targetTab.toLowerCase() || k.toLowerCase().replace(/_/g, '-') === targetTab.toLowerCase().replace(/_/g, '-')) {
+                tabKey = k;
+                break;
+              }
+            }
+            var products = catalog[tabKey] || [];
+            if (!products.length && pageCategory) {
+              for (var t in catalog) {
+                var matches = (catalog[t] || []).filter(function(p){
+                  return getProductCategories(p).indexOf(pageCategory.toLowerCase()) !== -1;
+                });
+                if (matches.length) {
+                  products = matches;
+                  break;
+                }
+              }
+            }
+            if (!products.length) throw new Error('No fallback products found for ' + targetTab);
+            fixIceCreamProducts(products, targetTab);
+            return products;
           });
       }
 
@@ -719,11 +763,15 @@
           }
           throw err;
         })
+        .catch(function(err){
+          console.warn('[RCProductsDB] Live Google Sheets failed (' + (err && err.message) + '), using local Hostinger fallback...');
+          return fetchFallback(tabName);
+        })
         .then(function(products){
           renderProducts(products, container, tabsBannerHTML || '');
         })
         .catch(function(err){
-          console.error('[RCProductsDB] Live load failed:', err);
+          console.error('[RCProductsDB] Live and fallback load failed:', err);
           showError(container, 'Could not load products. Please refresh the page.');
         });
     }
