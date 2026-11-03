@@ -29,19 +29,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const checkAndInitVideo = () => {
     if (isMobile()) {
-      if (heroVideoMobile && !heroVideoMobile.src && heroVideoMobile.querySelector('source[data-src]')) {
-        initHeroVideo(heroVideoMobile);
-      } else if (heroVideoMobile && heroVideoMobile.paused) {
-        heroVideoMobile.play().catch(() => {});
+      if (heroVideoMobile) {
+        heroVideoMobile.classList.add('is-playing');
+        if (!heroVideoMobile.src && heroVideoMobile.querySelector('source[data-src]')) {
+          initHeroVideo(heroVideoMobile);
+        } else if (heroVideoMobile.paused) {
+          heroVideoMobile.play().catch(() => {});
+        }
       }
       if (heroVideo && !heroVideo.paused) {
         heroVideo.pause();
       }
     } else {
-      if (heroVideo && !heroVideo.src && heroVideo.querySelector('source[data-src]')) {
-        initHeroVideo(heroVideo);
-      } else if (heroVideo && heroVideo.paused) {
-        heroVideo.play().catch(() => {});
+      if (heroVideo) {
+        heroVideo.classList.add('is-playing');
+        if (!heroVideo.src && heroVideo.querySelector('source[data-src]')) {
+          initHeroVideo(heroVideo);
+        } else if (heroVideo.paused) {
+          heroVideo.play().catch(() => {});
+        }
       }
       if (heroVideoMobile && !heroVideoMobile.paused) {
         heroVideoMobile.pause();

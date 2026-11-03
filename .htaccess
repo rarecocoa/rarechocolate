@@ -22,8 +22,8 @@
   Header set X-XSS-Protection "1; mode=block"
   Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
-  # Allow Google Favicon Bot & Web Crawlers to access image & icon assets
-  <FilesMatch "\.(ico|png|jpg|jpeg|webp|avif|svg|webmanifest)$">
+  # Allow Google Favicon Bot & Web Crawlers to access image & icon assets, and cache media & assets
+  <FilesMatch "\.(ico|png|jpg|jpeg|webp|avif|svg|webmanifest|mp4|webm|css|js)$">
     Header set Access-Control-Allow-Origin "*"
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
@@ -35,6 +35,8 @@
   AddType image/png .png
   AddType image/avif .avif
   AddType image/webp .webp
+  AddType video/mp4 .mp4
+  AddType video/webm .webm
   AddType application/xml .xml
   AddType application/json .json
   AddType application/manifest+json .webmanifest

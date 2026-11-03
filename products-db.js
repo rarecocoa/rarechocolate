@@ -680,7 +680,7 @@
 
       function fetchTab(targetTab) {
         var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-        var timeoutId = controller ? setTimeout(function() { controller.abort(); }, 4000) : null;
+        var timeoutId = controller ? setTimeout(function() { controller.abort(); }, 2000) : null;
         var fetchOpts = controller ? { signal: controller.signal } : {};
 
         return fetch(csvUrl(sheetId, targetTab), fetchOpts)
@@ -716,7 +716,7 @@
       }
 
       function fetchFallback(targetTab) {
-        return fetch('products-fallback.json?v=v87')
+        return fetch('products-fallback.json?v=v88')
           .then(function(res){
             if (!res.ok) throw new Error('Fallback HTTP ' + res.status);
             return res.json();
@@ -748,21 +748,6 @@
       }
 
       fetchTab(tabName)
-        .catch(function(err){
-          var altTab = tabName === tabName.toLowerCase() ? (tabName.charAt(0).toUpperCase() + tabName.slice(1)) : tabName.toLowerCase();
-          if (altTab !== tabName) {
-            console.warn('[RCProductsDB] Tab "' + tabName + '" failed, trying "' + altTab + '"...');
-            return fetchTab(altTab);
-          }
-          throw err;
-        })
-        .catch(function(err){
-          if (tabName !== 'products') {
-            console.warn('[RCProductsDB] Trying master "products" tab fallback...');
-            return fetchTab('products');
-          }
-          throw err;
-        })
         .catch(function(err){
           console.warn('[RCProductsDB] Live Google Sheets failed (' + (err && err.message) + '), using local Hostinger fallback...');
           return fetchFallback(tabName);
